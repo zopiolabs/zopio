@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "analyze": "ANALYZE=true pnpm build",
-    "test": "NODE_ENV=test vitest run",
+    "test": "cross-env NODE_ENV=test vitest run",
     "stripe": "stripe listen --forward-to localhost:3002/webhooks/stripe",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
@@ -36,6 +36,7 @@
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
     "typescript": "^5.8.3"
   }
 }
