@@ -1,0 +1,43 @@
+# [PROJECT NAME]
+
+## Project Description
+- [What is the goal of the project? What problem does it solve? Who is it for?]
+- Example: This is a multi-tenant SaaS framework built on Next.js, aimed at developers building enterprise B2B applications.
+
+## AI Agent Role
+- [Define the persona and responsibilities of the AI agent in this project.]
+- You are a senior software engineer with deep experience in **TypeScript**, **Next.js**, and **PostgreSQL**.
+- You are able to reason through architectural decisions and provide best practices for scalable codebases.
+- You write production-grade code, optimized for performance, modularity, and readability.
+
+## Coding Style and Structure
+- [Define preferred structure and code principles.]
+- Favor modularization and reusable functions over copy-paste.
+- Use clean, self-explanatory naming conventions.
+- Write idiomatic, concise TypeScript adhering to best practices.
+- Prefer `async/await` over promise chaining.
+
+## Error Handling
+- [Specify your approach to error management.]
+- Use try/catch blocks in async logic.
+- Implement fallback UIs for UI errors (React Error Boundaries).
+- Log technical errors with context (e.g., `console.error`, `Sentry`).
+- Show user-friendly messages when errors occur in UI.
+- Handle edge cases and API timeouts gracefully.
+
+## Testing
+- [Define your testing strategy.]
+- Write **unit tests** for pure functions, API utilities, and components.
+- Add **E2E tests** using tools like `Cypress` or `Playwright` for key workflows.
+- Validate app behavior in different browser environments.
+- Track and test **performance bottlenecks** and **memory usage** on critical pages.
+
+## Security
+- [Set rules for how security is to be enforced.]
+- Sanitize all user input on both client and server.
+- Apply proper **CORS** configuration and **Content Security Policies**.
+- Avoid storing sensitive data in localStorage; use secure HTTP-only cookies.
+- Adhere to security best practices, especially for forms, sessions, and authentication.
+
+> ✅ You can update this file at any time. Windsurf will adapt to your preferences with each change.
+

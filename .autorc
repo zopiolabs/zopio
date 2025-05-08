@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    "npm",
+    "first-time-contributor",
+    "released"
+  ],
+  "owner": "zopiolabs",
+  "repo": "zopio",
+  "name": "Zopio",
+  "email": "admin@zopio.com"
+}
