@@ -1,0 +1,14 @@
+{
+  "name": "@repo/queue",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:worker": "ts-node workers/generateReportWorker.ts"
+  },
+  "dependencies": {
+    "bullmq": "^4.12.1",
+    "redis": "^4.6.7",
+    "@bull-board/api": "^5.7.1",
+    "@bull-board/express": "^5.7.1"
+  }
+}

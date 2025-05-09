@@ -1,12 +1,11 @@
 {
   "name": "Zopio",
-  "version": "4.2.8",
+  "version": "1.0.0",
   "bin": {
     "Zopio": "dist/index.js"
   },
-  "files": [
-    "dist/index.js"
-  ],
+  "files": ["dist/index.js"],
+  "workspaces": ["apps/*", "apps/queues", "packages/*"],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",

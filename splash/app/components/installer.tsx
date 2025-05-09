@@ -3,7 +3,7 @@
 import { CopyIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-const command = 'npx Zopio@latest init';
+const command = 'npx zopio@latest init';
 
 export const Installer = () => {
   const handleCopy = () => {
