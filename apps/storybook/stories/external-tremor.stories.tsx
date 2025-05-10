@@ -1,5 +1,5 @@
 export default {
-  title: 'External Catalogs/Tremor Components',
+  title: 'External Catalogs/Tremor',
 };
 
 export const BlocksCatalog = () => (

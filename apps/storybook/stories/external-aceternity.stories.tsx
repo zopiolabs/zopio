@@ -1,5 +1,5 @@
 export default {
-  title: 'External Catalogs/Aceternity Components',
+  title: 'External Catalogs/Aceternity',
 };
 
 export const ComponentsCatalog = () => (
