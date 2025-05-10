@@ -6,6 +6,9 @@ const libraries = [
   { name: 'Friendlier Words', id: 'friendlier-words' },
   { name: 'Zustand', id: 'zustand' },
   { name: 'NUQS', id: 'nuqs' },
+  { name: 'Tiptap', id: 'tiptap' },
+  { name: 'react-pdf', id: 'react-pdf' },
+  { name: 'pdf-lib', id: 'pdf-lib' },
 ];
 
 const tools = [
@@ -44,21 +47,24 @@ export default function AddonsHome() {
 
   const renderList = (title: string, list: { name: string; id: string }[]) => (
     <div>
-      <h2 className="text-xl font-semibold mb-2">{title}</h2>
+      <h2 className="mb-2 font-semibold text-xl">{title}</h2>
       <ul className="space-y-2">
         {list.map((addon) => (
-          <li key={addon.id} className="flex justify-between items-center p-4 border rounded-lg">
+          <li
+            key={addon.id}
+            className="flex items-center justify-between rounded-lg border p-4"
+          >
             <span>{addon.name}</span>
             <button
-              className="px-3 py-1 text-sm rounded bg-blue-600 text-white disabled:bg-gray-400"
+              className="rounded bg-blue-600 px-3 py-1 text-sm text-white disabled:bg-gray-400"
               disabled={installed.includes(addon.id) || loading === addon.id}
               onClick={() => installAddon(addon.id)}
             >
               {installed.includes(addon.id)
                 ? 'Installed'
                 : loading === addon.id
-                ? 'Installing...'
-                : 'Install'}
+                  ? 'Installing...'
+                  : 'Install'}
             </button>
           </li>
         ))}
@@ -68,8 +74,10 @@ export default function AddonsHome() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Addons</h1>
-      <p className="text-muted-foreground">Manage and install libraries and tools for your app.</p>
+      <h1 className="font-bold text-2xl">Addons</h1>
+      <p className="text-muted-foreground">
+        Manage and install libraries and tools for your app.
+      </p>
       {renderList('Libraries', libraries)}
       {renderList('Tools', tools)}
       {error && <p className="text-red-500 text-sm">{error}</p>}
