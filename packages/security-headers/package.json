@@ -1,17 +1,16 @@
 {
-  "name": "@zopio/caching",
+  "name": "@zopio/security-headers",
   "version": "0.1.0",
-  "description": "Redis-backed caching utilities",
+  "description": "Security header middleware for Next.js apps",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "index.ts", "*.ts"],
+  "files": ["dist", "index.ts", "withSecurityHeaders.ts"],
   "scripts": {
     "build": "tsup"
   },
-  "dependencies": {
-    "@upstash/redis": "^1.20.0",
-    "ioredis": "^5.3.2"
+  "peerDependencies": {
+    "next": "*"
   },
   "devDependencies": {
     "tsup": "^8.4.0",
