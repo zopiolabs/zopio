@@ -1,22 +1,20 @@
-import 'server-only';
-
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
-import ws from 'ws';
 import { PrismaClient } from './generated/client';
-import { keys } from './keys';
 
+// Define a global variable for Prisma to enable connection reuse
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-neonConfig.webSocketConstructor = ws;
+// Create a Prisma client instance or reuse the existing one
+export const database =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+  });
 
-const pool = new Pool({ connectionString: keys().DATABASE_URL });
-const adapter = new PrismaNeon(pool);
-
-export const database = globalForPrisma.prisma || new PrismaClient({ adapter });
-
+// In non-production environments, save the client instance to the global object
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = database;
 }
 
+// Export all types from the generated client
 export * from './generated/client';
+
