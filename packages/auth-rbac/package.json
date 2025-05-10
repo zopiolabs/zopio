@@ -1,0 +1,27 @@
+{
+  "name": "@zopio/auth-rbac",
+  "version": "0.1.0",
+  "description": "RBAC utilities using CASL",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "index.ts",
+    "ability.ts",
+    "defineAbility.ts",
+    "roles.ts",
+    "types.ts"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@casl/ability": "^6.7.5"
+  },
+  "devDependencies": {
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.0"
+  },
+  "license": "MIT"
+}
