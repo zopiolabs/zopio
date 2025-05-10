@@ -1,23 +1,16 @@
 {
-  "name": "@zopio/auth-rbac",
+  "name": "@zopio/auth-tokens",
   "version": "0.1.0",
-  "description": "RBAC utilities using CASL",
+  "description": "Stateless token-based microservice authentication",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "index.ts",
-    "ability.ts",
-    "defineAbility.ts",
-    "roles.ts",
-    "types.ts"
-  ],
+  "files": ["dist", "index.ts", "*.ts"],
   "scripts": {
     "build": "tsup"
   },
   "dependencies": {
-    "@casl/ability": "^6.7.3"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "tsup": "^8.4.0",
