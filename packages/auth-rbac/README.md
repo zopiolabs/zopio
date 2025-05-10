@@ -1,6 +1,6 @@
 # @zopio/auth-rbac
 
-Role-Based Access Control (RBAC) utilities for Zopio Framework using CASL.
+Role-Based Access Control (RBAC) utilities using CASL.
 
 ## Features
 
