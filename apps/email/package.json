@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@react-email/components": "0.0.36",
+    "@react-email/components": "0.0.39",
     "@repo/email": "workspace:*",
     "react": "19.1.0",
     "react-email": "4.0.7"
