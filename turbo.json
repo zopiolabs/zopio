@@ -3,6 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "ui": "tui",
   "envMode": "loose",
+  "concurrency": "11",
   "tasks": {
     "build": {
       "dependsOn": ["^build", "test"],
