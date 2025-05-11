@@ -1,6 +1,8 @@
 import { init } from '@sentry/nextjs';
-import { keys } from './keys.js';
+// Use relative path without extension
+import { keys } from './keys';
 
+// Initialize Sentry
 export const initializeSentry = () => {
   try {
     const dsn = keys().NEXT_PUBLIC_SENTRY_DSN;
@@ -25,3 +27,9 @@ export const initializeSentry = () => {
     return false;
   }
 };
+
+// Standard Next.js instrumentation export
+export async function register() {
+  // Use Promise.resolve to provide an await target
+  await Promise.resolve(initializeSentry());
+}

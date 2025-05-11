@@ -1,3 +1,2 @@
-import { initializeSentry } from '@repo/observability/instrumentation';
-
-export const register = initializeSentry();
+// Import the register function directly from the observability package
+export { register } from '@repo/observability/instrumentation';
