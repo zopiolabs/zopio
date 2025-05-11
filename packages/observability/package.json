@@ -1,5 +1,5 @@
 {
-  "name": "@zopio/observability",
+  "name": "@repo/observability",
   "version": "0.1.0",
   "main": "./index.ts",
   "types": "./index.ts",

@@ -10,8 +10,7 @@
   },
   "dependencies": {
     "@types/react": "^18.2.0",
-    "react": ">=18",
-    "Zopio": "file:../.."
+    "react": ">=18"
   },
   "peerDependencies": {
     "react": ">=18"
