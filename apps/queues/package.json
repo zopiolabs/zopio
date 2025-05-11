@@ -1,5 +1,5 @@
 {
-  "name": "@repo/queues",
+  "name": "queues",
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
