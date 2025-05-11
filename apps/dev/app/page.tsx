@@ -19,6 +19,15 @@ export default function Home(): ReactNode {
               Manage and monitor background jobs
             </p>
           </Link>
+          <Link
+            href="/dbviewer"
+            className="rounded-md bg-green-100 p-4 transition-colors hover:bg-green-200"
+          >
+            <h3 className="font-medium text-green-800">Database Viewer</h3>
+            <p className="text-green-600 text-sm">
+              Browse and manage database tables
+            </p>
+          </Link>
           <PluginToggle />
           <FlagEditor />
           <UserCreateForm />
