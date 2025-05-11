@@ -1,5 +1,5 @@
 {
-  "name": "@repo/observability",
+  "name": "@repo/auth-policy",
   "version": "0.1.0",
   "main": "./index.ts",
   "types": "./index.ts",
@@ -8,7 +8,6 @@
       "import": "./index.ts"
     }
   },
-  "dependencies": {
-    "@sentry/nextjs": "^9.12.0"
-  }
+  "dependencies": {},
+  "peerDependencies": {}
 }

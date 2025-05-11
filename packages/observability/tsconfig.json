@@ -1,5 +1,9 @@
 {
-  "extends": "@zopio/typescript-config/tsconfig.package.json",
-  "compilerOptions": {},
+  "extends": "@repo/typescript-config/tsconfig.package.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "incremental": true
+  },
   "include": ["./*.ts", "./providers/*.ts"]
 }
