@@ -20,7 +20,7 @@ export const generateMetadata = async ({
   params,
 }: LegalPageProperties): Promise<Metadata> => {
   const { slug } = await params;
-  const post = await legal.getPost(slug);
+  const post = await legal.getPost(slug) as LegalPost | undefined;
 
   if (!post) {
     return {};
@@ -28,7 +28,7 @@ export const generateMetadata = async ({
 
   return createMetadata({
     title: post._title,
-    description: post.description,
+    description: post.description ?? '',
   });
 };
 
