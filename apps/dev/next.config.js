@@ -8,7 +8,19 @@ const nextConfig = {
         // Exclude files from Turbopack processing
       }
     }
-  }
+  },
+  rewrites() {
+    return [
+      {
+        source: '/jobs',
+        destination: 'http://localhost:3008/',
+      },
+      {
+        source: '/jobs/:path*',
+        destination: 'http://localhost:3008/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

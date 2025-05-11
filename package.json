@@ -9,7 +9,7 @@
   ],
   "workspaces": [
     "apps/*",
-    "apps/queues",
+    "apps/jobs",
     "packages/*"
   ],
   "scripts": {

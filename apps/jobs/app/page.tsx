@@ -1,9 +1,11 @@
 'use client';
 
-const QUEUES_UI_URL =
-  process.env.NEXT_PUBLIC_QUEUES_UI_URL || 'http://localhost:4001/admin/queues';
+import type { ReactElement } from 'react';
 
-export default function QueuesDashboard() {
+const QUEUES_UI_URL =
+  process.env.NEXT_PUBLIC_QUEUES_UI_URL || 'http://localhost:3006/admin/queues';
+
+export default function QueuesDashboard(): ReactElement {
   return (
     <iframe
       src={QUEUES_UI_URL}
