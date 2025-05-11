@@ -2,6 +2,7 @@ import path from 'node:path';
 import serverAdapter from '@repo/queue/ui';
 import dotenv from 'dotenv';
 import express from 'express';
+import { log } from '@repo/observability/log';
 
 // Load environment variables
 dotenv.config();
@@ -15,8 +16,7 @@ const app = express();
 try {
   dotenv.config({ path: path.resolve(__dirname, '.env.local') });
 } catch (_error) {
-  // eslint-disable-next-line no-console
-  console.log('No .env.local file found, using default configuration');
+  log.info('No .env.local file found, using default configuration');
 }
 
 // Load mandatory environment variables
@@ -34,6 +34,5 @@ app.use('/admin/queues', serverAdapter.getRouter());
 
 // Start the server
 app.listen(Number(PORT), () => {
-  // eslint-disable-next-line no-console
-  console.log(`✅ Bull Board is running at ${PUBLIC_URL}/admin/queues`);
+  log.info(`✅ Bull Board is running at ${PUBLIC_URL}/admin/queues`);
 });

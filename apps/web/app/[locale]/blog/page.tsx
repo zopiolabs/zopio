@@ -1,4 +1,4 @@
-import { blog } from '@repo/cms';
+import { blog, type PostMeta } from '@repo/cms';
 import { Feed } from '@repo/cms/components/feed';
 import { Image } from '@repo/cms/components/image';
 import { cn } from '@repo/design-system/lib/utils';
@@ -48,11 +48,11 @@ const BlogIndex = async ({ params }: BlogProps) => {
               {async ([data]) => {
                 'use server';
 
-                if (!data.blog.posts.items.length) {
+                if (!data.blog?.posts?.items?.length) {
                   return null;
                 }
 
-                return data.blog.posts.items.map((post, index) => (
+                return data.blog?.posts?.items?.map((post: PostMeta, index) => (
                   <Link
                     href={`/blog/${post._slug}`}
                     className={cn(
@@ -61,12 +61,14 @@ const BlogIndex = async ({ params }: BlogProps) => {
                     )}
                     key={post._slug}
                   >
-                    <Image
-                      src={post.image.url}
-                      alt={post.image.alt ?? ''}
-                      width={post.image.width}
-                      height={post.image.height}
-                    />
+                    {post.image && (
+                      <Image
+                        src={post.image?.url ?? ''}
+                        alt={post.image?.alt ?? ''}
+                        width={post.image?.width ?? 0}
+                        height={post.image?.height ?? 0}
+                      />
+                    )}
                     <div className="flex flex-row items-center gap-4">
                       <p className="text-muted-foreground text-sm">
                         {new Date(post.date).toLocaleDateString('en-US', {
@@ -81,7 +83,7 @@ const BlogIndex = async ({ params }: BlogProps) => {
                         {post._title}
                       </h3>
                       <p className="max-w-3xl text-base text-muted-foreground">
-                        {post.description}
+                        {post.description ?? ''}
                       </p>
                     </div>
                   </Link>

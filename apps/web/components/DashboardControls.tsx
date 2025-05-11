@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+// React is used implicitly by JSX
 import { useAbility } from '@/components/RBACProvider';
 
 export const DashboardControls = () => {
@@ -15,7 +15,7 @@ export const DashboardControls = () => {
       )}
 
       {ability.can('update', 'Profile') && (
-        <button>Edit Profile</button>
+        <button type="button">Edit Profile</button>
       )}
 
       {!ability.can('delete', 'User') && (

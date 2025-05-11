@@ -1,51 +1,25 @@
 # @zopio/caching
 
-High-performance Redis-backed caching utility.
-Used to optimize session access, tenant resolution, and general data TTL-based caching.
+Modular caching system for Zopio core packages. Supports custom TTL, namespacing, and pluggable providers.
 
 ## Features
 
-- ✅ `getCache(key)` — Retrieve cached value by key
-- ✅ `setCache(key, value, ttl)` — Set value with expiration (in seconds)
-- ✅ `deleteCache(key)` — Remove key from cache
-- ✅ Built-in Redis support (ioredis, upstash, or node-redis compatible)
+- `get`, `set`, `del` operations
+- `getOrLoad()` fallback mechanism
+- Namespace flushing (`flushNamespace`)
+- Configurable TTL per entry
+- Swappable providers (`memory`, `redis`, `mock`)
 
-## Usage Examples
-
-### Session Caching
-
-```ts
-import { getCache, setCache } from '@zopio/caching';
-
-export async function getServerUserWithCache(sessionId: string) {
-  const cached = await getCache(`session:${sessionId}`);
-  if (cached) return cached;
-
-  const user = await fetchUserFromDatabaseOrProvider(sessionId);
-  await setCache(`session:${sessionId}`, user, 60); // Cache for 60s
-  return user;
-}
-```
-
-### Tenant Lookup Caching
+## Usage
 
 ```ts
-export async function getTenant(tenantId: string) {
-  const cached = await getCache(`tenant:${tenantId}`);
-  if (cached) return cached;
+import { cache } from '@zopio/caching';
 
-  const tenant = await db.tenant.findUnique({ where: { id: tenantId } });
-  if (tenant) await setCache(`tenant:${tenantId}`, tenant, 300); // 5min TTL
-  return tenant;
-}
+await cache.set('auth:session:abc', { userId: '123' }, { ttl: 300 });
+const session = await cache.get('auth:session:abc');
+await cache.del('auth:session:abc');
+
+await cache.getOrLoad('feature-flag:dark-ui', async () => {
+  return fetchFlagFromDB();
+}, { ttl: 60 });
 ```
-
-## Environment
-
-Ensure you set `REDIS_URL` or compatible Redis client configuration in `.env`.
-
-## Roadmap
-
-- [ ] Optional namespace support
-- [ ] Redis cluster compatibility
-- [ ] In-memory fallback for dev

@@ -8,6 +8,7 @@ export default function QueuesDashboard() {
     <iframe
       src={QUEUES_UI_URL}
       style={{ width: '100%', height: '100vh', border: 'none' }}
+      title="Queues Dashboard"
     />
   );
 }

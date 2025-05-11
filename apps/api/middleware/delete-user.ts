@@ -1,7 +1,7 @@
 import { withAuthorization } from '@/middleware/withAuthorization';
 import { NextResponse } from 'next/server';
 
-async function handler(req) {
+function handler(_req: unknown) {
   // Your protected logic here
   return NextResponse.json({ message: 'User deleted successfully' });
 }

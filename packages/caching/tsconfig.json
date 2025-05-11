@@ -1,0 +1,5 @@
+{
+  "extends": "../../node_modules/@repo/typescript-config/tsconfig.package.json",
+  "compilerOptions": {},
+  "include": ["./*.ts", "./adapters/*.ts"]
+}

@@ -1,8 +1,5 @@
 {
-  "extends": "@repo/typescript-config/nextjs.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "extends": "@zopio/typescript-config/tsconfig.package.json",
+  "compilerOptions": {},
+  "include": ["./*.ts", "./providers/*.ts"]
 }

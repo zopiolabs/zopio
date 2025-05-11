@@ -1,7 +1,7 @@
 import { Sidebar } from '@/components/sidebar';
 import { env } from '@/env';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
-import { blog } from '@repo/cms';
+import { blog, type Post } from '@repo/cms';
 import { Body } from '@repo/cms/components/body';
 import { CodeBlock } from '@repo/cms/components/code-block';
 import { Feed } from '@repo/cms/components/feed';
@@ -53,11 +53,11 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
 
   return (
     <Feed queries={[blog.postQuery(slug)]}>
-      {/* biome-ignore lint/suspicious/useAwait: "Server Actions must be async" */}
+
       {async ([data]) => {
         'use server';
 
-        const page = data.blog.posts.item;
+        const page = data.blog?.posts?.item as Post | undefined;
 
         if (!page) {
           notFound();
@@ -70,15 +70,15 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                 '@type': 'BlogPosting',
                 '@context': 'https://schema.org',
                 datePublished: page.date,
-                description: page.description,
+                description: page.description ?? '',
                 mainEntityOfPage: {
                   '@type': 'WebPage',
                   '@id': new URL(`/blog/${page._slug}`, url).toString(),
                 },
                 headline: page._title,
-                image: page.image.url,
+                image: page.image?.url ?? '',
                 dateModified: page.date,
-                author: page.authors.at(0)?._title,
+                author: page.authors?.at(0)?._title ?? '',
                 isAccessibleForFree: true,
               }}
             />
@@ -97,21 +97,21 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                       <Balancer>{page._title}</Balancer>
                     </h1>
                     <p className="leading-7 [&:not(:first-child)]:mt-6">
-                      <Balancer>{page.description}</Balancer>
+                      <Balancer>{page.description ?? ''}</Balancer>
                     </p>
-                    {page.image ? (
+                    {page.image && page.image.url ? (
                       <Image
-                        src={page.image.url}
-                        width={page.image.width}
-                        height={page.image.height}
-                        alt={page.image.alt ?? ''}
+                        src={page.image?.url}
+                        width={page.image?.width ?? 0}
+                        height={page.image?.height ?? 0}
+                        alt={page.image?.alt ?? ''}
                         className="my-16 h-full w-full rounded-xl"
                         priority
                       />
                     ) : undefined}
                     <div className="mx-auto max-w-prose">
                       <Body
-                        content={page.body.json.content}
+                        content={page.body?.json?.content ?? {}}
                         components={{
                           pre: ({ code, language }) => {
                             return (
@@ -128,8 +128,8 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                 </div>
                 <div className="sticky top-24 hidden shrink-0 md:block">
                   <Sidebar
-                    toc={<TableOfContents data={page.body.json.toc} />}
-                    readingTime={`${page.body.readingTime} min read`}
+                    toc={<TableOfContents data={page.body?.json?.toc ?? []} />}
+                    readingTime={`${page.body?.readingTime ?? 0} min read`}
                     date={new Date(page.date)}
                   />
                 </div>

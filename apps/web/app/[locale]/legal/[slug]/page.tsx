@@ -1,6 +1,6 @@
 import { Sidebar } from '@/components/sidebar';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
-import { legal } from '@repo/cms';
+import { legal, type LegalPost } from '@repo/cms';
 import { Body } from '@repo/cms/components/body';
 import { Feed } from '@repo/cms/components/feed';
 import { TableOfContents } from '@repo/cms/components/toc';
@@ -47,7 +47,7 @@ const LegalPage = async ({ params }: LegalPageProperties) => {
       {async ([data]) => {
         'use server';
 
-        const page = data.legalPages.item;
+        const page = data.legalPages?.item as LegalPost | undefined;
 
         if (!page) {
           notFound();
@@ -71,13 +71,13 @@ const LegalPage = async ({ params }: LegalPageProperties) => {
             <div className="mt-16 flex flex-col items-start gap-8 sm:flex-row">
               <div className="sm:flex-1">
                 <div className="prose prose-neutral dark:prose-invert">
-                  <Body content={page.body.json.content} />
+                  <Body content={page.body?.json?.content ?? {}} />
                 </div>
               </div>
               <div className="sticky top-24 hidden shrink-0 md:block">
                 <Sidebar
-                  toc={<TableOfContents data={page.body.json.toc} />}
-                  readingTime={`${page.body.readingTime} min read`}
+                  toc={<TableOfContents data={page.body?.json?.toc ?? []} />}
+                  readingTime={`${page.body?.readingTime ?? 0} min read`}
                   date={new Date()}
                 />
               </div>
