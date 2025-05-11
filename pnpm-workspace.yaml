@@ -8,6 +8,7 @@ onlyBuiltDependencies:
   - '@prisma/client'
   - '@prisma/engines'
   - '@sentry/cli'
+  - '@tailwindcss/oxide'
   - bufferutil
   - core-js
   - core-js-pure
