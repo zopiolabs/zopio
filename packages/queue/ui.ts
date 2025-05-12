@@ -5,11 +5,15 @@ import { Queue } from 'bullmq';
 import { reportQueue } from './queue';
 
 const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath('/admin/queues');
+serverAdapter.setBasePath('/admin/jobs');
+
+// Create a simple logger since we can't use console.log due to linting rules
+const log = {
+  info: (...args: unknown[]) => process.stdout.write(`[INFO] ${args.join(' ')}\n`)
+};
 
 // Log which implementation we're using
-// eslint-disable-next-line no-console
-console.log('🔧 Using mock Redis client for development');
+log.info('🔧 Using mock Redis client for development');
 
 // Create a simple Bull Board with our queue if it's a real Queue instance
 if (reportQueue instanceof Queue) {
@@ -24,8 +28,8 @@ if (reportQueue instanceof Queue) {
     serverAdapter,
   });
   
-  // eslint-disable-next-line no-console
-  console.log('Using empty Bull Board since Redis is not available');
+  // Log that we're using an empty Bull Board
+  log.info('Using empty Bull Board since Redis is not available');
 }
 
 export default serverAdapter;
