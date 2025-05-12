@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { HTMLAttributes, ReactNode } from "react";
@@ -15,7 +17,8 @@ import {
   Settings, 
   Shield, 
   Terminal,
-  Users
+  Users,
+  ChevronRight
 } from "lucide-react";
 
 import { cn } from "../lib/utils";
@@ -34,12 +37,15 @@ type NavItemProps = {
 const NavItem = ({ href, icon, label, isActive }: NavItemProps) => (
   <Button
     variant={isActive ? "secondary" : "ghost"}
-    className="justify-start w-full"
+    className="justify-start w-full group hover:bg-muted/50 transition-colors"
     asChild
   >
-    <Link href={href}>
-      {icon}
-      {label}
+    <Link href={href} className="flex items-center">
+      <span className="mr-2 flex items-center justify-center rounded-md bg-primary/10 p-1 text-primary group-hover:bg-primary/20">
+        {icon}
+      </span>
+      <span className="text-sm font-medium">{label}</span>
+      {isActive && <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" />}
     </Link>
   </Button>
 );
@@ -48,7 +54,7 @@ export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <div className={cn("pb-12", className)}>
+    <div className={cn("bg-background pb-12 border-r border-border", className)}>
       <div className="py-4 space-y-4">
         <div className="px-4 py-2">
           <h2 className="mb-2 px-2 font-semibold text-xl tracking-tight">

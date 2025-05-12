@@ -30,6 +30,7 @@
     "@auto-it/first-time-contributor": "^11.3.0",
     "@biomejs/biome": "1.9.4",
     "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.6",
     "@turbo/gen": "^2.5.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.14.1",
