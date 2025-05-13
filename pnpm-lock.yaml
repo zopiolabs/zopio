@@ -1081,12 +1081,6 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  packages/devtools:
-    dependencies:
-      commander:
-        specifier: ^11.0.0
-        version: 11.1.0
-
   packages/email:
     dependencies:
       '@react-email/components':

@@ -1,5 +1,5 @@
 {
-  "extends": "@zopio/typescript-config/tsconfig.package.json",
+  "extends": "@repo/typescript-config/tsconfig.package.json",
   "compilerOptions": {},
   "include": ["./*.ts", "./rules/*.ts"]
 }
