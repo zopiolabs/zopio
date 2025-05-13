@@ -1,7 +1,24 @@
 {
-  "extends": "@repo/typescript-config/tsconfig.package.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "incremental": true
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "target": "ES2022",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noEmit": false
   },
   "include": ["./*.ts", "./rules/*.ts"]
 }
