@@ -1,5 +1,7 @@
 {
   "extends": "@repo/typescript-config/tsconfig.package.json",
-  "compilerOptions": {},
+  "compilerOptions": {
+    "incremental": true
+  },
   "include": ["./*.ts", "./rules/*.ts"]
 }

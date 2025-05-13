@@ -135,3 +135,116 @@ import { internationalizationMiddleware } from '@repo/internationalization';
 
 export default internationalizationMiddleware;
 ```
+
+## Formatters
+
+The internationalization package includes a set of formatters that help you display dates, numbers, currencies, and relative times in a localized format. These formatters use the browser's [Intl API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) to ensure proper localization.
+
+### Date Formatting
+
+Format dates according to the user's locale:
+
+```tsx
+import { formatDate } from '@repo/internationalization';
+
+// Basic usage (uses browser's locale by default)
+formatDate(new Date()); // "5/13/2025"
+
+// With specific locale
+formatDate(new Date(), 'de-DE'); // "13.5.2025"
+
+// With options
+formatDate(new Date(), 'en-US', { 
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+}); // "Tuesday, May 13, 2025"
+```
+
+### Number Formatting
+
+Format numbers according to the user's locale:
+
+```tsx
+import { formatNumber } from '@repo/internationalization';
+
+// Basic usage
+formatNumber(1000000); // "1,000,000"
+
+// With specific locale
+formatNumber(1000000, 'de-DE'); // "1.000.000"
+
+// With options
+formatNumber(1000000, 'en-US', { 
+  notation: 'compact' 
+}); // "1M"
+```
+
+### Currency Formatting
+
+Format currency values according to the user's locale:
+
+```tsx
+import { formatCurrency } from '@repo/internationalization';
+
+// Basic usage
+formatCurrency(1000, 'USD'); // "$1,000.00"
+
+// With specific locale
+formatCurrency(1000, 'EUR', 'de-DE'); // "1.000,00 €"
+```
+
+### Relative Time Formatting
+
+Format relative times (e.g., "2 days ago", "in 3 hours") according to the user's locale:
+
+```tsx
+import { formatRelativeTime } from '@repo/internationalization';
+
+// Days ago
+formatRelativeTime(-2, 'day'); // "2 days ago"
+
+// Hours from now
+formatRelativeTime(3, 'hour'); // "in 3 hours"
+
+// With specific locale
+formatRelativeTime(-1, 'month', 'fr'); // "il y a 1 mois"
+
+// With options
+formatRelativeTime(-1, 'day', 'en', { 
+  numeric: 'auto' 
+}); // "yesterday"
+```
+
+### Using Formatters with Translations
+
+You can combine formatters with your translations for a fully localized experience:
+
+```tsx
+import { getDictionary, formatCurrency, formatDate } from '@repo/internationalization';
+
+const Page = async ({ params: { locale } }) => {
+  const dictionary = await getDictionary(locale);
+  const orderDate = new Date();
+  const orderTotal = 99.99;
+  
+  return (
+    <div>
+      <h1>{dictionary.orders.summary}</h1>
+      <p>
+        {dictionary.orders.placedOn.replace(
+          '{date}', 
+          formatDate(orderDate, locale)
+        )}
+      </p>
+      <p>
+        {dictionary.orders.total.replace(
+          '{amount}', 
+          formatCurrency(orderTotal, 'USD', locale)
+        )}
+      </p>
+    </div>
+  );
+};
+```

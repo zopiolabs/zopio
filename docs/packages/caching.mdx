@@ -1,0 +1,203 @@
+---
+title: Caching
+description: Modular caching system for Zopio core packages
+---
+
+# Caching
+
+The `@repo/caching` package provides a modular caching system for Zopio core packages. It offers a consistent API for different cache providers, making it easy to implement caching throughout your application.
+
+## Features
+
+- **Simple, consistent API** for all cache providers
+- **Multiple storage backends** (Memory, Redis)
+- **TTL support** (Time-To-Live)
+- **Namespace-based cache invalidation**
+- **Convenient `getOrLoad` pattern** for cache-aside operations
+
+## Installation
+
+The package is included in the Zopio monorepo and can be imported directly:
+
+```ts
+import { cache } from '@repo/caching';
+```
+
+## Basic Usage
+
+### Get and Set Operations
+
+```ts
+import { cache } from '@repo/caching';
+
+// Get a value from the cache
+const value = await cache.get('key');
+
+// Set a value in the cache with a TTL of 60 seconds
+await cache.set('key', value, { ttl: 60 });
+```
+
+### Delete Operations
+
+```ts
+// Delete a single key
+await cache.del('key');
+
+// Delete all keys with a specific prefix
+await cache.flushNamespace('user:123:');
+```
+
+## Cache-Aside Pattern
+
+The package provides a convenient `getOrLoad` method for implementing the cache-aside pattern:
+
+```ts
+import { cache } from '@repo/caching';
+
+async function getUserProfile(userId: string) {
+  return cache.getOrLoad(
+    `user:${userId}:profile`,
+    async () => {
+      // This function only runs if the data isn't in the cache
+      const profile = await db.getUserProfile(userId);
+      return profile;
+    },
+    { ttl: 3600 } // Cache for 1 hour
+  );
+}
+```
+
+This pattern is particularly useful for expensive operations like database queries or API calls.
+
+## Cache Providers
+
+### Default In-Memory Cache
+
+By default, the package uses an in-memory cache implementation that stores data in a JavaScript Map. This is suitable for development environments or simple applications.
+
+### Redis Cache
+
+For production environments, you can use the Redis cache provider:
+
+```ts
+import { setCacheProvider, RedisCache } from '@repo/caching';
+
+// Switch to Redis cache
+setCacheProvider(RedisCache);
+```
+
+### Redis Configuration
+
+To use Redis, ensure you have the following environment variables set:
+
+```env
+UPSTASH_REDIS_REST_URL=your-redis-url
+UPSTASH_REDIS_REST_TOKEN=your-redis-token
+```
+
+## Custom Cache Providers
+
+You can implement your own cache provider by implementing the `CacheProvider` interface:
+
+```ts
+import { CacheProvider, setCacheProvider } from '@repo/caching';
+
+const MyCustomCache: CacheProvider = {
+  async get(key) { 
+    // Implementation for retrieving a value
+  },
+  async set(key, value, options) { 
+    // Implementation for storing a value with optional TTL
+  },
+  async del(key) { 
+    // Implementation for deleting a value
+  },
+  async flushNamespace(prefix) { 
+    // Implementation for deleting all keys with a specific prefix
+  }
+};
+
+setCacheProvider(MyCustomCache);
+```
+
+## Best Practices
+
+### Key Naming Conventions
+
+Use namespaced keys to organize your cache and make invalidation easier:
+
+```ts
+// Good
+const userKey = `user:${userId}:profile`;
+const settingsKey = `user:${userId}:settings`;
+
+// Later, you can invalidate all user-related cache:
+await cache.flushNamespace(`user:${userId}:`);
+```
+
+### TTL Strategy
+
+Choose appropriate TTL values based on the nature of your data:
+
+- **Short TTL (seconds to minutes)**: For frequently changing data
+- **Medium TTL (hours)**: For relatively stable data
+- **Long TTL (days)**: For static data that rarely changes
+
+### Error Handling
+
+Always handle cache errors gracefully:
+
+```ts
+try {
+  const data = await cache.get('key');
+  // Use data
+} catch (error) {
+  console.error('Cache error:', error);
+  // Fallback to non-cached operation
+}
+```
+
+## API Reference
+
+### `cache.get(key: string): Promise<any | undefined>`
+
+Retrieves a value from the cache by key.
+
+### `cache.set(key: string, value: any, options?: CacheOptions): Promise<void>`
+
+Stores a value in the cache with an optional TTL.
+
+### `cache.del(key: string): Promise<void>`
+
+Deletes a value from the cache.
+
+### `cache.flushNamespace(prefix: string): Promise<void>`
+
+Deletes all keys with a specific prefix.
+
+### `cache.getOrLoad<T>(key: string, loader: () => Promise<T>, options?: CacheOptions): Promise<T>`
+
+Retrieves a value from the cache or loads it using the provided function if not found.
+
+### `setCacheProvider(provider: CacheProvider): void`
+
+Sets the active cache provider.
+
+### `CacheOptions`
+
+```ts
+interface CacheOptions {
+  ttl?: number; // in seconds
+}
+```
+
+### `CacheProvider`
+
+```ts
+interface CacheProvider {
+  get: (key: string) => Promise<any | undefined>;
+  set: (key: string, value: any, options?: CacheOptions) => Promise<void>;
+  del: (key: string) => Promise<void>;
+  flushNamespace?: (prefix: string) => Promise<void>;
+}
+```

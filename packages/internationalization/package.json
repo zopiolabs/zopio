@@ -2,6 +2,14 @@
   "name": "@repo/internationalization",
   "version": "0.0.0",
   "private": true,
+  "description": "Internationalization package for Zopio, including formatters for dates, times, numbers, and currency.",
+  "main": "formatters/index.ts",
+  "types": "formatters/index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": "./formatters/index.ts"
+  },
+  "keywords": ["intl", "date", "number", "currency", "format", "i18n", "zopio"],
   "scripts": {
     "translate": "npx -y languine@latest translate",
     "clean": "git clean -xdf .cache .turbo dist node_modules",

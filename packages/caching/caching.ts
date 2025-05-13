@@ -1,4 +1,4 @@
-import type { CacheProvider } from './types';
+import type { CacheProvider, CacheOptions } from './types';
 import { MemoryCache } from './adapters/memory';
 
 let activeCache: CacheProvider = MemoryCache;
@@ -14,7 +14,9 @@ export const cache = {
   flushNamespace: activeCache.flushNamespace,
   async getOrLoad<T>(key: string, loader: () => Promise<T>, options?: CacheOptions): Promise<T> {
     const existing = await activeCache.get(key);
-    if (existing !== undefined) return existing;
+    if (existing !== undefined) {
+      return existing;
+    }
     const value = await loader();
     await activeCache.set(key, value, options);
     return value;

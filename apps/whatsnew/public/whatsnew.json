@@ -1,3 +1,22 @@
 {
-  "entries": []
+  "items": [
+    {
+      "version": "1.0.0",
+      "date": "May 13, 2025",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "Initial release of Zopio platform"
+        },
+        {
+          "type": "feature",
+          "description": "Added support for Next.js 15.3"
+        },
+        {
+          "type": "improvement",
+          "description": "Resolved OpenTelemetry dependency conflicts for Sentry integration"
+        }
+      ]
+    }
+  ]
 }

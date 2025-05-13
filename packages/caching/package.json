@@ -1,5 +1,5 @@
 {
-  "name": "@zopio/caching",
+  "name": "@repo/caching",
   "version": "0.1.0",
   "main": "./index.ts",
   "types": "./index.ts",
@@ -8,6 +8,8 @@
       "import": "./index.ts"
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "@upstash/redis": "^1.25.1"
+  },
   "peerDependencies": {}
 }

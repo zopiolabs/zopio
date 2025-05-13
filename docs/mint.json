@@ -94,6 +94,7 @@
           "pages": ["packages/analytics/web", "packages/analytics/product"]
         },
         "packages/authentication",
+        "packages/caching",
         "packages/cms",
         "packages/collaboration",
         "packages/cron",

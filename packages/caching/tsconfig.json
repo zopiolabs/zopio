@@ -1,5 +1,8 @@
 {
   "extends": "../../node_modules/@repo/typescript-config/tsconfig.package.json",
-  "compilerOptions": {},
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "incremental": true
+  },
   "include": ["./*.ts", "./adapters/*.ts"]
 }
