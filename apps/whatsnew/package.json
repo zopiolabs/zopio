@@ -10,12 +10,16 @@
   "dependencies": {
     "@repo/design-system": "workspace:*",
     "@repo/observability": "workspace:*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.358.0",
     "next": "15.3.0",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/typography": "^0.5.10",
     "@types/node": "22.14.1",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
