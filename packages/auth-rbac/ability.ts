@@ -1,11 +1,24 @@
 import { AbilityBuilder, createMongoAbility } from '@casl/ability';
-import type { AppAbility, SubjectType, Actions } from './types';
+import type { AppAbility } from './types';
 import { defineRulesFor } from './defineAbility';
 
-export function createAbilityFor(user: any): AppAbility {
+/**
+ * Create an ability instance for a user
+ * 
+ * @param user - Clerk user object with publicMetadata containing roles
+ * @returns AppAbility instance with permissions based on user roles
+ */
+export function createAbilityFor(user: {
+  id?: string;
+  publicMetadata?: { roles?: string[] };
+  [key: string]: unknown;
+} | null): AppAbility {
   const { can, cannot, rules } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
-  defineRulesFor(user, can, cannot);
+  // Extract role from Clerk user metadata
+  const role = user?.publicMetadata?.roles?.[0] || 'guest';
+  
+  defineRulesFor({ id: user?.id || '', role }, can, cannot);
 
   return createMongoAbility(rules);
 }
