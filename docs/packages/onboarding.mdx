@@ -1,0 +1,253 @@
+---
+title: Onboarding
+description: Lightweight wrapper for creating in-app product tours and onboarding flows
+---
+
+# Onboarding
+
+The `@repo/onboarding` package provides a lightweight wrapper around [Reactour](https://github.com/elrumordelaluz/reactour) to deliver in-app product tours and onboarding flows for your Zopio application.
+
+## Features
+
+- Configurable guided tour steps
+- Easy integration with any page
+- Fully client-side compatible
+- Type-safe with TypeScript
+- Customizable styling
+
+## Installation
+
+The package is included in the Zopio monorepo and can be imported directly:
+
+```tsx
+import { UserTourProvider, useUserTour } from '@repo/onboarding';
+```
+
+## Basic Usage
+
+### 1. Wrap Your Application
+
+First, wrap your application or layout component with the `UserTourProvider`:
+
+```tsx
+// In your layout component
+import { UserTourProvider } from '@repo/onboarding';
+
+export default function AppLayout({ children }) {
+  return (
+    <UserTourProvider>
+      {children}
+    </UserTourProvider>
+  );
+}
+```
+
+### 2. Add Tour Targets
+
+Add `data-tour` attributes to the elements you want to highlight in your tour:
+
+```tsx
+<div className="dashboard-header" data-tour="step-1">
+  Dashboard Overview
+</div>
+
+<button className="create-button" data-tour="step-2">
+  Create New Project
+</button>
+```
+
+### 3. Control the Tour
+
+Use the `useUserTour` hook to control the tour programmatically:
+
+```tsx
+import { useUserTour } from '@repo/onboarding';
+
+function WelcomeBanner() {
+  const { setIsOpen, isOpen, currentStep, setCurrentStep } = useUserTour();
+  
+  const startTour = () => {
+    setIsOpen(true);
+  };
+  
+  return (
+    <div className="welcome-banner">
+      <h2>Welcome to Zopio!</h2>
+      <button onClick={startTour}>Take a Tour</button>
+    </div>
+  );
+}
+```
+
+## Customizing Tour Steps
+
+By default, the package uses a set of predefined steps from `defaultTourSteps.ts`. You can create your own custom steps:
+
+```tsx
+// In your custom-steps.ts file
+import { TourStep } from '@repo/onboarding';
+
+export const customSteps: TourStep[] = [
+  {
+    selector: '[data-tour="dashboard"]',
+    content: 'This is your dashboard with all important metrics.',
+  },
+  {
+    selector: '[data-tour="analytics"]',
+    content: 'View detailed analytics about your projects here.',
+  },
+  {
+    selector: '[data-tour="settings"]',
+    content: 'Configure your account settings from this menu.',
+    position: 'left', // Optional positioning
+  },
+];
+```
+
+Then use your custom steps with a custom provider:
+
+```tsx
+// In your custom-tour-provider.tsx
+import { TourProvider } from '@reactour/tour';
+import { customSteps } from './custom-steps';
+
+export function CustomTourProvider({ children }) {
+  return (
+    <TourProvider 
+      steps={customSteps} 
+      showCloseButton 
+      maskClassName="bg-black/40"
+    >
+      {children}
+    </TourProvider>
+  );
+}
+```
+
+## Advanced Usage
+
+### Conditional Tours
+
+You can conditionally show tours based on user state:
+
+```tsx
+import { useUserTour } from '@repo/onboarding';
+import { useEffect } from 'react';
+import { useUser } from '@repo/auth';
+
+function NewUserTour() {
+  const { setIsOpen } = useUserTour();
+  const { user, isLoading } = useUser();
+  
+  useEffect(() => {
+    // Only show the tour for new users
+    if (!isLoading && user && user.isNewUser) {
+      setIsOpen(true);
+    }
+  }, [user, isLoading, setIsOpen]);
+  
+  return null; // This component doesn't render anything
+}
+```
+
+### Multi-page Tours
+
+For tours that span multiple pages:
+
+1. Save the current tour state in localStorage or a state management solution
+2. Resume the tour on each page by setting the appropriate step
+
+```tsx
+import { useUserTour } from '@repo/onboarding';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+function MultiPageTour() {
+  const { setIsOpen, setCurrentStep } = useUserTour();
+  const router = useRouter();
+  
+  useEffect(() => {
+    // Check if we're continuing a tour
+    const tourState = localStorage.getItem('tourState');
+    
+    if (tourState) {
+      const { currentPage, currentStep } = JSON.parse(tourState);
+      
+      // If we're on the right page, resume the tour
+      if (currentPage === router.pathname) {
+        setCurrentStep(currentStep);
+        setIsOpen(true);
+      }
+    }
+  }, [router.pathname, setIsOpen, setCurrentStep]);
+  
+  return null;
+}
+```
+
+## Styling
+
+The tour uses Tailwind CSS classes by default. You can customize the appearance by providing your own classes to the `TourProvider`:
+
+```tsx
+<TourProvider
+  steps={steps}
+  showCloseButton
+  maskClassName="bg-indigo-900/30" // Custom mask background
+  className="rounded-xl shadow-xl" // Custom tooltip styles
+  contentClassName="p-6" // Custom content padding
+>
+  {children}
+</TourProvider>
+```
+
+## API Reference
+
+### Components
+
+#### `UserTourProvider`
+
+The main provider component that wraps your application.
+
+```tsx
+<UserTourProvider>
+  {children}
+</UserTourProvider>
+```
+
+### Hooks
+
+#### `useUserTour()`
+
+A hook that provides access to the tour state and controls.
+
+**Returns:**
+
+- `isOpen: boolean` - Whether the tour is currently open
+- `setIsOpen: (open: boolean) => void` - Function to open or close the tour
+- `currentStep: number` - The current step index
+- `setCurrentStep: (step: number) => void` - Function to jump to a specific step
+
+### Types
+
+#### `TourStep`
+
+Represents a single step in the tour.
+
+```ts
+interface TourStep {
+  selector: string;       // CSS selector for the target element
+  content: string;        // Content to display in the tooltip
+  position?: string;      // Optional position (top, right, bottom, left)
+  action?: () => void;    // Optional action to perform when the step is shown
+  stepInteraction?: boolean; // Whether to allow interaction with the target
+}
+```
+
+## Best Practices
+
+1. **Keep Tour Steps Focused**: Each step should highlight one feature or concept
+2. **Use Clear, Concise Content**: Keep tooltip content brief and to the point
+3. **Test on All Screen Sizes**: Ensure your tour works well on mobile devices
+4. **Provide Skip Option**: Always allow users to skip or exit the tour
+5. **Save Tour Progress**: For multi-page tours, save progress to avoid repetition

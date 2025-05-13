@@ -1,13 +1,24 @@
 {
-  "name": "@zopio/runtime-adapter",
+  "name": "@repo/runtime-adapter",
   "version": "0.1.0",
+  "type": "module",
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
     ".": {
       "import": "./index.ts"
+    },
+    "./adapters/node": {
+      "import": "./adapters/node.ts"
+    },
+    "./adapters/next": {
+      "import": "./adapters/next.ts"
+    },
+    "./utils/logger": {
+      "import": "./utils/logger.ts"
     }
   },
   "dependencies": {},
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "description": "Abstraction layer for runtime-specific logic in applications"
 }

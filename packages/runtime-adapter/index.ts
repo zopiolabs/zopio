@@ -1,3 +1,3 @@
-export * from './types';
-export * from './createRuntimeAdapter';
-export * from './getRuntimeAdapter';
+export * from './types.js';
+export * from './createRuntimeAdapter.js';
+export * from './getRuntimeAdapter.js';

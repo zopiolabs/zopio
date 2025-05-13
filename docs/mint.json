@@ -110,6 +110,7 @@
           ]
         },
         "packages/email",
+        "packages/event-bus",
         "packages/flags",
         "packages/formatting",
         "packages/internationalization",
@@ -130,7 +131,11 @@
           ]
         },
         "packages/notifications",
+        "packages/onboarding",
         "packages/payments",
+        "packages/plugin-runtime",
+        "packages/queue",
+        "packages/runtime-adapter",
         {
           "group": "Security",
           "pages": [
@@ -141,6 +146,7 @@
             "packages/security/ip-geolocation"
           ]
         },
+        "packages/token",
         {
           "group": "SEO",
           "pages": [

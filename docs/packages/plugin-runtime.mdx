@@ -1,0 +1,255 @@
+---
+title: Plugin Runtime
+description: Lightweight plugin system for Zopio applications
+---
+
+# Plugin Runtime
+
+The `@repo/plugin-runtime` package provides a lightweight plugin system for Zopio applications, allowing you to extend functionality through a simple, consistent plugin architecture.
+
+## Features
+
+- Simple plugin registration and loading
+- Asynchronous plugin initialization
+- Type-safe plugin definitions
+- Error handling for plugin loading and initialization
+- Support for dynamic imports
+
+## Installation
+
+The package is included in the Zopio monorepo and can be imported directly:
+
+```ts
+import { PluginRegistry, loadPluginsFromConfig } from '@repo/plugin-runtime';
+```
+
+## Basic Usage
+
+### Creating a Plugin
+
+A plugin is a module that exports a default object implementing the `PluginDefinition` interface:
+
+```ts
+// my-plugin.ts
+import type { PluginDefinition } from '@repo/plugin-runtime';
+
+const myPlugin: PluginDefinition = {
+  id: 'my-plugin',
+  name: 'My Plugin',
+  description: 'Adds custom functionality to the application',
+  
+  // Called when the plugin is loaded
+  setup: async () => {
+    // Initialize your plugin here
+    console.log('My plugin is initialized');
+  },
+  
+  // Optional: Called when the plugin is unloaded
+  teardown: async () => {
+    // Clean up resources
+    console.log('My plugin is being unloaded');
+  }
+};
+
+export default myPlugin;
+```
+
+### Loading Plugins
+
+You can load plugins using the `loadPluginsFromConfig` function:
+
+```ts
+import { loadPluginsFromConfig } from '@repo/plugin-runtime';
+
+const pluginConfigs = [
+  {
+    id: 'my-plugin',
+    path: './plugins/my-plugin',
+    enabled: true
+  },
+  {
+    id: 'another-plugin',
+    path: './plugins/another-plugin',
+    enabled: process.env.NODE_ENV === 'development' // Conditionally enable
+  }
+];
+
+// Load all enabled plugins
+await loadPluginsFromConfig(pluginConfigs);
+```
+
+### Accessing Plugins
+
+You can access registered plugins through the `PluginRegistry`:
+
+```ts
+import { PluginRegistry } from '@repo/plugin-runtime';
+
+// Get a specific plugin by ID
+const myPlugin = PluginRegistry.get('my-plugin');
+if (myPlugin) {
+  // Use the plugin
+}
+
+// Get all registered plugins
+const allPlugins = PluginRegistry.getAll();
+console.log(`Loaded ${allPlugins.length} plugins`);
+```
+
+## Advanced Usage
+
+### Plugin Dependencies
+
+You can implement plugin dependencies by having one plugin check for the existence of another:
+
+```ts
+const myPluginWithDependency: PluginDefinition = {
+  id: 'dependent-plugin',
+  name: 'Dependent Plugin',
+  
+  setup: async () => {
+    const dependency = PluginRegistry.get('required-plugin');
+    if (!dependency) {
+      throw new Error('Required plugin is not loaded');
+    }
+    
+    // Continue with setup using the dependency
+  }
+};
+```
+
+### Plugin Configuration
+
+You can extend the plugin system to support configuration:
+
+```ts
+// Extended plugin definition with configuration
+interface ConfigurablePluginDefinition extends PluginDefinition {
+  configure: (config: Record<string, any>) => void;
+}
+
+// Usage
+const configurablePlugin: ConfigurablePluginDefinition = {
+  id: 'configurable-plugin',
+  name: 'Configurable Plugin',
+  
+  configure: (config) => {
+    // Apply configuration
+    this.apiKey = config.apiKey;
+    this.endpoint = config.endpoint;
+  },
+  
+  setup: async () => {
+    // Use configuration during setup
+    if (!this.apiKey) {
+      throw new Error('API key not configured');
+    }
+    
+    // Initialize with configuration
+  }
+};
+```
+
+### Dynamic Plugin Discovery
+
+You can implement dynamic plugin discovery by scanning directories:
+
+```ts
+import { readdir } from 'fs/promises';
+import { join } from 'path';
+import { loadPluginsFromConfig } from '@repo/plugin-runtime';
+
+async function discoverAndLoadPlugins(pluginsDir: string) {
+  // Scan the plugins directory
+  const entries = await readdir(pluginsDir, { withFileTypes: true });
+  
+  // Create plugin configs for each directory
+  const pluginConfigs = entries
+    .filter(entry => entry.isDirectory())
+    .map(dir => ({
+      id: dir.name,
+      path: join(pluginsDir, dir.name),
+      enabled: true
+    }));
+  
+  // Load the discovered plugins
+  await loadPluginsFromConfig(pluginConfigs);
+}
+
+// Usage
+await discoverAndLoadPlugins('./plugins');
+```
+
+## Error Handling
+
+The plugin runtime includes built-in error handling to prevent plugin failures from affecting the entire application:
+
+```ts
+import { loadPluginsFromConfig } from '@repo/plugin-runtime';
+
+try {
+  await loadPluginsFromConfig(pluginConfigs);
+  console.log('Plugins loaded successfully');
+} catch (error) {
+  console.error('Failed to load plugins:', error);
+  // Application can continue without plugins
+}
+```
+
+Individual plugin failures are logged but don't prevent other plugins from loading.
+
+## API Reference
+
+### `PluginDefinition`
+
+The core interface that all plugins must implement:
+
+```ts
+interface PluginDefinition {
+  id: string;              // Unique identifier for the plugin
+  name: string;            // Display name for the plugin
+  description?: string;    // Optional description
+  setup: () => void | Promise<void>;  // Called when plugin is loaded
+  teardown?: () => void | Promise<void>; // Optional cleanup function
+}
+```
+
+### `PluginRegistry`
+
+A static registry for managing plugins:
+
+#### `PluginRegistry.register(plugin: PluginDefinition): void`
+
+Registers a plugin in the registry.
+
+#### `PluginRegistry.get(id: string): PluginDefinition | undefined`
+
+Retrieves a plugin by its ID.
+
+#### `PluginRegistry.getAll(): PluginDefinition[]`
+
+Returns all registered plugins.
+
+### `PluginConfig`
+
+Configuration for loading a plugin:
+
+```ts
+interface PluginConfig {
+  id: string;      // Unique identifier
+  path: string;    // Path to the plugin module
+  enabled: boolean; // Whether the plugin is enabled
+}
+```
+
+### `loadPluginsFromConfig(config: PluginConfig[]): Promise<void>`
+
+Loads plugins based on the provided configuration.
+
+## Best Practices
+
+1. **Unique Plugin IDs**: Ensure each plugin has a unique ID to avoid conflicts
+2. **Error Handling**: Implement proper error handling in your plugins
+3. **Async/Await**: Use async/await for asynchronous operations in setup and teardown
+4. **Plugin Isolation**: Design plugins to be self-contained and avoid tight coupling
+5. **Versioning**: Consider adding version information to your plugins for compatibility checks

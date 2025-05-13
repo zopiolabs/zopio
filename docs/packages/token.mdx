@@ -1,0 +1,320 @@
+---
+title: Token
+description: Lightweight token generation and verification for secure data exchange
+---
+
+# Token
+
+The `@repo/token` package provides a lightweight solution for generating and verifying tokens for secure data exchange between systems. It offers a simple, secure way to create and validate tokens with customizable payloads, expiration times, and purpose validation.
+
+## Features
+
+- Simple token generation with customizable payloads
+- Expiration time support
+- Purpose-based token validation
+- Type-safe interfaces
+- Detailed error handling with specific error types
+- No external dependencies
+
+## Installation
+
+The package is included in the Zopio monorepo and can be imported directly:
+
+```ts
+import { createToken, verifyToken } from '@repo/token';
+```
+
+## Basic Usage
+
+### Creating Tokens
+
+Create tokens with a payload that includes a purpose and any additional data:
+
+```ts
+import { createToken } from '@repo/token';
+
+// Create a token for password reset that expires in 1 hour (3600 seconds)
+const token = createToken(
+  { 
+    purpose: 'reset-password', 
+    userId: '123456',
+    email: 'user@example.com'
+  }, 
+  { expiresIn: 3600 }
+);
+
+// Send the token to the user (e.g., via email)
+sendPasswordResetEmail(email, token);
+```
+
+### Verifying Tokens
+
+Verify tokens and extract their payload:
+
+```ts
+import { verifyToken, TokenVerificationError, TokenVerificationErrorType } from '@repo/token';
+
+try {
+  // Verify the token and ensure it was created for password reset
+  const payload = verifyToken(token, 'reset-password');
+  
+  // Token is valid, extract data from payload
+  const { userId, email } = payload;
+  
+  // Process the password reset
+  resetUserPassword(userId);
+} catch (error) {
+  if (error instanceof TokenVerificationError) {
+    switch (error.type) {
+      case TokenVerificationErrorType.EXPIRED:
+        // Handle expired token
+        console.error('Token has expired');
+        break;
+      case TokenVerificationErrorType.INVALID_PURPOSE:
+        // Handle invalid purpose
+        console.error('Invalid token purpose');
+        break;
+      case TokenVerificationErrorType.INVALID_FORMAT:
+      case TokenVerificationErrorType.DECODE_ERROR:
+        // Handle invalid token format
+        console.error('Invalid token format');
+        break;
+    }
+  }
+}
+```
+
+## Advanced Usage
+
+### Custom Token Expiration
+
+You can customize token expiration times based on your security requirements:
+
+```ts
+// Short-lived token (5 minutes)
+const shortLivedToken = createToken(
+  { purpose: 'email-verification', userId: '123' },
+  { expiresIn: 300 } // 5 minutes
+);
+
+// Long-lived token (30 days)
+const longLivedToken = createToken(
+  { purpose: 'remember-me', userId: '123' },
+  { expiresIn: 2592000 } // 30 days
+);
+
+// Non-expiring token (use with caution)
+const nonExpiringToken = createToken(
+  { purpose: 'api-key', clientId: '123' },
+  { includeStandardClaims: false }
+);
+```
+
+### Type-Safe Payload Handling
+
+Use TypeScript generics for type-safe payload handling:
+
+```ts
+interface UserTokenPayload {
+  purpose: string;
+  userId: string;
+  role: 'admin' | 'user';
+  permissions: string[];
+  iat?: number;
+  exp?: number;
+}
+
+// Create a token with typed payload
+const token = createToken<UserTokenPayload>({
+  purpose: 'authentication',
+  userId: '123',
+  role: 'admin',
+  permissions: ['read', 'write', 'delete']
+}, { expiresIn: 3600 });
+
+// Verify and extract typed payload
+try {
+  const payload = verifyToken<UserTokenPayload>(token);
+  
+  // TypeScript knows the shape of the payload
+  const { userId, role, permissions } = payload;
+  
+  if (role === 'admin' && permissions.includes('delete')) {
+    // Allow admin operation
+  }
+} catch (error) {
+  // Handle verification error
+}
+```
+
+## Use Cases
+
+### Authentication Tokens
+
+Create tokens for user authentication:
+
+```ts
+const authToken = createToken({
+  purpose: 'authentication',
+  userId: user.id,
+  sessionId: session.id
+}, { expiresIn: 86400 }); // 24 hours
+
+// Store in cookie or localStorage
+setCookie('auth_token', authToken);
+```
+
+### Password Reset Tokens
+
+Generate secure tokens for password reset flows:
+
+```ts
+const resetToken = createToken({
+  purpose: 'reset-password',
+  userId: user.id,
+  email: user.email
+}, { expiresIn: 3600 }); // 1 hour
+
+// Create reset URL with token
+const resetUrl = `https://example.com/reset-password?token=${resetToken}`;
+```
+
+### Email Verification
+
+Create tokens for email verification:
+
+```ts
+const verificationToken = createToken({
+  purpose: 'verify-email',
+  userId: user.id,
+  email: user.email
+}, { expiresIn: 86400 * 3 }); // 3 days
+
+// Create verification URL with token
+const verificationUrl = `https://example.com/verify-email?token=${verificationToken}`;
+```
+
+### Invitation Links
+
+Generate invitation tokens:
+
+```ts
+const inviteToken = createToken({
+  purpose: 'team-invite',
+  teamId: team.id,
+  role: 'member',
+  invitedBy: currentUser.id
+}, { expiresIn: 604800 }); // 7 days
+
+// Create invitation URL with token
+const inviteUrl = `https://example.com/join-team?token=${inviteToken}`;
+```
+
+## API Reference
+
+### Interfaces
+
+#### `TokenPayload`
+
+The base interface for token payloads:
+
+```ts
+interface TokenPayload {
+  /** Identifies the purpose of the token (e.g., 'reset-password', 'invite', etc.) */
+  purpose: string;
+  /** Unix timestamp (seconds) when the token was issued */
+  iat?: number;
+  /** Unix timestamp (seconds) when the token expires */
+  exp?: number;
+  /** Additional custom properties */
+  [key: string]: unknown;
+}
+```
+
+#### `TokenOptions`
+
+Options for token creation:
+
+```ts
+interface TokenOptions {
+  /** Token expiration time in seconds from now */
+  expiresIn?: number;
+  /** Whether to include standard JWT claims (iat, exp) */
+  includeStandardClaims?: boolean;
+}
+```
+
+### Functions
+
+#### `createToken(payload, options?): string`
+
+Creates a token with the given payload and options.
+
+**Parameters:**
+- `payload`: The data to include in the token (must include a `purpose` property)
+- `options` (optional): Configuration options for the token
+
+**Returns:**
+- A base64url encoded token string
+
+#### `verifyToken(token, expectedPurpose?): TokenPayload`
+
+Verifies a token and returns its payload.
+
+**Parameters:**
+- `token`: The token string to verify
+- `expectedPurpose` (optional): Purpose to validate against
+
+**Returns:**
+- The decoded token payload
+
+**Throws:**
+- `TokenVerificationError`: If the token is invalid or expired
+
+### Error Handling
+
+#### `TokenVerificationErrorType`
+
+Constants for verification error types:
+
+```ts
+const TokenVerificationErrorType = {
+  INVALID_FORMAT: 'invalid_format',
+  EXPIRED: 'expired',
+  INVALID_PURPOSE: 'invalid_purpose',
+  DECODE_ERROR: 'decode_error'
+} as const;
+```
+
+#### `TokenVerificationError`
+
+Custom error class for token verification failures:
+
+```ts
+class TokenVerificationError extends Error {
+  type: TokenVerificationErrorType;
+  
+  constructor(message: string, type: TokenVerificationErrorType) {
+    super(message);
+    this.name = 'TokenVerificationError';
+    this.type = type;
+  }
+}
+```
+
+## Best Practices
+
+1. **Always Include Purpose**: Always specify a clear purpose for each token to ensure proper validation
+2. **Set Appropriate Expiration**: Use the shortest expiration time that makes sense for your use case
+3. **Use Purpose Validation**: Always validate the token purpose when verifying tokens
+4. **Handle Errors Properly**: Implement proper error handling for all possible verification errors
+5. **Secure Token Transmission**: Always transmit tokens over secure channels (HTTPS)
+6. **Don't Store Sensitive Data**: Avoid storing highly sensitive data in tokens, as they are only encoded, not encrypted
+7. **Type Safety**: Use TypeScript interfaces to ensure type safety when working with token payloads
+
+## Security Considerations
+
+- Tokens are encoded using base64url, not encrypted. Do not include sensitive information that shouldn't be decoded.
+- Always validate the token purpose to prevent token reuse across different systems.
+- Set appropriate expiration times based on the sensitivity of the operation.
+- For highly sensitive operations, consider adding additional validation beyond just token verification.

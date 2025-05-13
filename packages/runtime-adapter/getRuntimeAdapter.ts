@@ -1,5 +1,5 @@
-import { NextRuntimeAdapter } from './adapters/next';
-import type { RuntimeAdapter } from './types';
+import { NextRuntimeAdapter } from './adapters/next.js';
+import type { RuntimeAdapter } from './types.js';
 
 let current: RuntimeAdapter = NextRuntimeAdapter;
 

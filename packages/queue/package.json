@@ -1,7 +1,8 @@
 {
   "name": "@repo/queue",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
     "start:worker": "ts-node workers/generateReportWorker.ts"
   },
@@ -10,5 +11,8 @@
     "redis": "^4.6.7",
     "@bull-board/api": "^5.7.1",
     "@bull-board/express": "^5.7.1"
+  },
+  "peerDependencies": {
+    "express": "^4.18.0"
   }
 }

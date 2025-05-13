@@ -1,0 +1,219 @@
+---
+title: Event Bus
+description: Lightweight internal event bus for Zopio core modules and plugins
+---
+
+# Event Bus
+
+The `@repo/event-bus` package provides a lightweight internal event bus system for communication between Zopio core modules and plugins. It enables decoupled, event-driven architecture within your application.
+
+## Features
+
+- Simple and consistent API for event handling
+- Type-safe event handling with TypeScript generics
+- Support for one-time event listeners
+- Async event handling with Promise support
+- Built-in constants for common core events
+
+## Installation
+
+The package is included in the Zopio monorepo and can be imported directly:
+
+```ts
+import { EventBusInstance, CoreEvents } from '@repo/event-bus';
+```
+
+## Basic Usage
+
+### Subscribing to Events
+
+```ts
+import { EventBusInstance, CoreEvents } from '@repo/event-bus';
+
+// Listen for a specific event
+EventBusInstance.on(CoreEvents.USER_CREATED, (payload) => {
+  console.log('A new user was created:', payload);
+});
+```
+
+### Publishing Events
+
+```ts
+import { EventBusInstance, CoreEvents } from '@repo/event-bus';
+
+// Emit an event with payload data
+await EventBusInstance.emit(CoreEvents.USER_CREATED, {
+  id: 'user_123',
+  email: 'user@example.com',
+  name: 'New User'
+});
+```
+
+### One-time Event Listeners
+
+```ts
+import { EventBusInstance, CoreEvents } from '@repo/event-bus';
+
+// Listen for an event only once
+EventBusInstance.once(CoreEvents.AUTH_FAILED, (payload) => {
+  console.log('Authentication failed:', payload);
+  // This handler will be automatically removed after execution
+});
+```
+
+### Unsubscribing from Events
+
+```ts
+import { EventBusInstance, CoreEvents } from '@repo/event-bus';
+
+const handler = (payload) => {
+  console.log('Cache invalidated:', payload);
+};
+
+// Subscribe to an event
+EventBusInstance.on(CoreEvents.CACHE_INVALIDATED, handler);
+
+// Later, unsubscribe from the event
+EventBusInstance.off(CoreEvents.CACHE_INVALIDATED, handler);
+```
+
+## Type-Safe Events
+
+The event bus supports TypeScript generics for type-safe event handling:
+
+```ts
+import { EventBusInstance, CoreEvents } from '@repo/event-bus';
+
+// Define event payload types
+type UserCreatedEvent = {
+  id: string;
+  email: string;
+  name: string;
+};
+
+type AuthFailedEvent = {
+  username: string;
+  reason: string;
+  attempts: number;
+};
+
+// Type-safe event handlers
+EventBusInstance.on<UserCreatedEvent>(CoreEvents.USER_CREATED, (user) => {
+  // TypeScript knows the shape of 'user'
+  console.log(`Welcome ${user.name}! Verification email sent to ${user.email}`);
+});
+
+EventBusInstance.on<AuthFailedEvent>(CoreEvents.AUTH_FAILED, (authData) => {
+  console.log(`Failed login for ${authData.username}: ${authData.reason}`);
+  console.log(`Attempts: ${authData.attempts}`);
+});
+```
+
+## Core Events
+
+The package provides constants for common core events:
+
+```ts
+import { CoreEvents } from '@repo/event-bus';
+
+// Available core events
+CoreEvents.USER_CREATED     // 'user.created'
+CoreEvents.AUTH_FAILED      // 'auth.failed'
+CoreEvents.CACHE_INVALIDATED // 'cache.invalidated'
+```
+
+## Custom Events
+
+You can define and use custom events by simply using string identifiers:
+
+```ts
+import { EventBusInstance } from '@repo/event-bus';
+
+// Define custom event types
+type ProductPurchasedEvent = {
+  productId: string;
+  userId: string;
+  amount: number;
+};
+
+// Use custom event
+const PRODUCT_PURCHASED = 'product.purchased';
+
+EventBusInstance.on<ProductPurchasedEvent>(PRODUCT_PURCHASED, (purchase) => {
+  console.log(`User ${purchase.userId} purchased product ${purchase.productId} for $${purchase.amount}`);
+});
+
+await EventBusInstance.emit(PRODUCT_PURCHASED, {
+  productId: 'prod_123',
+  userId: 'user_456',
+  amount: 29.99
+});
+```
+
+## Best Practices
+
+### Event Naming Conventions
+
+Use dot notation for event names to create namespaces:
+
+```ts
+// Good event names
+'user.created'
+'user.updated'
+'user.deleted'
+'payment.succeeded'
+'payment.failed'
+```
+
+### Error Handling
+
+Always handle errors in your event handlers to prevent unhandled promise rejections:
+
+```ts
+EventBusInstance.on('important.event', async (payload) => {
+  try {
+    await processData(payload);
+  } catch (error) {
+    console.error('Error processing event:', error);
+    // Handle the error appropriately
+  }
+});
+```
+
+### Memory Management
+
+Remember to unsubscribe from events when they're no longer needed, especially in components with shorter lifecycles:
+
+```ts
+// In a component initialization
+const handler = (data) => { /* ... */ };
+EventBusInstance.on('some.event', handler);
+
+// In component cleanup/destruction
+EventBusInstance.off('some.event', handler);
+```
+
+## API Reference
+
+### `EventBusInstance.on<T>(event: string, handler: EventHandler<T>): void`
+
+Subscribes a handler function to an event.
+
+### `EventBusInstance.off<T>(event: string, handler: EventHandler<T>): void`
+
+Unsubscribes a handler function from an event.
+
+### `EventBusInstance.once<T>(event: string, handler: EventHandler<T>): void`
+
+Subscribes a one-time handler function to an event. The handler will be automatically removed after execution.
+
+### `EventBusInstance.emit<T>(event: string, payload: T): Promise<void>`
+
+Publishes an event with a payload. Returns a Promise that resolves when all handlers have completed.
+
+### `CoreEvents`
+
+Constants for common core events:
+- `USER_CREATED`: Triggered when a new user is created
+- `AUTH_FAILED`: Triggered when authentication fails
+- `CACHE_INVALIDATED`: Triggered when cache is invalidated

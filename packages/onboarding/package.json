@@ -5,8 +5,7 @@
   "main": "index.ts",
   "types": "index.ts",
   "dependencies": {
-    "@reactour/tour": "^3.3.1",
-    "react": "^18.2.0"
+    "@reactour/tour": "^3.3.1"
   },
   "peerDependencies": {
     "react": "^18.2.0",

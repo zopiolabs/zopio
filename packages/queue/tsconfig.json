@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "incremental": true
+    "incremental": true,
+    "esModuleInterop": true
   },
-  "include": ["./*.ts", "./adapters/*.ts", "./utils/*.ts"]
+  "include": ["./**/*.ts"]
 }

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "incremental": true
+    "incremental": true,
+    "jsx": "react-jsx"
   },
-  "include": ["./*.ts", "./adapters/*.ts", "./utils/*.ts"]
+  "include": ["./**/*.ts", "./**/*.tsx"]
 }

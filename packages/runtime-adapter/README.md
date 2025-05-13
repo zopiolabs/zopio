@@ -1,4 +1,4 @@
-# @zopio/runtime-adapter
+# @repo/runtime-adapter
 
 Abstraction layer for runtime-specific logic in Zopio applications.
 
@@ -11,7 +11,7 @@ Abstraction layer for runtime-specific logic in Zopio applications.
 ## Usage
 
 ```ts
-import { getRuntimeAdapter } from '@zopio/runtime-adapter';
+import { getRuntimeAdapter } from '@repo/runtime-adapter';
 
 const adapter = getRuntimeAdapter();
 const ip = adapter.getIp();

@@ -1,0 +1,396 @@
+---
+title: Runtime Adapter
+description: Abstraction layer for runtime-specific APIs in different JavaScript environments
+---
+
+# Runtime Adapter
+
+The `@repo/runtime-adapter` package provides an abstraction layer for accessing runtime-specific APIs (like cookies, headers, and IP addresses) across different JavaScript environments such as Next.js and Node.js.
+
+## Features
+
+- Unified API for accessing request data
+- Environment-specific adapters (Next.js, Node.js)
+- Type-safe interfaces with comprehensive JSDoc documentation
+- Robust error handling and graceful fallbacks
+- Easy switching between runtime environments
+- Extensible for custom environments
+- Cross-environment compatibility
+
+## Installation
+
+The package is included in the Zopio monorepo and can be imported directly:
+
+```ts
+import { getRuntimeAdapter } from '@repo/runtime-adapter';
+```
+
+## Basic Usage
+
+### Accessing the Current Runtime Adapter
+
+The package automatically detects and provides the appropriate adapter for your environment:
+
+```ts
+import { getRuntimeAdapter } from '@repo/runtime-adapter';
+
+// Get the current runtime adapter
+const runtime = getRuntimeAdapter();
+
+// Access runtime-specific information
+const userCookie = runtime.getCookie('user_session');
+const userAgent = runtime.getHeader('user-agent');
+const clientIp = runtime.getIp();
+const requestContext = runtime.getRequestContext();
+```
+
+### Available Methods
+
+The runtime adapter provides the following methods:
+
+```ts
+// Get a cookie value
+const sessionId = runtime.getCookie('session_id');
+
+// Get a request header
+const contentType = runtime.getHeader('content-type');
+
+// Get the client IP address
+const ipAddress = runtime.getIp();
+
+// Get additional request context
+const { method, url } = runtime.getRequestContext();
+```
+
+## Environment-Specific Adapters
+
+### Next.js Adapter
+
+The Next.js adapter is used automatically in Next.js applications and uses the Next.js App Router APIs:
+
+```ts
+import { NextRuntimeAdapter } from '@repo/runtime-adapter/adapters/next';
+
+// The adapter uses Next.js App Router APIs:
+// - cookies() from 'next/headers'
+// - headers() from 'next/headers'
+```
+
+### Node.js Adapter
+
+For Node.js HTTP server environments, you can create a Node.js adapter:
+
+```ts
+import { createNodeRuntimeAdapter } from '@repo/runtime-adapter/adapters/node';
+import type { IncomingMessage } from 'node:http';
+
+// Create a Node.js adapter from an HTTP request
+const nodeAdapter = createNodeRuntimeAdapter(req);
+
+// Use the adapter
+const authHeader = nodeAdapter.getHeader('authorization');
+```
+
+## Advanced Usage
+
+### Setting a Custom Runtime Adapter
+
+You can set a custom runtime adapter for your application:
+
+```ts
+import { setRuntimeAdapter } from '@repo/runtime-adapter';
+import type { RuntimeAdapter } from '@repo/runtime-adapter';
+
+// Create a custom adapter
+const customAdapter: RuntimeAdapter = {
+  getCookie: (key) => {
+    // Custom implementation
+    return localStorage.getItem(`cookie_${key}`);
+  },
+  getHeader: (key) => {
+    // Custom implementation
+    return customHeaders[key];
+  },
+  getIp: () => {
+    // Custom implementation
+    return '127.0.0.1';
+  },
+  getRequestContext: () => {
+    // Custom implementation
+    return {
+      method: 'GET',
+      environment: 'custom'
+    };
+  }
+};
+
+// Set the custom adapter as the current runtime adapter
+setRuntimeAdapter(customAdapter);
+```
+
+### Creating a Runtime Adapter Factory
+
+You can create a factory function to generate runtime adapters:
+
+```ts
+import { createRuntimeAdapter } from '@repo/runtime-adapter';
+import type { RuntimeAdapter } from '@repo/runtime-adapter';
+
+function createBrowserAdapter(): RuntimeAdapter {
+  return createRuntimeAdapter({
+    getCookie: (key) => {
+      // Parse document.cookie
+      const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+        const [k, v] = cookie.trim().split('=');
+        return { ...acc, [k]: v };
+      }, {});
+      
+      return cookies[key];
+    },
+    getHeader: () => undefined, // Headers not accessible in browser
+    getIp: () => undefined, // IP not accessible in browser
+    getRequestContext: () => ({
+      userAgent: navigator.userAgent,
+      language: navigator.language
+    })
+  });
+}
+
+// Use the factory
+const browserAdapter = createBrowserAdapter();
+```
+
+## Integration Examples
+
+### With API Routes
+
+```ts
+// In a Next.js API route
+import { createNodeRuntimeAdapter } from '@repo/runtime-adapter/adapters/node';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const runtime = createNodeRuntimeAdapter(req);
+  
+  // Get authentication token
+  const token = runtime.getHeader('authorization')?.replace('Bearer ', '');
+  
+  // Get user session
+  const sessionId = runtime.getCookie('session_id');
+  
+  // Get client IP for rate limiting
+  const clientIp = runtime.getIp();
+  
+  // Process the request...
+}
+```
+
+### With Server Components
+
+```tsx
+// In a Next.js Server Component
+import { getRuntimeAdapter } from '@repo/runtime-adapter';
+
+export default async function UserProfile() {
+  const runtime = getRuntimeAdapter();
+  const sessionCookie = runtime.getCookie('session');
+  
+  // Fetch user data based on session
+  const userData = sessionCookie 
+    ? await fetchUserData(sessionCookie)
+    : null;
+  
+  return (
+    <div>
+      {userData ? (
+        <h1>Welcome, {userData.name}</h1>
+      ) : (
+        <h1>Please log in</h1>
+      )}
+    </div>
+  );
+}
+```
+
+## Error Handling and Logging
+
+The runtime-adapter package includes a built-in logging utility to help with debugging and error handling. This is particularly useful when working with adapters across different environments where APIs might not be available.
+
+### Using the Logger
+
+```ts
+import { logger } from '@repo/runtime-adapter/utils/logger';
+
+// Log messages at different levels
+logger.debug('Debug message with details:', { data: 'value' });
+logger.info('Information about operation');
+logger.warn('Warning about potential issue');
+logger.error('Error occurred:', new Error('Something went wrong'));
+```
+
+### Creating a Custom Logger
+
+You can create a custom logger with a specific namespace:
+
+```ts
+import { createLogger } from '@repo/runtime-adapter/utils/logger';
+
+// Create a logger for a specific component
+const authLogger = createLogger('auth-service');
+authLogger.info('User authentication successful');
+```
+
+### Environment-Aware Logging
+
+The logger is environment-aware and will only show appropriate logs based on the environment:
+
+- In development: All log levels are shown
+- In production: Only warnings and errors are shown
+
+### Cross-Environment Compatibility
+
+All adapters are designed to work safely across environments with graceful fallbacks:
+
+```ts
+// This works safely even if Next.js APIs aren't available
+import { NextRuntimeAdapter } from '@repo/runtime-adapter';
+
+// In a non-Next.js environment, this will return undefined instead of throwing
+const cookie = NextRuntimeAdapter.getCookie('session');
+```
+
+## API Reference
+
+### Interfaces
+
+#### `RuntimeAdapter`
+
+The core interface that defines the runtime adapter API:
+
+```ts
+interface RuntimeAdapter {
+  getCookie: (key: string) => string | undefined;
+  getHeader: (key: string) => string | undefined;
+  getIp: () => string | undefined;
+  getRequestContext: () => RequestContext;
+}
+```
+
+#### `RequestContext`
+
+Interface for request context information:
+
+```ts
+interface RequestContext {
+  method?: string;
+  url?: string;
+  httpVersion?: string;
+  headers?: Record<string, unknown>;
+  remoteAddress?: string;
+  [key: string]: unknown;
+}
+```
+
+#### `Logger`
+
+Interface for the logging utility:
+
+```ts
+interface Logger {
+  debug(message: string, ...args: unknown[]): void;
+  info(message: string, ...args: unknown[]): void;
+  warn(message: string, ...args: unknown[]): void;
+  error(message: string, ...args: unknown[]): void;
+}
+```
+
+### Functions
+
+#### `getRuntimeAdapter(): RuntimeAdapter`
+
+Returns the current runtime adapter.
+
+#### `setRuntimeAdapter(adapter: RuntimeAdapter): void`
+
+Sets the current runtime adapter.
+
+#### `createRuntimeAdapter(adapter: RuntimeAdapter): RuntimeAdapter`
+
+Creates a new runtime adapter instance.
+
+#### `createNodeRuntimeAdapter(req: IncomingMessage): RuntimeAdapter`
+
+Creates a runtime adapter for Node.js HTTP server environments.
+
+#### `createLogger(namespace: string): Logger`
+
+Creates a new logger instance with the specified namespace.
+
+### Constants
+
+#### `NextRuntimeAdapter: RuntimeAdapter`
+
+Pre-configured adapter for Next.js environments.
+
+#### `logger: Logger`
+
+Default logger instance for the runtime-adapter package.
+
+## Best Practices
+
+1. **Environment Detection**: Let the package automatically detect the environment when possible
+2. **Error Handling**: Add error handling around runtime adapter methods as they may return undefined
+3. **Use the Logger**: Leverage the built-in logger for consistent error reporting and debugging
+4. **Testing**: Create mock adapters for testing to simulate different environments
+5. **Custom Adapters**: Create custom adapters for specialized environments like Electron or React Native
+6. **Type Safety**: Use TypeScript to ensure type safety when working with runtime adapters
+7. **Module Imports**: When using ES modules, remember to include the `.js` extension in import paths
+
+## Troubleshooting
+
+### Import Path Issues
+
+When using the package with ES modules and Node16/NodeNext module resolution, make sure to include the `.js` extension in your import paths:
+
+```ts
+// Correct
+import { RuntimeAdapter } from '@repo/runtime-adapter/types.js';
+import { logger } from '@repo/runtime-adapter/utils/logger.js';
+
+// Incorrect (will cause errors)
+import { RuntimeAdapter } from '@repo/runtime-adapter/types';
+import { logger } from '@repo/runtime-adapter/utils/logger';
+```
+
+### Next.js API Availability
+
+The Next.js adapter uses dynamic imports to safely access Next.js APIs. If you see warnings about Next.js headers or cookies not being available, ensure you're using the adapter in a server context:
+
+```tsx
+// This works in Server Components and API routes
+import { NextRuntimeAdapter } from '@repo/runtime-adapter';
+
+export default function ServerComponent() {
+  // This is safe in a Server Component
+  const sessionId = NextRuntimeAdapter.getCookie('session');
+  // ...
+}
+```
+
+### Handling Missing Values
+
+All adapter methods may return `undefined` if the requested data is not available. Always handle these cases gracefully:
+
+```ts
+const runtime = getRuntimeAdapter();
+const authHeader = runtime.getHeader('authorization');
+
+if (authHeader) {
+  // Process the auth header
+  const token = authHeader.replace('Bearer ', '');
+  // ...
+} else {
+  // Handle missing auth header
+  // ...
+}
+```

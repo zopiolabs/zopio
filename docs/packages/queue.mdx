@@ -1,0 +1,282 @@
+---
+title: Queue
+description: Job queue system for background processing in Zopio applications
+---
+
+# Queue
+
+The `@repo/queue` package provides a robust job queue system for background processing in Zopio applications. It's built on top of [BullMQ](https://docs.bullmq.io/), a Redis-based queue for Node.js, with support for both production and development environments.
+
+## Features
+
+- Background job processing with Redis
+- Development mode with in-memory queue (no Redis required)
+- Job monitoring UI with Bull Board
+- Type-safe job definitions
+- Graceful error handling and retries
+- Worker process management
+
+## Installation
+
+The package is included in the Zopio monorepo and can be imported directly:
+
+```ts
+import { reportQueue, addReportJob } from '@repo/queue';
+```
+
+## Basic Usage
+
+### Adding Jobs to the Queue
+
+To add a job to the queue, use the provided job functions:
+
+```ts
+import { addReportJob } from '@repo/queue';
+
+// Add a report generation job
+await addReportJob({ userId: 'user_123' });
+```
+
+### Processing Jobs with Workers
+
+Workers are processes that consume jobs from the queue and execute them. The package includes a worker for report generation:
+
+```ts
+// Start the report generation worker
+// This is typically done in a separate process
+import '@repo/queue/workers/generateReportWorker';
+```
+
+You can start the worker using the provided npm script:
+
+```bash
+npm run start:worker -w @repo/queue
+```
+
+## Advanced Usage
+
+### Creating Custom Job Types
+
+You can create custom job types by defining new job functions:
+
+```ts
+// In your-job.ts
+import { Queue } from 'bullmq';
+import { connection } from '@repo/queue/redis';
+
+// Define your job data type
+interface EmailJobData {
+  to: string;
+  subject: string;
+  body: string;
+}
+
+// Create a queue for your job type
+export const emailQueue = new Queue<EmailJobData>('emailQueue', { connection });
+
+// Create a function to add jobs to the queue
+export async function sendEmail(data: EmailJobData) {
+  await emailQueue.add('sendEmail', data, {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    }
+  });
+}
+```
+
+### Creating Custom Workers
+
+To process your custom jobs, create a worker:
+
+```ts
+// In your-worker.ts
+import { Worker } from 'bullmq';
+import { connection } from '@repo/queue/redis';
+import { emailQueue } from './your-job';
+
+// Create a worker for your job type
+const worker = new Worker(
+  'emailQueue',
+  async job => {
+    // Process the job
+    const { to, subject, body } = job.data;
+    
+    // Your email sending logic here
+    await actuallySendEmail(to, subject, body);
+    
+    return { success: true };
+  },
+  { connection }
+);
+
+// Handle worker events
+worker.on('completed', job => {
+  console.log(`Email sent to ${job.data.to}`);
+});
+
+worker.on('failed', (job, err) => {
+  console.error(`Failed to send email to ${job?.data.to}:`, err);
+});
+```
+
+### Job Options
+
+You can customize job behavior with options:
+
+```ts
+await addReportJob(
+  { userId: 'user_123' },
+  {
+    // Job will be retried up to 3 times
+    attempts: 3,
+    
+    // Exponential backoff between retries
+    backoff: {
+      type: 'exponential',
+      delay: 1000
+    },
+    
+    // Job will be removed after completion
+    removeOnComplete: true,
+    
+    // Job will be removed after failure
+    removeOnFail: false,
+    
+    // Job priority (lower means higher priority)
+    priority: 10,
+    
+    // Delay job execution by 5 minutes
+    delay: 5 * 60 * 1000
+  }
+);
+```
+
+## Development Mode
+
+The queue package automatically detects the environment and uses an in-memory implementation when Redis is not available or when in development mode. This allows you to develop and test your application without setting up Redis.
+
+To force the use of the in-memory implementation:
+
+```ts
+// Set NODE_ENV to development
+process.env.NODE_ENV = 'development';
+
+// Or unset REDIS_URL
+delete process.env.REDIS_URL;
+```
+
+## Monitoring
+
+The package includes a Bull Board UI for monitoring queues:
+
+```ts
+import express from 'express';
+import { queueUIAdapter } from '@repo/queue';
+
+const app = express();
+
+// Mount the Bull Board UI
+app.use('/admin/queues', queueUIAdapter.getRouter());
+
+app.listen(3000, () => {
+  console.log('Bull Board UI available at http://localhost:3000/admin/queues');
+});
+```
+
+## Configuration
+
+The queue package uses the following environment variables:
+
+- `REDIS_URL`: Redis connection URL (e.g., `redis://localhost:6379`)
+- `NODE_ENV`: If set to `development`, uses the in-memory implementation
+
+## API Reference
+
+### Queues
+
+#### `reportQueue`
+
+Queue for report generation jobs.
+
+### Job Functions
+
+#### `addReportJob(data: { userId: string }, opts?: JobOptions): Promise<Job>`
+
+Adds a report generation job to the queue.
+
+### UI
+
+#### `queueUIAdapter`
+
+Express adapter for the Bull Board UI.
+
+### Workers
+
+#### `generateReportWorker`
+
+Worker for processing report generation jobs.
+
+## Best Practices
+
+1. **Separate Worker Processes**: Run workers in separate processes to avoid blocking the main application
+2. **Job Data Validation**: Validate job data before adding it to the queue
+3. **Error Handling**: Implement proper error handling in your job processors
+4. **Monitoring**: Use the Bull Board UI to monitor queue health
+5. **Cleanup**: Configure jobs to be removed after completion to avoid Redis memory issues
+
+## Examples
+
+### API Route with Queue
+
+```ts
+// In an API route
+import { addReportJob } from '@repo/queue';
+
+export async function POST(req: Request) {
+  const { userId } = await req.json();
+  
+  // Add job to queue
+  await addReportJob({ userId });
+  
+  return Response.json({ status: 'Report generation started' });
+}
+```
+
+### Scheduled Jobs
+
+```ts
+import { reportQueue } from '@repo/queue';
+import { CronJob } from 'cron';
+
+// Create a cron job to run daily at midnight
+const job = new CronJob('0 0 * * *', async () => {
+  // Add a job to generate daily reports
+  await reportQueue.add('generateDailyReport', { date: new Date().toISOString() });
+});
+
+// Start the cron job
+job.start();
+```
+
+### Job Completion Handling
+
+```ts
+import { reportQueue } from '@repo/queue';
+import { QueueEvents } from 'bullmq';
+
+// Listen for job completion events
+const queueEvents = new QueueEvents('reportQueue');
+
+queueEvents.on('completed', async ({ jobId }) => {
+  // Get the completed job
+  const job = await reportQueue.getJob(jobId);
+  
+  // Do something with the job result
+  console.log(`Report for user ${job.data.userId} is ready:`, job.returnvalue);
+  
+  // Notify the user
+  await notifyUser(job.data.userId, 'Your report is ready!');
+});
+```

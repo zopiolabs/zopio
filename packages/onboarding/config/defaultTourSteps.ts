@@ -1,6 +1,6 @@
-import type { StepType } from '@reactour/tour';
+import type { TourStep } from '../types';
 
-export const steps: StepType[] = [
+export const steps: TourStep[] = [
   {
     selector: '[data-tour="step-1"]',
     content: 'Welcome! This is your dashboard overview.',
