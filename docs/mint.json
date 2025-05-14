@@ -104,6 +104,7 @@
         "packages/cms",
         "packages/collaboration",
         "packages/cron",
+        "packages/crud",
         "packages/database",
         {
           "group": "Design System",
@@ -238,7 +239,13 @@
     },
     {
       "group": "Tools",
-      "pages": ["addons/dub", "addons/infisical", "addons/metabase", "addons/tagui", "addons/temporal-ui"]
+      "pages": [
+        "addons/dub",
+        "addons/infisical",
+        "addons/metabase",
+        "addons/tagui",
+        "addons/temporal-ui"
+      ]
     }
   ],
 

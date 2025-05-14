@@ -1,0 +1,302 @@
+---
+title: CRUD
+description: Type-safe, reusable handlers for building RESTful APIs in Next.js
+---
+
+The `@repo/crud` package provides a comprehensive set of type-safe, reusable handlers for building RESTful APIs with Next.js route handlers. It offers proper error handling, validation, and extensibility to streamline your API development process.
+
+## Features
+
+- **Type-safe**: Full TypeScript support with generics for model types
+- **Validation**: Built-in Zod schema validation
+- **Extensible**: Hooks for pre-processing and post-processing data
+- **Error Handling**: Comprehensive error handling with detailed error messages
+- **Pagination**: Built-in support for pagination, filtering, and sorting
+- **Soft Delete**: Support for soft deletion of records
+
+## Installation
+
+```bash
+pnpm add @repo/crud
+```
+
+## Core Concepts
+
+The CRUD package is built around five main handler functions that correspond to the standard CRUD operations:
+
+1. **Create**: `createHandler` for POST requests to create new records
+2. **Read**: `readHandler` for GET requests to retrieve a single record by ID
+3. **Read Many**: `readManyHandler` for GET requests to retrieve multiple records with pagination
+4. **Update**: `updateHandler` for PUT requests to update existing records
+5. **Delete**: `deleteHandler` for DELETE requests to delete records
+
+Each handler is highly configurable through options and hooks, allowing you to customize behavior at different stages of the request lifecycle.
+
+## Usage Examples
+
+### Creating a New Record
+
+Use the `createHandler` to handle POST requests for creating new records:
+
+```ts app/api/users/route.ts
+import { createHandler } from '@repo/crud';
+import { prisma } from '@repo/database';
+import { userSchema } from '@/schemas/user';
+
+// Define a handler for creating users
+export const POST = createHandler({
+  model: prisma.user,
+  schema: userSchema,
+  beforeHook: (data, req) => {
+    // Add additional fields or transform data before saving
+    return {
+      ...data,
+      createdBy: req.headers.get('x-user-id') || 'anonymous',
+    };
+  },
+  afterHook: (user) => {
+    // Transform the response data
+    const { password, ...rest } = user;
+    return rest;
+  },
+});
+```
+
+### Reading a Single Record
+
+Use the `readHandler` to handle GET requests for retrieving a single record by ID:
+
+```ts app/api/users/[id]/route.ts
+import { readHandler } from '@repo/crud';
+import { prisma } from '@repo/database';
+
+// Define a handler for retrieving a single user
+export const GET = readHandler({
+  model: prisma.user,
+  include: {
+    posts: true,
+    profile: true,
+  },
+  afterHook: (user) => {
+    // Transform the response data
+    const { password, ...rest } = user;
+    return rest;
+  },
+});
+```
+
+### Reading Multiple Records with Pagination
+
+Use the `readManyHandler` to handle GET requests for retrieving multiple records with pagination:
+
+```ts app/api/users/route.ts
+import { readManyHandler, parseBoolean } from '@repo/crud';
+import { prisma } from '@repo/database';
+
+// Define a handler for retrieving multiple users with pagination
+export const GET = readManyHandler({
+  model: prisma.user,
+  include: {
+    profile: true,
+  },
+  defaultLimit: 20,
+  maxLimit: 100,
+  filterHook: (params) => {
+    // Build filter conditions based on query parameters
+    const filters = {};
+    
+    if (params.name) {
+      filters.name = { contains: params.name };
+    }
+    
+    if (params.role) {
+      filters.role = params.role;
+    }
+    
+    // Handle soft-deleted records
+    if (!parseBoolean(params.includeDeleted)) {
+      filters.deletedAt = null;
+    }
+    
+    return filters;
+  },
+});
+```
+
+### Updating a Record
+
+Use the `updateHandler` to handle PUT requests for updating existing records:
+
+```ts app/api/users/[id]/route.ts
+import { updateHandler } from '@repo/crud';
+import { prisma } from '@repo/database';
+import { userUpdateSchema } from '@/schemas/user';
+
+// Define a handler for updating a user
+export const PUT = updateHandler({
+  model: prisma.user,
+  schema: userUpdateSchema,
+  beforeHook: (data, req) => {
+    // Add additional fields or transform data before saving
+    return {
+      ...data,
+      updatedBy: req.headers.get('x-user-id') || 'anonymous',
+      updatedAt: new Date(),
+    };
+  },
+});
+```
+
+### Deleting a Record
+
+Use the `deleteHandler` to handle DELETE requests for deleting records:
+
+```ts app/api/users/[id]/route.ts
+import { deleteHandler } from '@repo/crud';
+import { prisma } from '@repo/database';
+
+// Define a handler for deleting a user (soft delete)
+export const DELETE = deleteHandler({
+  model: prisma.user,
+  softDelete: true, // Use soft deletion instead of hard deletion
+});
+```
+
+## Advanced Usage
+
+### Custom Validation with Zod
+
+The CRUD package integrates seamlessly with [Zod](https://zod.dev/) for input validation:
+
+```ts schemas/user.ts
+import { z } from 'zod';
+
+export const userSchema = z.object({
+  name: z.string().min(3).max(50),
+  email: z.string().email(),
+  password: z.string().min(8),
+  role: z.enum(['user', 'admin']).default('user'),
+});
+
+export const userUpdateSchema = userSchema.partial().omit({ password: true });
+```
+
+### Custom Error Handling
+
+You can wrap the handlers with your own error handling middleware:
+
+```ts middleware/errorHandler.ts
+import { NextRequest } from 'next/server';
+
+export function withErrorLogging(handler: (req: NextRequest) => Promise<Response>) {
+  return async (req: NextRequest) => {
+    try {
+      return await handler(req);
+    } catch (error) {
+      console.error('API Error:', error);
+      return Response.json(
+        { error: 'Internal Server Error' },
+        { status: 500 }
+      );
+    }
+  };
+}
+
+// Usage
+import { createHandler } from '@repo/crud';
+import { withErrorLogging } from '@/middleware/errorHandler';
+
+export const POST = withErrorLogging(
+  createHandler({
+    model: prisma.user,
+    schema: userSchema,
+  })
+);
+```
+
+## Utility Functions
+
+The CRUD package provides several utility functions to help with common tasks:
+
+- `validateInput`: Validates input data against a Zod schema
+- `formatZodErrors`: Formats Zod validation errors into a readable string
+- `createSoftDeleteFilter`: Creates a filter function for soft-deleted records
+- `parseBoolean`: Parses a string to a boolean value
+- `parseNumber`: Parses a string to a number value
+- `createResponse`: Creates a standard response object
+
+## API Reference
+
+### Handler Options
+
+#### CreateHandlerOptions
+
+```ts
+interface CreateHandlerOptions<T extends Partial<BaseModel>, R = T> {
+  model: DatabaseModel<T>;
+  schema?: ZodType<T>;
+  beforeHook?: BeforeHook<T>;
+  afterHook?: AfterHook<T, R>;
+}
+```
+
+#### ReadHandlerOptions
+
+```ts
+interface ReadHandlerOptions<T extends BaseModel, R = T> {
+  model: DatabaseModel<T>;
+  include?: IncludeRelations;
+  afterHook?: AfterHook<T, R>;
+}
+```
+
+#### ReadManyHandlerOptions
+
+```ts
+interface ReadManyHandlerOptions<T extends BaseModel, R = T[]> {
+  model: DatabaseModel<T>;
+  include?: IncludeRelations;
+  defaultLimit?: number;
+  maxLimit?: number;
+  afterHook?: AfterHook<T[], R>;
+  filterHook?: (params: QueryParams) => WhereConditions<T>;
+}
+```
+
+#### UpdateHandlerOptions
+
+```ts
+interface UpdateHandlerOptions<T extends BaseModel, R = T> {
+  model: DatabaseModel<T>;
+  schema?: ZodType<Partial<T>>;
+  beforeHook?: BeforeHook<Partial<T>>;
+  afterHook?: AfterHook<T, R>;
+}
+```
+
+#### DeleteHandlerOptions
+
+```ts
+interface DeleteHandlerOptions<T extends BaseModel, R = T> {
+  model: DatabaseModel<T>;
+  softDelete?: boolean;
+  afterHook?: AfterHook<T, R>;
+}
+```
+
+## Integration with Other Packages
+
+The CRUD package works well with other Zopio packages:
+
+- **@repo/database**: For database models and ORM integration
+- **@repo/auth-policy**: For authorization checks in your API routes
+- **@repo/security**: For rate limiting and other security features
+- **@repo/observability**: For logging and monitoring API requests
+
+## Best Practices
+
+1. **Use Zod schemas for validation**: Always define and use Zod schemas for input validation to ensure data integrity.
+2. **Implement proper error handling**: Use try/catch blocks or error middleware to handle exceptions gracefully.
+3. **Leverage hooks for customization**: Use beforeHook and afterHook to customize behavior without duplicating code.
+4. **Consider soft deletion**: Use the softDelete option for records that should be archived rather than permanently deleted.
+5. **Implement pagination for large datasets**: Use the readManyHandler with appropriate limits to avoid performance issues.
