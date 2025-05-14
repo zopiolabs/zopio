@@ -10,7 +10,8 @@
   "workspaces": [
     "apps/*",
     "apps/jobs",
-    "packages/*"
+    "packages/*",
+    "addons/*"
   ],
   "scripts": {
     "build": "turbo build",
