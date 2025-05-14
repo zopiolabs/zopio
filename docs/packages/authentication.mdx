@@ -72,10 +72,35 @@ const ServerComponent = async () => {
 
 ## Integration with Other Packages
 
-The authentication system integrates with two other packages:
+The authentication system integrates with several other packages:
 
-1. **[auth-policy](/packages/auth-policy)**: Provides policy-based authorization using user roles from Clerk
+1. **[auth-core](/packages/auth-core-package)**: Core authentication utilities that integrate all auth modules
 2. **[auth-rbac](/packages/auth-rbac)**: Provides role-based access control using CASL
+3. **[auth-policy](/packages/auth-policy)**: Provides policy-based authorization using user roles from Clerk
+
+### Using Auth Core for Integration
+
+The recommended way to use authentication with other auth modules is through the `@repo/auth-core` package, which provides a standardized interface:
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { createAbilityForAuthUser } from '@repo/auth-core/integrations/rbac';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function checkAccess() {
+  const clerkUser = await currentUser();
+  const authUser = createAuthUser(clerkUser);
+  
+  // Use with RBAC
+  const ability = createAbilityForAuthUser(authUser);
+  if (ability.can('read', 'User')) {
+    // Allow user read access
+  }
+}
+```
+
+See the [Auth Core](/packages/auth-core-package) documentation for more details on integrating authentication with other auth modules.
 
 ## Webhooks
 

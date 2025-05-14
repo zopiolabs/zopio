@@ -53,6 +53,37 @@ async function checkAccess() {
 }
 ```
 
+## Integration with Auth Core
+
+For better integration with other auth modules, you can use the `@repo/auth-core` package:
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { canWithPolicy } from '@repo/auth-core/integrations/policy';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function checkAccess() {
+  const clerkUser = await currentUser();
+  const authUser = createAuthUser(clerkUser);
+  
+  // Check if user can perform an action using policy-based authorization
+  const canManageUsers = await canWithPolicy(
+    authUser,
+    'users.manage',
+    'user',
+    { organizationId: authUser.organizationId }
+  );
+  
+  if (canManageUsers) {
+    // Allow user management
+  }
+}
+```
+
+See the [Auth Core](/packages/auth-core-package) documentation for more details on integrating policy-based authorization with other auth modules.
+```
+
 ## Policy Context
 
 Each policy check requires a context object with the following properties:
@@ -188,10 +219,54 @@ export const canAccessResource: PolicyRule = ({ user, resource, context }) => {
 };
 ```
 
+## React Hooks Integration
+
+You can use the React hooks from the `@repo/auth-core/integrations/hooks` package to check policies in React components:
+
+```tsx
+import { usePolicy } from '@repo/auth-core/integrations/hooks';
+
+function PluginInstallButton({ pluginId }) {
+  const { can, isLoaded } = usePolicy('plugin.install', 'plugin', { id: pluginId });
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  return can ? <Button>Install Plugin</Button> : <AccessDenied />;
+}
+```
+
+## UI Components Integration
+
+You can use the UI components from the `@repo/auth-core/integrations/ui` package to conditionally render components based on policies:
+
+```tsx
+import { PolicyGuard } from '@repo/auth-core/integrations/ui';
+
+function PluginManagement() {
+  return (
+    <div>
+      <h1>Plugin Management</h1>
+      
+      <PolicyGuard 
+        action="plugin.install" 
+        resource="plugin" 
+        context={{ id: 'plugin-123' }}
+        fallback={<AccessDenied />}
+      >
+        <InstallPluginForm />
+      </PolicyGuard>
+    </div>
+  );
+}
+```
+
 ## Best Practices
 
 1. **Keep rules simple**: Each rule should have a single responsibility
 2. **Use descriptive names**: Name your rules clearly to indicate what they permit
 3. **Validate inputs**: Always check that user data exists and has the expected structure
-4. **Add tests**: Write tests for your policy rules to ensure they work as expected
-5. **Document policies**: Keep documentation updated when adding new policies
+4. **Use Auth Core**: Use the Auth Core package for better integration with other auth modules
+5. **Add tests**: Write tests for your policy rules to ensure they work as expected
+6. **Document policies**: Keep documentation updated when adding new policies

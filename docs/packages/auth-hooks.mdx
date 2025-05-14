@@ -1,0 +1,223 @@
+---
+title: Auth Hooks
+description: React hooks for authentication and authorization in Zopio applications
+---
+
+# Auth Hooks
+
+The `@repo/auth-hooks` package provides a collection of React hooks for authentication and authorization in Zopio applications. These hooks simplify the integration of authentication and authorization logic into React components.
+
+## Overview
+
+Auth Hooks offers a set of React hooks that make it easy to access authentication state, check user roles and permissions, and implement authorization checks in your React components. The hooks integrate with Clerk for authentication and support various authorization models including RBAC, policy-based authorization, and more.
+
+## Key Features
+
+- **Authentication Hooks**: Access the current user and authentication state
+- **Role and Permission Hooks**: Check user roles and permissions
+- **Authorization Hooks**: Implement RBAC, policy-based, and other authorization checks
+- **Loading State Management**: Properly handle loading states for auth operations
+- **Integration with Auth Core**: Seamless integration with the auth-core package
+- **Type Safety**: Comprehensive TypeScript types for all hooks
+
+## Installation
+
+```bash
+npm install @repo/auth-hooks
+```
+
+## Basic Usage
+
+### Authentication Hooks
+
+```tsx
+import { useAuth, useUser } from '@repo/auth-hooks';
+
+function ProfileComponent() {
+  // Get authentication state
+  const { isSignedIn, isLoaded } = useAuth();
+  
+  // Get current user
+  const { user } = useUser();
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  if (!isSignedIn) {
+    return <SignInPrompt />;
+  }
+  
+  return (
+    <div>
+      <h1>Welcome, {user.firstName}!</h1>
+      <p>Email: {user.primaryEmailAddress}</p>
+    </div>
+  );
+}
+```
+
+### Role and Permission Hooks
+
+```tsx
+import { useHasRole, useHasPermission } from '@repo/auth-hooks';
+
+function AdminPanel() {
+  // Check if user has admin role
+  const { hasRole, isLoaded: roleLoaded } = useHasRole('admin');
+  
+  // Check if user has a specific permission
+  const { hasPermission, isLoaded: permissionLoaded } = useHasPermission('manage-users');
+  
+  if (!roleLoaded || !permissionLoaded) {
+    return <Loading />;
+  }
+  
+  if (!hasRole) {
+    return <AccessDenied />;
+  }
+  
+  return (
+    <div>
+      <h1>Admin Panel</h1>
+      {hasPermission && <UserManagement />}
+    </div>
+  );
+}
+```
+
+### RBAC Authorization Hooks
+
+```tsx
+import { useCan } from '@repo/auth-hooks';
+
+function UserList() {
+  // Check if user can read users
+  const { can, isLoaded } = useCan('read', 'User');
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  if (!can) {
+    return <AccessDenied />;
+  }
+  
+  return (
+    <div>
+      <h1>User List</h1>
+      {/* User list component */}
+    </div>
+  );
+}
+```
+
+### Policy-Based Authorization Hooks
+
+```tsx
+import { usePolicy } from '@repo/auth-hooks';
+
+function PluginInstallButton({ pluginId }) {
+  // Check if user can install a plugin
+  const { can, isLoaded } = usePolicy('plugin.install', 'plugin', { id: pluginId });
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  return can ? <Button>Install Plugin</Button> : null;
+}
+```
+
+## Integration with Auth Core
+
+The auth-hooks package is fully integrated with the `@repo/auth-core` package:
+
+```tsx
+import { useAuthUser } from '@repo/auth-hooks';
+
+function MyComponent() {
+  // Get the standardized auth user
+  const { user, isLoaded } = useAuthUser();
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  return (
+    <div>
+      <h1>Welcome, {user.id}!</h1>
+      <p>Roles: {user.roles.join(', ')}</p>
+      <p>Permissions: {user.permissions.join(', ')}</p>
+    </div>
+  );
+}
+```
+
+## Custom Hook Composition
+
+You can compose custom hooks for specific authorization needs:
+
+```tsx
+import { useUser, useCan } from '@repo/auth-hooks';
+
+// Custom hook to check if user can edit their own profile
+function useCanEditProfile() {
+  const { user, isLoaded: userLoaded } = useUser();
+  const { can, isLoaded: canLoaded } = useCan('update', 'Profile', { userId: user?.id });
+  
+  return {
+    canEditProfile: userLoaded && canLoaded && can,
+    isLoaded: userLoaded && canLoaded
+  };
+}
+
+// Usage
+function ProfileEditor() {
+  const { canEditProfile, isLoaded } = useCanEditProfile();
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  if (!canEditProfile) {
+    return <AccessDenied />;
+  }
+  
+  return <ProfileForm />;
+}
+```
+
+## Server-Side Usage
+
+For server components, you can use the server-side helpers:
+
+```tsx
+import { getAuthUser } from '@repo/auth-hooks/server';
+
+// In a server component
+async function ServerComponent() {
+  // Get the auth user on the server
+  const authUser = await getAuthUser();
+  
+  if (!authUser) {
+    return <SignInPrompt />;
+  }
+  
+  return (
+    <div>
+      <h1>Welcome, {authUser.id}!</h1>
+      <p>Roles: {authUser.roles.join(', ')}</p>
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+1. **Handle loading states**: Always check the `isLoaded` property before using hook results
+2. **Composition over repetition**: Create custom hooks for common authorization patterns
+3. **Use with UI components**: Combine hooks with UI components for consistent authorization UI
+4. **Server-side checks**: Always perform critical authorization checks on the server
+5. **Client-side UX**: Use hooks for better user experience by showing/hiding UI elements
+6. **Type everything**: Take advantage of the comprehensive type definitions

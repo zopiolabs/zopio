@@ -96,8 +96,13 @@
           "group": "Authentication",
           "pages": [
             "packages/authentication",
+            "packages/auth-core-package",
+            "packages/auth-rbac",
             "packages/auth-policy",
-            "packages/auth-rbac"
+            "packages/auth-abac",
+            "packages/auth-acp",
+            "packages/auth-hooks",
+            "packages/auth-ui"
           ]
         },
         "packages/caching",

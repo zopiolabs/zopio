@@ -1,0 +1,239 @@
+---
+title: Auth UI
+description: UI components for authentication and authorization in Zopio applications
+---
+
+# Auth UI
+
+The `@repo/auth-ui` package provides a collection of UI components for authentication and authorization in Zopio applications. These components simplify the implementation of authentication flows and authorization checks in your React applications.
+
+## Overview
+
+Auth UI offers ready-to-use React components that handle common authentication and authorization scenarios, such as sign-in forms, protected routes, role-based access control, and policy-based authorization. The components integrate with Clerk for authentication and support various authorization models.
+
+## Key Features
+
+- **Authentication Components**: Sign-in, sign-up, and user profile components
+- **Authorization Guards**: Components for role-based, policy-based, and other authorization checks
+- **Protected Routes**: Route protection based on authentication and authorization
+- **Loading State Management**: Properly handle loading states for auth operations
+- **Integration with Auth Core**: Seamless integration with the auth-core package
+- **Customizable Styling**: Components that adapt to your application's design system
+
+## Installation
+
+```bash
+npm install @repo/auth-ui
+```
+
+## Basic Usage
+
+### Authentication Components
+
+```tsx
+import { SignIn, SignUp, UserProfile } from '@repo/auth-ui';
+
+function AuthPages() {
+  return (
+    <Routes>
+      <Route path="/sign-in" element={<SignIn redirectUrl="/dashboard" />} />
+      <Route path="/sign-up" element={<SignUp redirectUrl="/onboarding" />} />
+      <Route path="/profile" element={<UserProfile />} />
+    </Routes>
+  );
+}
+```
+
+### Protected Routes
+
+```tsx
+import { ProtectedRoute } from '@repo/auth-ui';
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/public" element={<PublicPage />} />
+      
+      {/* Protected routes require authentication */}
+      <Route
+        path="/dashboard/*"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
+}
+```
+
+### Role-Based Authorization Guards
+
+```tsx
+import { RoleGuard } from '@repo/auth-ui';
+
+function AdminDashboard() {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      
+      {/* Only render for users with admin role */}
+      <RoleGuard role="admin" fallback={<AccessDenied />}>
+        <AdminPanel />
+      </RoleGuard>
+      
+      {/* Only render for users with either editor or writer role */}
+      <RoleGuard roles={['editor', 'writer']} fallback={<AccessDenied />}>
+        <ContentManagement />
+      </RoleGuard>
+    </div>
+  );
+}
+```
+
+### Permission-Based Authorization Guards
+
+```tsx
+import { PermissionGuard } from '@repo/auth-ui';
+
+function UserManagement() {
+  return (
+    <div>
+      <h1>User Management</h1>
+      
+      {/* Only render for users with view-users permission */}
+      <PermissionGuard permission="view-users" fallback={<AccessDenied />}>
+        <UserList />
+      </PermissionGuard>
+      
+      {/* Only render for users with manage-users permission */}
+      <PermissionGuard permission="manage-users" fallback={<AccessDenied />}>
+        <UserForm />
+      </PermissionGuard>
+    </div>
+  );
+}
+```
+
+### RBAC Authorization Guards
+
+```tsx
+import { AbilityGuard } from '@repo/auth-ui';
+
+function ResourceManagement() {
+  return (
+    <div>
+      <h1>Resource Management</h1>
+      
+      {/* Only render for users who can read users */}
+      <AbilityGuard action="read" subject="User" fallback={<AccessDenied />}>
+        <UserList />
+      </AbilityGuard>
+      
+      {/* Only render for users who can update users */}
+      <AbilityGuard action="update" subject="User" fallback={<AccessDenied />}>
+        <UserForm />
+      </AbilityGuard>
+    </div>
+  );
+}
+```
+
+### Policy-Based Authorization Guards
+
+```tsx
+import { PolicyGuard } from '@repo/auth-ui';
+
+function PluginManagement() {
+  return (
+    <div>
+      <h1>Plugin Management</h1>
+      
+      {/* Only render for users who can install plugins */}
+      <PolicyGuard 
+        action="plugin.install" 
+        resource="plugin" 
+        context={{ id: 'plugin-123' }}
+        fallback={<AccessDenied />}
+      >
+        <InstallPluginForm />
+      </PolicyGuard>
+    </div>
+  );
+}
+```
+
+## Integration with Auth Core
+
+The auth-ui package is fully integrated with the `@repo/auth-core` package:
+
+```tsx
+import { AuthUserProvider, RoleGuard } from '@repo/auth-ui';
+
+function App() {
+  return (
+    <AuthUserProvider>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route 
+          path="/admin" 
+          element={
+            <RoleGuard role="admin" fallback={<Navigate to="/" />}>
+              <AdminPage />
+            </RoleGuard>
+          } 
+        />
+      </Routes>
+    </AuthUserProvider>
+  );
+}
+```
+
+## Customizing Components
+
+You can customize the appearance of the components using the `className` and `style` props:
+
+```tsx
+import { SignIn } from '@repo/auth-ui';
+
+function CustomSignIn() {
+  return (
+    <SignIn 
+      redirectUrl="/dashboard"
+      className="my-custom-signin"
+      formClassName="signin-form"
+      buttonClassName="signin-button"
+    />
+  );
+}
+```
+
+## Server-Side Rendering
+
+For server components, you can use the server-side components:
+
+```tsx
+import { ProtectedServerPage, RoleGuardServer } from '@repo/auth-ui/server';
+
+// In a server component
+async function AdminDashboard() {
+  return (
+    <ProtectedServerPage>
+      <RoleGuardServer role="admin" fallback={<AccessDenied />}>
+        <AdminPanel />
+      </RoleGuardServer>
+    </ProtectedServerPage>
+  );
+}
+```
+
+## Best Practices
+
+1. **Use guards consistently**: Apply authorization guards at the appropriate level of your component hierarchy
+2. **Provide meaningful fallbacks**: Always provide a fallback UI for when authorization fails
+3. **Combine with hooks**: Use auth-hooks for complex authorization logic and auth-ui for UI representation
+4. **Server-side checks**: Always perform critical authorization checks on the server
+5. **Client-side UX**: Use UI components for better user experience by showing/hiding UI elements
+6. **Customize thoughtfully**: Customize components to match your design system while maintaining functionality

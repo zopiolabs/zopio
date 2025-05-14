@@ -32,7 +32,7 @@ The following roles are defined in the system:
 ## Basic Usage
 
 ```tsx
-import { createAbilityFor } from '@repo/auth-rbac';
+import { createAbilityFor, createAbilityFromRoles } from '@repo/auth-rbac';
 import { currentUser } from '@repo/auth/server';
 
 // In a server component
@@ -41,6 +41,10 @@ async function ProtectedComponent() {
   
   // Create ability instance based on Clerk user
   const ability = createAbilityFor(user);
+  
+  // Or create ability directly from roles (without needing the full Clerk user)
+  const roles = user?.publicMetadata?.roles || [];
+  const abilityFromRoles = createAbilityFromRoles(user?.id || '', roles);
   
   // Check permissions
   const canManageUsers = ability.can('read', 'User');
@@ -75,47 +79,63 @@ type Subjects =
   | 'all';
 ```
 
-## Role Abilities
+## Role Definitions with Inheritance
 
-Each role has a set of predefined abilities:
+The enhanced RBAC system now supports role inheritance, allowing roles to inherit permissions from other roles. Each role has a set of predefined permissions and can inherit permissions from other roles:
 
 ### Guest
 ```tsx
-[
-  { action: 'read', subject: 'Public' }
-]
+{
+  name: 'guest',
+  permissions: [
+    { action: 'read', subject: 'Public' }
+  ]
+}
 ```
 
 ### User
 ```tsx
-[
-  { action: 'read', subject: 'Dashboard' },
-  { action: 'read', subject: 'Profile' },
-  { action: 'update', subject: 'Profile', conditions: { userId: 'USER_ID_PLACEHOLDER' } },
-  { action: 'delete', subject: 'Profile', inverted: true } // 'cannot' rule
-]
+{
+  name: 'user',
+  permissions: [
+    { action: 'read', subject: 'Dashboard' },
+    { action: 'read', subject: 'Profile' },
+    { action: 'update', subject: 'Profile', conditions: { userId: 'USER_ID_PLACEHOLDER' } },
+    { action: 'delete', subject: 'Profile', inverted: true } // 'cannot' rule
+  ],
+  inherits: ['guest'] // Inherits all guest permissions
+}
 ```
 
 ### Developer
 ```tsx
-[
-  { action: 'read', subject: 'Dashboard' },
-  { action: 'read', subject: 'Profile' },
-  { action: 'update', subject: 'Profile' },
-  { action: 'read', subject: 'User' }
-]
+{
+  name: 'developer',
+  permissions: [
+    { action: 'read', subject: 'User' },
+    { action: 'update', subject: 'Profile' }
+  ],
+  inherits: ['user'] // Inherits all user permissions (which also include guest permissions)
+}
 ```
 
 ### Admin
 ```tsx
-[
-  { action: 'manage', subject: 'all' }
-]
+{
+  name: 'admin',
+  permissions: [
+    { action: 'manage', subject: 'all' }
+  ]
+}
 ```
 
 ## Adding New Permissions
 
-To add new permissions, update the `roles.ts` file with new subjects and role abilities:
+The enhanced RBAC system allows you to add new permissions in two ways:
+
+### 1. Update Role Definitions
+
+Update the `roles.ts` file with new subjects and role definitions:
 
 ```tsx
 // Add new subject type
@@ -125,16 +145,42 @@ export type Subjects =
   | 'NewFeature'  // New subject
   | 'all';
 
-// Add permissions for roles
-export const roleAbilities = {
-  user: [
-    // Existing permissions...
-    { action: 'read', subject: 'NewFeature' }
-  ],
-  admin: [
-    { action: 'manage', subject: 'all' }
-  ]
+// Update role definitions
+export const roleDefinitions = {
+  user: {
+    name: 'user',
+    permissions: [
+      // Existing permissions...
+      { action: 'read', subject: 'NewFeature' }
+    ],
+    inherits: ['guest']
+  },
+  admin: {
+    name: 'admin',
+    permissions: [
+      { action: 'manage', subject: 'all' }
+    ]
+  }
 };
+```
+
+### 2. Register New Roles at Runtime
+
+You can also register new roles at runtime using the `registerRole` function:
+
+```tsx
+import { registerRole } from '@repo/auth-rbac';
+
+// Register a new role
+registerRole({
+  name: 'editor',
+  permissions: [
+    { action: 'read', subject: 'Content' },
+    { action: 'update', subject: 'Content' }
+  ],
+  inherits: ['user'] // Inherits all user permissions
+});
+```
 ```
 
 ## Conditional Permissions
@@ -151,3 +197,34 @@ You can add conditions to permissions that are evaluated at runtime:
 ```
 
 The `USER_ID_PLACEHOLDER` will be automatically replaced with the current user's ID when checking permissions.
+
+## Integration with Auth Core
+
+For better integration with other auth modules, you can use the `@repo/auth-core` package:
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { createAbilityForAuthUser, canPerformAction } from '@repo/auth-core/integrations/rbac';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function checkAccess() {
+  const clerkUser = await currentUser();
+  const authUser = createAuthUser(clerkUser);
+  
+  // Create ability instance for role-based access control
+  const ability = createAbilityForAuthUser(authUser);
+  
+  // Check if user can perform an action
+  if (ability.can('read', 'User')) {
+    // Allow user read access
+  }
+  
+  // Or use the helper function
+  if (canPerformAction(authUser, 'read', 'User')) {
+    // Allow user read access
+  }
+}
+```
+
+See the [Auth Core](/packages/auth-core-package) documentation for more details on integrating RBAC with other auth modules.

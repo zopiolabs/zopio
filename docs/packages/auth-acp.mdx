@@ -1,0 +1,205 @@
+---
+title: Auth ACP
+description: Access Control Policies for Zopio applications
+---
+
+# Auth ACP
+
+The `@repo/auth-acp` package provides Access Control Policies (ACP) for Zopio applications. ACP is a flexible authorization model that combines aspects of RBAC and ABAC to provide powerful and expressive access control.
+
+## Overview
+
+Access Control Policies allow you to define complex authorization rules that can consider roles, attributes, and contextual information when making access decisions. This provides a unified approach to authorization that can adapt to various application requirements.
+
+## Key Features
+
+- **Expressive Policy Language**: Define complex access control rules with a simple, declarative syntax
+- **Contextual Evaluation**: Consider user attributes, resource properties, and environmental context
+- **Policy Composition**: Combine multiple policies with logical operators (AND, OR, NOT)
+- **Integration with Auth Core**: Seamless integration with the auth-core package
+- **Type Safety**: Comprehensive TypeScript types for all ACP operations
+
+## Basic Usage
+
+```tsx
+import { evaluatePolicy, createPolicyContext } from '@repo/auth-acp';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function checkAccess() {
+  const clerkUser = await currentUser();
+  
+  const policyContext = createPolicyContext({
+    user: {
+      id: clerkUser?.id,
+      roles: clerkUser?.publicMetadata?.roles || [],
+      organizationId: clerkUser?.publicMetadata?.organizationId
+    },
+    resource: { 
+      id: 'doc-123',
+      ownerId: 'user-456',
+      status: 'draft'
+    },
+    context: {
+      environment: 'production',
+      time: new Date()
+    }
+  });
+  
+  const allowed = await evaluatePolicy('document.edit', policyContext);
+  
+  if (allowed) {
+    // Allow document editing
+    return true;
+  }
+  
+  return false;
+}
+```
+
+## Integration with Auth Core
+
+For better integration with other auth modules, you can use the `@repo/auth-core` package:
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { canWithAcp } from '@repo/auth-core/integrations/acp';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function checkAccess() {
+  const clerkUser = await currentUser();
+  const authUser = createAuthUser(clerkUser);
+  
+  // Check if user can perform an action using access control policies
+  const canEditDocument = await canWithAcp(
+    authUser,
+    'document.edit',
+    { 
+      id: 'doc-123',
+      status: 'draft'
+    },
+    {
+      environment: 'production',
+      time: new Date()
+    }
+  );
+  
+  if (canEditDocument) {
+    // Allow document editing
+  }
+}
+```
+
+## Defining Access Control Policies
+
+ACP policies are defined using a declarative syntax that combines conditions with logical operators:
+
+```tsx
+import { definePolicy, and, or, not, hasRole, isResourceOwner, hasAttribute } from '@repo/auth-acp';
+
+// Define a policy for document editing
+definePolicy('document.edit', 
+  or(
+    // Allow if user is the document owner
+    isResourceOwner('ownerId'),
+    
+    // Allow if user has admin role and document is in draft status
+    and(
+      hasRole('admin'),
+      hasAttribute('resource.status', 'draft')
+    ),
+    
+    // Allow if user has editor role, document is in draft status, and it's during business hours
+    and(
+      hasRole('editor'),
+      hasAttribute('resource.status', 'draft'),
+      (context) => {
+        const hour = context.time.getHours();
+        return hour >= 9 && hour <= 17;
+      }
+    )
+  )
+);
+```
+
+## Policy Composition
+
+You can compose complex policies by combining simpler ones:
+
+```tsx
+import { definePolicy, and, or, hasRole, isInOrganization } from '@repo/auth-acp';
+
+// Define base policies
+const isAdmin = hasRole('admin');
+const isEditor = hasRole('editor');
+const isInSameOrganization = isInOrganization('resource.organizationId');
+
+// Compose a complex policy
+definePolicy('document.edit', 
+  or(
+    isAdmin,
+    and(
+      isEditor,
+      isInSameOrganization
+    )
+  )
+);
+```
+
+## React Hooks Integration
+
+You can use the React hooks from the `@repo/auth-core/integrations/hooks` package to check ACP policies in React components:
+
+```tsx
+import { useAcp } from '@repo/auth-core/integrations/hooks';
+
+function DocumentEditButton({ documentId, documentStatus, ownerId }) {
+  const { can, isLoaded } = useAcp(
+    'document.edit',
+    { id: documentId, status: documentStatus, ownerId },
+    { environment: 'production', time: new Date() }
+  );
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  return can ? <Button>Edit Document</Button> : <AccessDenied />;
+}
+```
+
+## UI Components Integration
+
+You can use the UI components from the `@repo/auth-core/integrations/ui` package to conditionally render components based on ACP policies:
+
+```tsx
+import { AcpGuard } from '@repo/auth-core/integrations/ui';
+
+function DocumentView({ document }) {
+  return (
+    <div>
+      <h1>{document.title}</h1>
+      <p>{document.content}</p>
+      
+      <AcpGuard 
+        policy="document.edit" 
+        resource={{ id: document.id, status: document.status, ownerId: document.ownerId }}
+        context={{ environment: 'production', time: new Date() }}
+        fallback={<AccessDenied />}
+      >
+        <EditDocumentForm document={document} />
+      </AcpGuard>
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+1. **Start simple**: Begin with basic policies and refine them as needed
+2. **Reuse policy components**: Define reusable policy components for common checks
+3. **Test thoroughly**: Write tests for your policies to ensure they work as expected
+4. **Document policies**: Keep documentation updated when adding new policies
+5. **Use Auth Core**: Use the Auth Core package for better integration with other auth modules
+6. **Consider performance**: Cache policy results for frequently accessed resources

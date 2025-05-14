@@ -1,0 +1,176 @@
+---
+title: Auth ABAC
+description: Attribute-based access control for Zopio applications
+---
+
+# Auth ABAC
+
+The `@repo/auth-abac` package provides attribute-based access control (ABAC) for Zopio applications. ABAC extends beyond role-based access control by allowing permissions to be determined based on attributes of the user, resource, action, and environment.
+
+## Overview
+
+Attribute-based access control offers more flexibility than traditional RBAC by considering multiple attributes when making access decisions. This allows for more fine-grained and context-aware authorization policies.
+
+## Key Features
+
+- **Attribute-Based Decisions**: Make access decisions based on user attributes, resource attributes, action context, and environmental conditions
+- **Dynamic Evaluation**: Policies are evaluated at runtime with current attribute values
+- **Integration with Auth Core**: Seamless integration with the auth-core package
+- **Type Safety**: Comprehensive TypeScript types for all ABAC operations
+
+## Basic Usage
+
+```tsx
+import { can, createAbacUser } from '@repo/auth-abac';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function checkAccess() {
+  const clerkUser = await currentUser();
+  const abacUser = createAbacUser(clerkUser);
+  
+  const allowed = await can({
+    user: abacUser,
+    action: 'document.edit',
+    resource: { 
+      id: 'doc-123',
+      ownerId: 'user-456',
+      status: 'draft'
+    },
+    context: {
+      environment: 'production',
+      time: new Date()
+    }
+  });
+  
+  if (allowed) {
+    // Allow document editing
+    return true;
+  }
+  
+  return false;
+}
+```
+
+## Integration with Auth Core
+
+For better integration with other auth modules, you can use the `@repo/auth-core` package:
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { canWithAbac } from '@repo/auth-core/integrations/abac';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function checkAccess() {
+  const clerkUser = await currentUser();
+  const authUser = createAuthUser(clerkUser);
+  
+  // Check if user can perform an action using attribute-based authorization
+  const canEditDocument = await canWithAbac(
+    authUser,
+    'document.edit',
+    { 
+      id: 'doc-123',
+      status: 'draft'
+    },
+    {
+      environment: 'production',
+      time: new Date()
+    }
+  );
+  
+  if (canEditDocument) {
+    // Allow document editing
+  }
+}
+```
+
+## Defining ABAC Policies
+
+ABAC policies are defined as functions that evaluate attributes and return a boolean decision:
+
+```tsx
+import { definePolicy } from '@repo/auth-abac';
+
+// Define a policy for document editing
+definePolicy('document.edit', async ({ user, resource, context }) => {
+  // Allow if user is the document owner
+  if (resource.ownerId === user.id) {
+    return true;
+  }
+  
+  // Allow if user has admin role and document is in draft status
+  if (user.roles.includes('admin') && resource.status === 'draft') {
+    return true;
+  }
+  
+  // Allow if user has editor role, document is in draft status, and it's during business hours
+  if (user.roles.includes('editor') && resource.status === 'draft') {
+    const hour = context.time.getHours();
+    if (hour >= 9 && hour <= 17) {
+      return true;
+    }
+  }
+  
+  // Deny by default
+  return false;
+});
+```
+
+## React Hooks Integration
+
+You can use the React hooks from the `@repo/auth-core/integrations/hooks` package to check ABAC policies in React components:
+
+```tsx
+import { useAbac } from '@repo/auth-core/integrations/hooks';
+
+function DocumentEditButton({ documentId, documentStatus, ownerId }) {
+  const { can, isLoaded } = useAbac(
+    'document.edit',
+    { id: documentId, status: documentStatus, ownerId },
+    { environment: 'production', time: new Date() }
+  );
+  
+  if (!isLoaded) {
+    return <Loading />;
+  }
+  
+  return can ? <Button>Edit Document</Button> : <AccessDenied />;
+}
+```
+
+## UI Components Integration
+
+You can use the UI components from the `@repo/auth-core/integrations/ui` package to conditionally render components based on ABAC policies:
+
+```tsx
+import { AbacGuard } from '@repo/auth-core/integrations/ui';
+
+function DocumentView({ document }) {
+  return (
+    <div>
+      <h1>{document.title}</h1>
+      <p>{document.content}</p>
+      
+      <AbacGuard 
+        action="document.edit" 
+        resource={{ id: document.id, status: document.status, ownerId: document.ownerId }}
+        context={{ environment: 'production', time: new Date() }}
+        fallback={<AccessDenied />}
+      >
+        <EditDocumentForm document={document} />
+      </AbacGuard>
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+1. **Keep policies focused**: Each policy should evaluate a specific action on a specific resource type
+2. **Consider performance**: ABAC evaluations can be complex, so optimize for performance
+3. **Cache results**: Consider caching policy results for frequently accessed resources
+4. **Use Auth Core**: Use the Auth Core package for better integration with other auth modules
+5. **Add tests**: Write tests for your ABAC policies to ensure they work as expected
+6. **Document policies**: Keep documentation updated when adding new policies

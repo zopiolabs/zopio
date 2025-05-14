@@ -1,0 +1,216 @@
+---
+title: Auth Core
+description: Core authentication utilities that integrate all auth modules while allowing developers to use only what they need.
+---
+
+# Auth Core
+
+The `@repo/auth-core` package provides a standardized interface for working with authentication and authorization across Zopio applications. It serves as a bridge between the basic authentication functionality and more advanced authorization features.
+
+## Overview
+
+Auth Core is designed to be the central hub for all authentication and authorization functionality in your application. It provides:
+
+- A standardized user representation with roles, permissions, and metadata
+- Core utility functions for common auth checks
+- Seamless integration with other auth modules
+- The ability to use only the features you need
+
+## Key Features
+
+- **Standardized User Model**: Consistent representation of users across all auth modules
+- **Modular Design**: Use only the auth features you need
+- **Integration Modules**: Easy connections to RBAC, policy-based auth, React hooks, and UI components
+- **Type Safety**: Comprehensive TypeScript types for all auth operations
+
+## Basic Usage
+
+### Creating a Standardized Auth User
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component or API route
+async function getAuthUser() {
+  const clerkUser = await currentUser();
+  return createAuthUser(clerkUser);
+}
+```
+
+### Basic Role and Permission Checks
+
+```tsx
+import { hasRole, hasPermission } from '@repo/auth-core';
+
+// Check if user has a specific role
+if (hasRole(authUser, 'admin')) {
+  // Allow admin access
+}
+
+// Check if user has a specific permission
+if (hasPermission(authUser, 'manage-users')) {
+  // Allow user management
+}
+
+// Check if user belongs to an organization
+if (belongsToOrganization(authUser, 'org-123')) {
+  // Allow organization-specific access
+}
+```
+
+## Integration Modules
+
+Auth Core provides several integration modules that connect it with other auth packages:
+
+### RBAC Integration
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { createAbilityForAuthUser, canPerformAction } from '@repo/auth-core/integrations/rbac';
+
+// Create an ability instance for role-based access control
+const ability = createAbilityForAuthUser(authUser);
+
+// Check if user can perform an action
+if (ability.can('read', 'User')) {
+  // Allow user read access
+}
+
+// Or use the helper function
+if (canPerformAction(authUser, 'read', 'User')) {
+  // Allow user read access
+}
+```
+
+### Policy Integration
+
+```tsx
+import { createAuthUser } from '@repo/auth-core';
+import { canWithPolicy } from '@repo/auth-core/integrations/policy';
+
+// Check if user can perform an action using policy-based authorization
+const canManageUsers = await canWithPolicy(
+  authUser,
+  'users.manage',
+  'user',
+  { organizationId: authUser.organizationId }
+);
+
+if (canManageUsers) {
+  // Allow user management
+}
+```
+
+### React Hooks Integration
+
+```tsx
+import { useAuthUser, useHasRole, useCan, usePolicy } from '@repo/auth-core/integrations/hooks';
+
+function MyComponent() {
+  // Get the current auth user
+  const { user, isLoaded } = useAuthUser();
+  
+  // Check if user has a role
+  const { hasRole, isLoaded: roleLoaded } = useHasRole('admin');
+  
+  // Check if user can perform an action (RBAC)
+  const { can: canReadUsers, isLoaded: canLoaded } = useCan('read', 'User');
+  
+  // Check if user can perform an action (Policy)
+  const { can: canManageUsers, isLoaded: policyLoaded } = usePolicy('users.manage', 'user');
+  
+  if (!isLoaded || !roleLoaded || !canLoaded || !policyLoaded) {
+    return <Loading />;
+  }
+  
+  return (
+    <div>
+      {hasRole && <AdminPanel />}
+      {canReadUsers && <UserList />}
+      {canManageUsers && <UserManagement />}
+    </div>
+  );
+}
+```
+
+### UI Components Integration
+
+```tsx
+import { RoleGuard, AbilityGuard, PolicyGuard } from '@repo/auth-core/integrations/ui';
+
+function App() {
+  return (
+    <div>
+      {/* Only render for users with admin role */}
+      <RoleGuard role="admin" fallback={<AccessDenied />}>
+        <AdminPanel />
+      </RoleGuard>
+      
+      {/* Only render for users who can read users */}
+      <AbilityGuard action="read" subject="User" fallback={<AccessDenied />}>
+        <UserList />
+      </AbilityGuard>
+      
+      {/* Only render for users who can manage users */}
+      <PolicyGuard 
+        action="users.manage" 
+        resource="user" 
+        fallback={<AccessDenied />}
+      >
+        <UserManagement />
+      </PolicyGuard>
+    </div>
+  );
+}
+```
+
+## Progressive Enhancement
+
+One of the key benefits of Auth Core is the ability to start simple and add more advanced features as your application grows:
+
+1. **Start with Basic Auth**: Use Clerk authentication with basic role checks
+2. **Add RBAC**: Implement role-based access control for more granular permissions
+3. **Add Policy-Based Auth**: Implement complex authorization rules with policy-based auth
+4. **Add React Integration**: Use hooks and UI components for frontend integration
+
+## Type Definitions
+
+Auth Core provides comprehensive type definitions for all its functionality:
+
+```tsx
+// Core user representation
+interface AuthUser {
+  id: string;
+  roles: string[];
+  permissions: string[];
+  organizationId?: string;
+  metadata: Record<string, unknown>;
+}
+
+// Clerk user with metadata
+interface ClerkUserWithMetadata {
+  id?: string;
+  publicMetadata?: {
+    roles?: string[];
+    permissions?: string[];
+    organizationId?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+```
+
+## Best Practices
+
+1. **Use the standardized AuthUser**: Always convert Clerk users to AuthUser for consistent handling
+2. **Start simple**: Begin with basic role checks and add more advanced features as needed
+3. **Layer your permissions**: Use RBAC for common permissions and policy-based auth for complex rules
+4. **Use the UI components**: They handle loading states and provide consistent behavior
+5. **Type everything**: Take advantage of the comprehensive type definitions
+
+## Related Packages
+
+- [Authentication](/packages/authentication): Base authentication with Clerk
+- [Auth RBAC](/packages/auth-rbac): Role-based access control using CASL
+- [Auth Policy](/packages/auth-policy): Policy-based authorization
