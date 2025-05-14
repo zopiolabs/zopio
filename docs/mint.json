@@ -162,6 +162,7 @@
             "packages/seo/sitemap"
           ]
         },
+        "packages/statemanagement",
         "packages/storage",
         "packages/testing",
         "packages/toolbar",

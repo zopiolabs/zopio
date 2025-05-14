@@ -1,0 +1,186 @@
+---
+title: 'State Management'
+description: 'Manage application state with Zustand'
+---
+
+# State Management
+
+The `@repo/state` package provides a lightweight, flexible state management solution for Zopio applications using [Zustand](https://github.com/pmndrs/zustand). It's designed to be edge-compatible and modular, allowing you to use only the state stores you need.
+
+## Features
+
+- **Lightweight**: Minimal boilerplate and bundle size
+- **Edge-compatible**: Works in all environments including edge functions
+- **Modular**: Use only the stores you need
+- **Type-safe**: Full TypeScript support
+
+## Installation
+
+```bash
+pnpm add @repo/state
+```
+
+## Available Stores
+
+### Session Store
+
+The session store manages user session information.
+
+```typescript
+import { useSessionStore } from '@repo/state';
+
+// Get the current user ID
+const userId = useSessionStore((state) => state.userId);
+
+// Set the user ID
+const setUserId = useSessionStore((state) => state.setUserId);
+setUserId('user_123');
+
+// Clear the user ID on logout
+setUserId(null);
+```
+
+### Tenant Store
+
+The tenant store manages multi-tenant context for applications that support multiple organizations or workspaces.
+
+```typescript
+import { useTenantStore } from '@repo/state';
+
+// Get the current tenant ID
+const tenantId = useTenantStore((state) => state.tenantId);
+
+// Set the tenant ID when switching contexts
+const setTenantId = useTenantStore((state) => state.setTenantId);
+setTenantId('org_456');
+
+// Clear the tenant ID
+setTenantId(null);
+```
+
+### Feature Flags Store
+
+The feature flags store manages dynamic feature flags for your application, enabling feature toggling and A/B testing.
+
+```typescript
+import { useFeatureFlagsStore } from '@repo/state';
+
+// Get all feature flags
+const flags = useFeatureFlagsStore((state) => state.flags);
+
+// Check if a specific feature is enabled
+const isFeatureEnabled = flags['new-dashboard'] === true;
+
+// Set feature flags (typically done at app initialization)
+const setFlags = useFeatureFlagsStore((state) => state.setFlags);
+setFlags({
+  'new-dashboard': true,
+  'beta-features': false,
+  'experimental-editor': true
+});
+```
+
+## Usage with React
+
+### Basic Usage
+
+```typescript
+import { useSessionStore } from '@repo/state';
+
+function UserProfile() {
+  const userId = useSessionStore((state) => state.userId);
+  
+  if (!userId) {
+    return <div>Please log in</div>;
+  }
+  
+  return <div>User ID: {userId}</div>;
+}
+```
+
+### Updating State
+
+```typescript
+import { useSessionStore } from '@repo/state';
+
+function LoginButton() {
+  const setUserId = useSessionStore((state) => state.setUserId);
+  
+  const handleLogin = async () => {
+    // Perform login logic
+    const user = await loginUser();
+    setUserId(user.id);
+  };
+  
+  return <button onClick={handleLogin}>Log in</button>;
+}
+```
+
+### Using Multiple Stores
+
+```typescript
+import { useSessionStore, useTenantStore } from '@repo/state';
+
+function AppHeader() {
+  const userId = useSessionStore((state) => state.userId);
+  const tenantId = useTenantStore((state) => state.tenantId);
+  
+  return (
+    <header>
+      {userId && <span>User: {userId}</span>}
+      {tenantId && <span>Organization: {tenantId}</span>}
+    </header>
+  );
+}
+```
+
+## Best Practices
+
+1. **Selective Imports**: Only import the stores you need to minimize bundle size
+2. **Selective Selectors**: Select only the specific state properties you need
+3. **Memoization**: Use React's `useMemo` for derived state to prevent unnecessary re-renders
+4. **Persistence**: Consider using Zustand's persistence middleware for state that needs to survive page refreshes
+
+## Advanced Usage
+
+### Creating Custom Stores
+
+You can create your own custom stores following the same pattern:
+
+```typescript
+import { create } from 'zustand';
+
+interface CustomState {
+  value: string;
+  setValue: (value: string) => void;
+}
+
+export const useCustomStore = create<CustomState>((set) => ({
+  value: '',
+  setValue: (value) => set({ value }),
+}));
+```
+
+### Combining with Server State
+
+The state stores work well alongside server state management solutions like React Query or SWR:
+
+```typescript
+import { useQuery } from '@tanstack/react-query';
+import { useSessionStore } from '@repo/state';
+
+function UserData() {
+  const userId = useSessionStore((state) => state.userId);
+  
+  const { data, isLoading } = useQuery({
+    queryKey: ['user-data', userId],
+    queryFn: () => fetchUserData(userId),
+    enabled: !!userId,
+  });
+  
+  if (!userId) return <div>Please log in</div>;
+  if (isLoading) return <div>Loading...</div>;
+  
+  return <div>{data.name}</div>;
+}
+```
