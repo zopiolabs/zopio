@@ -1,0 +1,30 @@
+{
+  "name": "mobile-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3006",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@repo/design-system": "workspace:*",
+    "@repo/observability": "workspace:*",
+    "next": "15.3.0",
+    "next-pwa": "^5.6.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "workbox-window": "^7.0.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/node": "22.14.1",
+    "@types/react": "19.1.1",
+    "@types/react-dom": "19.1.2",
+    "tailwindcss": "^4.0.0-beta.1",
+    "typescript": "^5.8.3"
+  },
+  "type": "module"
+}
