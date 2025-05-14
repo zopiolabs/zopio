@@ -1,0 +1,177 @@
+{
+  "modules": [
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth",
+      "definition": "Main authentication module for user authentication and session management",
+      "importCode": "import { Auth } from '@repo/auth';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth-abac",
+      "definition": "Attribute-Based Access Control module for Zopio framework",
+      "importCode": "import { ABAC } from '@repo/auth-abac';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth-acp",
+      "definition": "Access Control Provider for Zopio framework",
+      "importCode": "import { ACP } from '@repo/auth-acp';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth-core",
+      "definition": "Core authentication utilities for integrating auth modules",
+      "importCode": "import { AuthCore } from '@repo/auth-core';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth-hooks",
+      "definition": "React access control hooks for Zopio framework",
+      "importCode": "import { useAuth } from '@repo/auth-hooks';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth-policy",
+      "definition": "Policy management and enforcement for authentication",
+      "importCode": "import { AuthPolicy } from '@repo/auth-policy';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth-rbac",
+      "definition": "Role-Based Access Control utilities using CASL",
+      "importCode": "import { RBAC } from '@repo/auth-rbac';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "auth-ui",
+      "definition": "React UI components for access control",
+      "importCode": "import { AuthUI } from '@repo/auth-ui';"
+    },
+    {
+      "category": "Performance",
+      "name": "caching",
+      "definition": "Caching infrastructure for improved performance",
+      "importCode": "import { Cache } from '@repo/caching';"
+    },
+    {
+      "category": "Content Management",
+      "name": "cms",
+      "definition": "Content Management System core functionality",
+      "importCode": "import { CMS } from '@repo/cms';"
+    },
+    {
+      "category": "Data Management",
+      "name": "database",
+      "definition": "Database access and management utilities",
+      "importCode": "import { Database } from '@repo/database';"
+    },
+    {
+      "category": "UI Components",
+      "name": "design-system",
+      "definition": "Core UI components and design system",
+      "importCode": "import { DesignSystem } from '@repo/design-system';"
+    },
+    {
+      "category": "Communication",
+      "name": "email",
+      "definition": "Email templating and sending functionality",
+      "importCode": "import { Email } from '@repo/email';"
+    },
+    {
+      "category": "Event Handling",
+      "name": "event-bus",
+      "definition": "Event bus for application-wide pub/sub",
+      "importCode": "import { EventBus } from '@repo/event-bus';"
+    },
+    {
+      "category": "Feature Management",
+      "name": "feature-flags",
+      "definition": "Feature flag management and toggling",
+      "importCode": "import { FeatureFlags } from '@repo/feature-flags';"
+    },
+    {
+      "category": "Localization",
+      "name": "internationalization",
+      "definition": "Internationalization package including formatters for dates, times, numbers, and currency",
+      "importCode": "import { I18n } from '@repo/internationalization';"
+    },
+    {
+      "category": "Communication",
+      "name": "notifications",
+      "definition": "In-app notification system",
+      "importCode": "import { Notifications } from '@repo/notifications';"
+    },
+    {
+      "category": "Payment Processing",
+      "name": "payments",
+      "definition": "Payment processing and management",
+      "importCode": "import { Payments } from '@repo/payments';"
+    },
+    {
+      "category": "Plugin System",
+      "name": "plugin-runtime",
+      "definition": "Plugin system runtime and management",
+      "importCode": "import { PluginRuntime } from '@repo/plugin-runtime';"
+    },
+    {
+      "category": "Security",
+      "name": "rate-limit",
+      "definition": "Rate limiting middleware and utilities",
+      "importCode": "import { RateLimit } from '@repo/rate-limit';"
+    },
+    {
+      "category": "Runtime",
+      "name": "runtime-adapter",
+      "definition": "Abstraction layer for runtime-specific logic",
+      "importCode": "import { RuntimeAdapter } from '@repo/runtime-adapter';"
+    },
+    {
+      "category": "Security",
+      "name": "security",
+      "definition": "Core security utilities and helpers",
+      "importCode": "import { Security } from '@repo/security';"
+    },
+    {
+      "category": "Security",
+      "name": "security-headers",
+      "definition": "Security header middleware for Next.js apps",
+      "importCode": "import { SecurityHeaders } from '@repo/security-headers';"
+    },
+    {
+      "category": "Storage",
+      "name": "storage",
+      "definition": "File storage and management system",
+      "importCode": "import { Storage } from '@repo/storage';"
+    },
+    {
+      "category": "Authentication & Authorization",
+      "name": "token",
+      "definition": "Token management and validation",
+      "importCode": "import { Token } from '@repo/token';"
+    },
+    {
+      "category": "Integration",
+      "name": "webhooks",
+      "definition": "Webhook handling and management",
+      "importCode": "import { Webhooks } from '@repo/webhooks';"
+    }
+  ],
+  "categories": [
+    "Authentication & Authorization",
+    "Communication",
+    "Content Management",
+    "Data Management",
+    "Event Handling",
+    "Feature Management",
+    "Integration",
+    "Localization",
+    "Payment Processing",
+    "Performance",
+    "Plugin System",
+    "Runtime",
+    "Security",
+    "Storage",
+    "UI Components"
+  ]
+}

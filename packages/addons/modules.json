@@ -1,0 +1,87 @@
+{
+  "modules": [
+    {
+      "category": "AI & Machine Learning",
+      "name": "ai",
+      "definition": "AI integration module for machine learning and AI-powered features",
+      "importCode": "import { AI } from '@repo/ai';"
+    },
+    {
+      "category": "Analytics & Monitoring",
+      "name": "analytics",
+      "definition": "Analytics integration for tracking user behavior and application metrics",
+      "importCode": "import { Analytics } from '@repo/analytics';"
+    },
+    {
+      "category": "Analytics & Monitoring",
+      "name": "betterstack",
+      "definition": "Better Stack integration for uptime monitoring and logging",
+      "importCode": "import { BetterStack } from '@repo/betterstack';"
+    },
+    {
+      "category": "Team & Collaboration",
+      "name": "collaboration",
+      "definition": "Real-time collaboration features and team workspace tools",
+      "importCode": "import { Collaboration } from '@repo/collaboration';"
+    },
+    {
+      "category": "Security & Compliance",
+      "name": "compliance",
+      "definition": "Compliance tools and security policy enforcement",
+      "importCode": "import { Compliance } from '@repo/compliance';"
+    },
+    {
+      "category": "Analytics & Monitoring",
+      "name": "observability",
+      "definition": "Application observability with OpenTelemetry integration",
+      "importCode": "import { Observability } from '@repo/observability';"
+    },
+    {
+      "category": "User Experience",
+      "name": "onboarding",
+      "definition": "User onboarding flows and guided tutorials",
+      "importCode": "import { Onboarding } from '@repo/onboarding';"
+    },
+    {
+      "category": "Infrastructure",
+      "name": "queue",
+      "definition": "Background job processing and message queue system",
+      "importCode": "import { Queue } from '@repo/queue';"
+    },
+    {
+      "category": "SEO & Marketing",
+      "name": "seo",
+      "definition": "Search engine optimization tools and meta tag management",
+      "importCode": "import { SEO } from '@repo/seo';"
+    },
+    {
+      "category": "State Management",
+      "name": "state",
+      "definition": "Global state management and persistence",
+      "importCode": "import { State } from '@repo/state';"
+    },
+    {
+      "category": "Development & Testing",
+      "name": "testing",
+      "definition": "Testing utilities and test data generation",
+      "importCode": "import { Testing } from '@repo/testing';"
+    },
+    {
+      "category": "Infrastructure",
+      "name": "trigger-dev",
+      "definition": "Integration module for Trigger.dev background jobs and workflows",
+      "importCode": "import { TriggerDev } from '@repo/trigger-dev';"
+    }
+  ],
+  "categories": [
+    "AI & Machine Learning",
+    "Analytics & Monitoring",
+    "Development & Testing",
+    "Infrastructure",
+    "Security & Compliance",
+    "SEO & Marketing",
+    "State Management",
+    "Team & Collaboration",
+    "User Experience"
+  ]
+}

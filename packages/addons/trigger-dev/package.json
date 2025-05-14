@@ -1,0 +1,9 @@
+
+{
+  "name": "@addons/trigger-dev",
+  "version": "0.1.0",
+  "main": "src/client.ts",
+  "dependencies": {
+    "@trigger.dev/sdk": "^2.0.0"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "modules": [
+    {
+      "category": "Core",
+      "name": "crud",
+      "definition": "CRUD operations and utilities for data management",
+      "importCode": "import { CRUD } from '@repo/crud';"
+    },
+    {
+      "category": "Core",
+      "name": "data-core",
+      "definition": "Core data utilities for Zopio framework",
+      "importCode": "import { DataCore } from '@repo/data-core';"
+    },
+    {
+      "category": "Forms & Validation",
+      "name": "data-form",
+      "definition": "Form handling and validation utilities",
+      "importCode": "import { useDataForm } from '@repo/data-form';"
+    },
+    {
+      "category": "React Hooks",
+      "name": "data-hooks",
+      "definition": "React hooks for data management",
+      "importCode": "import { useData } from '@repo/data-hooks';"
+    },
+    {
+      "category": "Data Operations",
+      "name": "data-mutation",
+      "definition": "Data mutation utilities and hooks",
+      "importCode": "import { useMutation } from '@repo/data-mutation';"
+    },
+    {
+      "category": "Data Access",
+      "name": "data-provider",
+      "definition": "Base data provider interface and utilities",
+      "importCode": "import { DataProvider } from '@repo/data-provider';"
+    },
+    {
+      "category": "Data Access",
+      "name": "data-provider-prisma",
+      "definition": "Prisma data provider implementation",
+      "importCode": "import { PrismaProvider } from '@repo/data-provider-prisma';"
+    },
+    {
+      "category": "Data Access",
+      "name": "data-provider-prisma-advanced",
+      "definition": "Advanced Prisma data provider with additional features",
+      "importCode": "import { AdvancedPrismaProvider } from '@repo/data-provider-prisma-advanced';"
+    },
+    {
+      "category": "Data Operations",
+      "name": "data-query",
+      "definition": "Data query utilities and hooks",
+      "importCode": "import { useQuery } from '@repo/data-query';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table",
+      "definition": "Basic data table with sorting, filtering and pagination",
+      "importCode": "import { useTable } from '@repo/data-table';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-advanced",
+      "definition": "Advanced data table with additional features",
+      "importCode": "import { useAdvancedTable } from '@repo/data-table-advanced';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-bulk",
+      "definition": "Data table with bulk actions support",
+      "importCode": "import { useBulkTable } from '@repo/data-table-bulk';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-combined",
+      "definition": "Combined data table with all features",
+      "importCode": "import { useCombinedTable } from '@repo/data-table-combined';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-filters",
+      "definition": "Enhanced filtering capabilities for data tables",
+      "importCode": "import { useTableFilters } from '@repo/data-table-filters';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-inline",
+      "definition": "Data table with inline editing support",
+      "importCode": "import { useInlineTable } from '@repo/data-table-inline';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-layout",
+      "definition": "Layout components for data tables",
+      "importCode": "import { TableLayout } from '@repo/data-table-layout';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-live",
+      "definition": "Real-time data table with live updates",
+      "importCode": "import { useLiveTable } from '@repo/data-table-live';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-provider",
+      "definition": "Data provider integration for tables",
+      "importCode": "import { TableProvider } from '@repo/data-table-provider';"
+    },
+    {
+      "category": "UI Components",
+      "name": "data-table-url-sync",
+      "definition": "URL state synchronization for data tables",
+      "importCode": "import { useUrlSyncTable } from '@repo/data-table-url-sync';"
+    }
+  ],
+  "categories": [
+    "Core",
+    "Forms & Validation",
+    "React Hooks",
+    "Data Operations",
+    "Data Access",
+    "UI Components"
+  ]
+}

@@ -1,0 +1,9 @@
+
+{
+  "name": "@addons/betterstack",
+  "version": "0.1.0",
+  "main": "src/monitor.ts",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
