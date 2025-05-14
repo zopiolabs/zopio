@@ -9,7 +9,16 @@ description: We use Clerk to handle authentication, user and organization manage
 
 Zopio manages authentication through the use of a `auth` package. By default, this package is a wrapper around [Clerk](https://clerk.com/) which provides a complete authentication and user management solution that integrates seamlessly with Next.js applications.
 
-## In-App
+## Overview
+
+The authentication system is built around Clerk, which provides a complete authentication and user management solution that integrates seamlessly with Next.js applications. The `@repo/auth` package includes:
+
+- **AuthProvider**: A wrapper around Clerk's `ClerkProvider` with theme support and customization options
+- **SignIn/SignUp Components**: Pre-built components for authentication flows
+- **Server Utilities**: Functions for server-side authentication checks and user data access
+- **Middleware**: Authentication middleware for protecting routes
+
+## In-App Usage
 
 The `@repo/auth` package exposes an `AuthProvider`, however you don't need to use this directly. The [`DesignSystemProvider`](/packages/design-system/provider) includes all relevant providers and higher-order components.
 
@@ -19,6 +28,55 @@ From here, you can use all the pre-built components and hooks provided by Clerk.
   <img src="/images/sign-in.png" alt="Sign In Page" />
 </Frame>
 
+## Client-side Authentication
+
+You can use Clerk's client-side hooks and components for authentication flows:
+
+```tsx
+import { useUser, SignedIn, SignedOut } from '@repo/auth/client';
+
+const MyComponent = () => {
+  const { user } = useUser();
+  
+  return (
+    <>
+      <SignedIn>
+        <p>Welcome, {user.firstName}!</p>
+      </SignedIn>
+      <SignedOut>
+        <p>Please sign in</p>
+      </SignedOut>
+    </>
+  );
+};
+```
+
+## Server-side Authentication
+
+For server components and API routes, use the server-side authentication utilities:
+
+```tsx
+import { auth, currentUser, getUserRoles } from '@repo/auth/server';
+
+const ServerComponent = async () => {
+  const user = await currentUser();
+  const roles = getUserRoles(user);
+  
+  if (!user) {
+    // Handle unauthenticated user
+  }
+  
+  return <div>Hello, {user.firstName}!</div>;
+};
+```
+
+## Integration with Other Packages
+
+The authentication system integrates with two other packages:
+
+1. **[auth-policy](/packages/auth-policy)**: Provides policy-based authorization using user roles from Clerk
+2. **[auth-rbac](/packages/auth-rbac)**: Provides role-based access control using CASL
+
 ## Webhooks
 
 Clerk uses webhooks to handle authentication events. These are handled in the `POST /webhooks/clerk` route in the `api` app. Make sure you enable the webhook events you need in your Clerk project settings.
@@ -27,6 +85,18 @@ Clerk uses webhooks to handle authentication events. These are handled in the `P
 
 Clerk handles authentication and authorization emails automatically. You can configure the theming of Clerk-sent emails in their dashboard.
 
-### Local Development
+## Environment Variables
+
+The following environment variables are required:
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Your Clerk publishable key
+- `CLERK_SECRET_KEY`: Your Clerk secret key
+- `NEXT_PUBLIC_CLERK_SIGN_IN_URL`: URL for sign in page (e.g., "/sign-in")
+- `NEXT_PUBLIC_CLERK_SIGN_UP_URL`: URL for sign up page (e.g., "/sign-up")
+- `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL`: Redirect URL after sign in (e.g., "/dashboard")
+- `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL`: Redirect URL after sign up (e.g., "/onboarding")
+- `CLERK_WEBHOOK_SECRET`: Secret for Clerk webhooks (optional)
+
+## Local Development
 
 Currently there's no way to easily test Clerk webhooks locally, so you'll have to test them in a staging environment. This means deploying your app to a "production" state Vercel project with development environment variables e.g. `staging-api.example.com`. Then you can add this URL to your Clerk project's webhook settings.

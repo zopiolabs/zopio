@@ -1,0 +1,153 @@
+---
+title: Auth RBAC
+description: Role-Based Access Control (RBAC) utilities using CASL, integrated with Clerk authentication.
+---
+
+# Auth RBAC
+
+The `@zopio/auth-rbac` package provides Role-Based Access Control (RBAC) utilities using CASL, integrated with Clerk authentication. It enables fine-grained permission control based on user roles stored in Clerk's metadata.
+
+## Overview
+
+The auth-rbac package implements a robust RBAC system that allows you to:
+
+- Define permissions based on user roles
+- Check permissions using CASL's intuitive API
+- Handle conditional permissions based on resource ownership
+- Seamlessly integrate with Clerk authentication
+
+## Integration with Clerk
+
+This package is designed to work with Clerk authentication. It uses the roles stored in Clerk's `publicMetadata.roles` field to determine user permissions based on predefined role abilities.
+
+## Available Roles
+
+The following roles are defined in the system:
+
+- `guest`: Basic read access to public resources
+- `user`: Standard user permissions for personal resources
+- `developer`: Extended permissions for development features
+- `admin`: Full system access
+
+## Basic Usage
+
+```tsx
+import { createAbilityFor } from '@zopio/auth-rbac';
+import { currentUser } from '@repo/auth/server';
+
+// In a server component
+async function ProtectedComponent() {
+  const user = await currentUser();
+  
+  // Create ability instance based on Clerk user
+  const ability = createAbilityFor(user);
+  
+  // Check permissions
+  const canManageUsers = ability.can('read', 'User');
+  const canAccessDashboard = ability.can('read', 'Dashboard');
+  
+  return (
+    <div>
+      {canAccessDashboard && <DashboardComponent />}
+      {canManageUsers && <UserManagementComponent />}
+    </div>
+  );
+}
+```
+
+## Permission Model
+
+The permission model is based on CASL's ability system, which uses actions and subjects:
+
+```tsx
+// Available actions
+type Actions = 'manage' | 'create' | 'read' | 'update' | 'delete';
+
+// Available subjects
+type Subjects =
+  | 'Dashboard'
+  | 'Profile'
+  | 'User'
+  | 'Plugin'
+  | 'FeatureFlag'
+  | 'Organization'
+  | 'Public'
+  | 'all';
+```
+
+## Role Abilities
+
+Each role has a set of predefined abilities:
+
+### Guest
+```tsx
+[
+  { action: 'read', subject: 'Public' }
+]
+```
+
+### User
+```tsx
+[
+  { action: 'read', subject: 'Dashboard' },
+  { action: 'read', subject: 'Profile' },
+  { action: 'update', subject: 'Profile', conditions: { userId: 'USER_ID_PLACEHOLDER' } },
+  { action: 'delete', subject: 'Profile', inverted: true } // 'cannot' rule
+]
+```
+
+### Developer
+```tsx
+[
+  { action: 'read', subject: 'Dashboard' },
+  { action: 'read', subject: 'Profile' },
+  { action: 'update', subject: 'Profile' },
+  { action: 'read', subject: 'User' }
+]
+```
+
+### Admin
+```tsx
+[
+  { action: 'manage', subject: 'all' }
+]
+```
+
+## Adding New Permissions
+
+To add new permissions, update the `roles.ts` file with new subjects and role abilities:
+
+```tsx
+// Add new subject type
+export type Subjects = 
+  | 'Dashboard'
+  | 'Profile'
+  | 'NewFeature'  // New subject
+  | 'all';
+
+// Add permissions for roles
+export const roleAbilities = {
+  user: [
+    // Existing permissions...
+    { action: 'read', subject: 'NewFeature' }
+  ],
+  admin: [
+    { action: 'manage', subject: 'all' }
+  ]
+};
+```
+
+## Conditional Permissions
+
+You can add conditions to permissions that are evaluated at runtime:
+
+```tsx
+// Only allow users to update their own profile
+{ 
+  action: 'update', 
+  subject: 'Profile', 
+  conditions: { userId: 'USER_ID_PLACEHOLDER' } 
+}
+```
+
+The `USER_ID_PLACEHOLDER` will be automatically replaced with the current user's ID when checking permissions.

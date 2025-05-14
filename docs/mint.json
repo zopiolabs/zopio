@@ -93,7 +93,14 @@
           "group": "Analytics",
           "pages": ["packages/analytics/web", "packages/analytics/product"]
         },
-        "packages/authentication",
+        {
+          "group": "Authentication",
+          "pages": [
+            "packages/authentication",
+            "packages/auth-policy",
+            "packages/auth-rbac"
+          ]
+        },
         "packages/caching",
         "packages/cms",
         "packages/collaboration",
