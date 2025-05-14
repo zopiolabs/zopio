@@ -1,0 +1,382 @@
+---
+title: Data Query
+description: React hooks for data querying in Zopio framework
+---
+
+# Data Query
+
+The `@repo/data-query` package provides a collection of React hooks for data querying in Zopio applications. These hooks simplify the process of fetching and managing data while handling loading states, errors, and refetching.
+
+## Overview
+
+Data Query offers a set of React hooks that make it easy to fetch data with proper state management. The hooks integrate with the data-core package and support various data providers.
+
+## Installation
+
+```bash
+npm install @repo/data-query
+```
+
+## Basic Usage
+
+### Fetching a Single Resource
+
+```tsx
+import { useGetOne } from '@repo/data-query';
+
+function UserProfile({ userId }) {
+  const { data: user, loading, error } = useGetOne('users', userId);
+  
+  if (loading) return <div>Loading user...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!user) return <div>User not found</div>;
+  
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>Email: {user.email}</p>
+      <p>Role: {user.role}</p>
+    </div>
+  );
+}
+```
+
+### Fetching a List of Resources
+
+```tsx
+import { useGetList } from '@repo/data-query';
+
+function ProductList({ category }) {
+  const { data: products, loading, error } = useGetList(
+    'products',
+    { category }
+  );
+  
+  if (loading) return <div>Loading products...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!products?.length) return <div>No products found</div>;
+  
+  return (
+    <ul>
+      {products.map(product => (
+        <li key={product.id}>
+          <h3>{product.name}</h3>
+          <p>${product.price}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### Manual Refetching
+
+```tsx
+import { useGetList } from '@repo/data-query';
+
+function ProductListWithRefresh() {
+  const { 
+    data: products, 
+    loading, 
+    error, 
+    refetch 
+  } = useGetList('products');
+  
+  return (
+    <div>
+      <div className="header">
+        <h2>Products</h2>
+        <button onClick={() => refetch()} disabled={loading}>
+          {loading ? 'Refreshing...' : 'Refresh'}
+        </button>
+      </div>
+      
+      {error && <div className="error">{error.message}</div>}
+      
+      <ul>
+        {products?.map(product => (
+          <li key={product.id}>{product.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+## Advanced Usage
+
+### Using Custom Data Provider
+
+You can specify a custom data provider to use with the hooks:
+
+```tsx
+import { useGetList } from '@repo/data-query';
+import { dataProvider as prismaProvider } from '@repo/data-provider-prisma';
+
+function UserList() {
+  const { data: users, loading } = useGetList('users', {}, {
+    dataProvider: prismaProvider
+  });
+  
+  // Component implementation...
+}
+```
+
+### Custom Query Hook
+
+For more complex cases, you can use the base query hook:
+
+```tsx
+import { useQuery } from '@repo/data-query';
+
+function SearchProducts({ searchTerm }) {
+  const { data, loading, error, refetch } = useQuery(
+    async () => {
+      if (!searchTerm) return [];
+      
+      const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`);
+      if (!response.ok) {
+        throw new Error('Search failed');
+      }
+      return response.json();
+    },
+    {
+      enabled: Boolean(searchTerm), // Only run query when searchTerm exists
+      onSuccess: (results) => {
+        console.log(`Found ${results.length} results`);
+      }
+    }
+  );
+  
+  return (
+    <div>
+      {loading && <div>Searching...</div>}
+      {error && <div className="error">{error.message}</div>}
+      {data && (
+        <ul>
+          {data.map(item => (
+            <li key={item.id}>{item.name}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+```
+
+### Auto-Refreshing Data
+
+You can set up automatic refetching at regular intervals:
+
+```tsx
+import { useGetList } from '@repo/data-query';
+
+function LiveStockPrices() {
+  const { data: stocks, loading, error } = useGetList(
+    'stocks',
+    {},
+    {
+      refetchInterval: 5000 // Refetch every 5 seconds
+    }
+  );
+  
+  return (
+    <div>
+      <h2>Live Stock Prices</h2>
+      {loading && <div className="loading-indicator">Updating...</div>}
+      {error && <div className="error">{error.message}</div>}
+      <table>
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stocks?.map(stock => (
+            <tr key={stock.symbol}>
+              <td>{stock.symbol}</td>
+              <td>${stock.price.toFixed(2)}</td>
+              <td className={stock.change > 0 ? 'positive' : 'negative'}>
+                {stock.change > 0 ? '+' : ''}{stock.change.toFixed(2)}%
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+
+### Conditional Fetching
+
+You can control when a query runs:
+
+```tsx
+import { useGetOne } from '@repo/data-query';
+
+function ConditionalUserProfile({ userId, shouldFetch }) {
+  const { data: user, loading } = useGetOne(
+    'users',
+    userId,
+    { 
+      enabled: Boolean(userId) && shouldFetch 
+    }
+  );
+  
+  if (!shouldFetch) return <div>Fetching disabled</div>;
+  if (!userId) return <div>No user ID provided</div>;
+  if (loading) return <div>Loading...</div>;
+  
+  return (
+    <div>
+      <h1>{user?.name || 'Unknown User'}</h1>
+    </div>
+  );
+}
+```
+
+## Integration with Data Hooks
+
+Data Query works well with the `@repo/data-hooks` package for a complete data management solution:
+
+```tsx
+import { useGetList } from '@repo/data-query';
+import { useDelete } from '@repo/data-hooks';
+
+function UserTable() {
+  const { 
+    data: users, 
+    loading: fetchLoading, 
+    error: fetchError,
+    refetch
+  } = useGetList('users');
+  
+  const { 
+    mutate: deleteUser, 
+    loading: deleteLoading 
+  } = useDelete('users', {
+    onSuccess: () => refetch() // Refetch the list after deletion
+  });
+  
+  const handleDelete = async (userId) => {
+    if (confirm('Are you sure you want to delete this user?')) {
+      try {
+        await deleteUser(userId);
+      } catch (err) {
+        console.error('Failed to delete user:', err);
+      }
+    }
+  };
+  
+  if (fetchLoading) return <div>Loading users...</div>;
+  if (fetchError) return <div>Error: {fetchError.message}</div>;
+  
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users?.map(user => (
+          <tr key={user.id}>
+            <td>{user.name}</td>
+            <td>{user.email}</td>
+            <td>
+              <button 
+                onClick={() => handleDelete(user.id)}
+                disabled={deleteLoading}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+## API Reference
+
+### useQuery
+
+```tsx
+function useQuery<TData>(
+  queryFn: () => Promise<TData>,
+  options?: {
+    enabled?: boolean;
+    initialData?: TData | null;
+    onSuccess?: (data: TData) => void;
+    onError?: (error: Error) => void;
+    dataProvider?: DataProvider;
+    refetchInterval?: number;
+  }
+): {
+  data: TData | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => Promise<TData | undefined>;
+}
+```
+
+### useGetOne
+
+```tsx
+function useGetOne<TData = Record<string, unknown>>(
+  resource: string,
+  id?: number | string,
+  options?: {
+    enabled?: boolean;
+    initialData?: TData | null;
+    onSuccess?: (data: TData) => void;
+    onError?: (error: Error) => void;
+    dataProvider?: DataProvider;
+    refetchInterval?: number;
+  }
+): {
+  data: TData | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => Promise<TData | undefined>;
+}
+```
+
+### useGetList
+
+```tsx
+function useGetList<TData = Record<string, unknown>[]>(
+  resource: string,
+  query?: Record<string, unknown>,
+  options?: {
+    enabled?: boolean;
+    initialData?: TData | null;
+    onSuccess?: (data: TData) => void;
+    onError?: (error: Error) => void;
+    dataProvider?: DataProvider;
+    refetchInterval?: number;
+  }
+): {
+  data: TData | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => Promise<TData | undefined>;
+}
+```
+
+## Best Practices
+
+1. **Handle loading states**: Always show loading indicators when data is being fetched
+2. **Error handling**: Display meaningful error messages when data fetching fails
+3. **Empty states**: Handle cases where no data is returned
+4. **Conditional fetching**: Use the `enabled` option to control when queries run
+5. **Refetching**: Use the `refetch` function to manually refresh data when needed
+6. **Auto-refresh**: Use the `refetchInterval` option for data that needs to be kept up-to-date
+7. **Initial data**: Provide `initialData` when you have data available before the query runs

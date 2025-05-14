@@ -1,0 +1,20 @@
+{
+  "name": "@repo/data-hooks",
+  "version": "0.1.0",
+  "description": "React hooks for data mutations in Zopio framework",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "@repo/data-core": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.2.0"
+  }
+}

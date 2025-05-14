@@ -1,0 +1,245 @@
+---
+title: Data Core
+description: Core data utilities for Zopio framework
+---
+
+# Data Core
+
+The `@repo/data-core` package provides a standardized interface for data operations in Zopio applications. It serves as the foundation for all data-related modules, allowing developers to use basic data fetching without complexity while providing the ability to add advanced features when needed.
+
+## Overview
+
+Data Core offers a unified approach to data operations with:
+
+- Common types and interfaces used across all data modules
+- A basic fetch-based data provider for simple use cases
+- Mutation utilities for data modifications
+- Extensibility for more advanced data providers
+
+## Installation
+
+```bash
+npm install @repo/data-core
+```
+
+## Basic Usage
+
+### Data Provider
+
+The data provider is the central concept in Data Core. It provides a standard interface for CRUD operations:
+
+```tsx
+import { dataProvider } from '@repo/data-core';
+
+// Get a single resource
+const user = await dataProvider.getOne({ 
+  resource: 'users', 
+  id: 123 
+});
+
+// Get a list of resources
+const products = await dataProvider.getList({ 
+  resource: 'products',
+  query: { category: 'electronics' } 
+});
+
+// Create a resource
+const newOrder = await dataProvider.create({ 
+  resource: 'orders',
+  variables: { 
+    userId: 123,
+    items: [{ productId: 456, quantity: 1 }]
+  } 
+});
+
+// Update a resource
+const updatedUser = await dataProvider.update({ 
+  resource: 'users',
+  id: 123,
+  variables: { name: 'New Name' } 
+});
+
+// Delete a resource
+const deletedProduct = await dataProvider.delete({ 
+  resource: 'products',
+  id: 456 
+});
+```
+
+### Creating a Custom Data Provider
+
+You can create a custom data provider for your specific backend:
+
+```tsx
+import { createFetchDataProvider } from '@repo/data-core';
+
+// Create a provider with a custom API URL
+const myDataProvider = createFetchDataProvider('/api/v2');
+
+// Use the custom provider
+const users = await myDataProvider.getList({ resource: 'users' });
+```
+
+### Mutations
+
+Data Core provides utilities for handling mutations:
+
+```tsx
+import { createMutation } from '@repo/data-core';
+
+// Create a mutation function
+const updateUser = createMutation(
+  async (userData) => {
+    const response = await fetch(`/api/users/${userData.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(userData)
+    });
+    return response.json();
+  },
+  {
+    onSuccess: (result) => console.log('User updated:', result),
+    onError: (error) => console.error('Update failed:', error)
+  }
+);
+
+// Use the mutation
+const result = await updateUser({ id: 123, name: 'New Name' });
+```
+
+## Integration with Other Data Modules
+
+Data Core is designed to work seamlessly with other data modules:
+
+### With Data Hooks
+
+```tsx
+import { useCreate, useUpdate, useDelete } from '@repo/data-hooks';
+
+function UserForm() {
+  // Use the create hook with the default data provider
+  const { mutate: createUser, loading } = useCreate('users');
+  
+  const handleSubmit = async (userData) => {
+    await createUser(userData);
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form fields */}
+      <button type="submit" disabled={loading}>Create User</button>
+    </form>
+  );
+}
+```
+
+### With Data Query
+
+```tsx
+import { useGetOne, useGetList } from '@repo/data-query';
+
+function UserProfile({ userId }) {
+  // Fetch a single user
+  const { data: user, loading, error } = useGetOne('users', userId);
+  
+  if (loading) return <Loading />;
+  if (error) return <Error message={error.message} />;
+  
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  );
+}
+```
+
+### With Prisma Data Provider
+
+```tsx
+import { dataProvider } from '@repo/data-provider-prisma';
+import { useGetList } from '@repo/data-query';
+
+function ProductList() {
+  // Use the Prisma data provider with the query hook
+  const { data: products, loading } = useGetList('products', {}, { 
+    dataProvider 
+  });
+  
+  if (loading) return <Loading />;
+  
+  return (
+    <ul>
+      {products.map(product => (
+        <li key={product.id}>{product.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## Advanced Usage
+
+For more complex applications, you can use the advanced data providers:
+
+```tsx
+import { createAdvancedPrismaDataProvider } from '@repo/data-provider-prisma-advanced';
+
+// Create a provider with custom resource handlers
+const advancedProvider = createAdvancedPrismaDataProvider({
+  users: {
+    getList: async (params) => {
+      // Custom implementation for fetching users
+      // with role-based filtering, pagination, etc.
+    }
+  }
+});
+
+// Use the advanced provider
+const users = await advancedProvider.getList({ 
+  resource: 'users',
+  query: { role: 'admin' } 
+});
+```
+
+## API Reference
+
+### DataParams
+
+```tsx
+type DataParams = {
+  resource: string;
+  id?: number | string;
+  variables?: Record<string, unknown>;
+  query?: Record<string, unknown>;
+};
+```
+
+### DataProvider
+
+```tsx
+type DataProvider = {
+  getOne: (params: DataParams) => Promise<any>;
+  getList: (params: DataParams) => Promise<any[]>;
+  create: (params: DataParams) => Promise<any>;
+  update: (params: DataParams) => Promise<any>;
+  delete: (params: DataParams) => Promise<any>;
+};
+```
+
+### MutationOptions
+
+```tsx
+type MutationOptions<TResult> = {
+  onSuccess?: (result: TResult) => void;
+  onError?: (error: Error) => void;
+  invalidateQueries?: string[];
+};
+```
+
+## Best Practices
+
+1. **Start simple**: Begin with the basic data provider for simple applications
+2. **Add hooks as needed**: Use data-hooks and data-query for React integration
+3. **Upgrade providers**: Move to specialized providers like data-provider-prisma as your application grows
+4. **Advanced features**: Use data-provider-prisma-advanced for complex scenarios with custom logic
+5. **Consistent interface**: Maintain the same interface across all data providers for easy swapping

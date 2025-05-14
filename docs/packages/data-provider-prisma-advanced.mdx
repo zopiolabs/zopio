@@ -1,0 +1,436 @@
+---
+title: Data Provider Prisma Advanced
+description: Advanced Prisma data provider for Zopio with resource-based resolvers
+---
+
+# Data Provider Prisma Advanced
+
+The `@repo/data-provider-prisma-advanced` package provides an advanced Prisma-based implementation of the data provider interface for Zopio applications. It extends the basic Prisma data provider with resource-specific handlers, audit logging, soft deletes, and more complex data operations.
+
+## Overview
+
+Data Provider Prisma Advanced is designed for applications with complex data requirements that go beyond simple CRUD operations. It allows you to define custom behavior for each resource type while maintaining the standard data provider interface from data-core.
+
+## Installation
+
+```bash
+npm install @repo/data-provider-prisma-advanced
+```
+
+## Basic Usage
+
+### Using the Default Provider
+
+```tsx
+import { dataProvider } from '@repo/data-provider-prisma-advanced';
+
+// Get a single user with sensitive fields hidden
+const user = await dataProvider.getOne({
+  resource: 'users',
+  id: 123
+});
+
+// Get active products only
+const products = await dataProvider.getList({
+  resource: 'products'
+});
+
+// Create an order with audit logging
+const newOrder = await dataProvider.create({
+  resource: 'orders',
+  variables: {
+    userId: 123,
+    items: [{ productId: 456, quantity: 1 }]
+  }
+});
+
+// Update a user with audit logging
+const updatedUser = await dataProvider.update({
+  resource: 'users',
+  id: 123,
+  variables: { name: 'New Name' }
+});
+
+// Soft delete an order instead of hard delete
+const deletedOrder = await dataProvider.delete({
+  resource: 'orders',
+  id: 456
+});
+```
+
+## Advanced Usage
+
+### Creating a Custom Advanced Provider
+
+You can create a custom advanced Prisma data provider with resource-specific handlers:
+
+```tsx
+import { createAdvancedPrismaDataProvider } from '@repo/data-provider-prisma-advanced';
+
+// Create a provider with custom resource handlers
+const customProvider = createAdvancedPrismaDataProvider({
+  users: {
+    // Custom handler for getting a list of users
+    getList: async (params) => {
+      // Get the Prisma client from your context or import it
+      const { prisma } = require('../lib/prisma');
+      
+      // Implement custom logic for fetching users
+      return prisma.user.findMany({
+        where: {
+          // Filter out deleted users
+          deleted: false,
+          // Apply any query filters
+          ...params.query,
+          // Add role-based filtering
+          ...(params.query?.role ? { role: params.query.role } : {})
+        },
+        // Select specific fields
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          createdAt: true,
+          // Exclude sensitive fields
+          password: false
+        },
+        // Add sorting
+        orderBy: { createdAt: 'desc' }
+      });
+    },
+    
+    // Custom handler for updating a user
+    update: async (id, data, params) => {
+      const { prisma } = require('../lib/prisma');
+      const { currentUser } = params;
+      
+      // Check if user has permission to update
+      if (currentUser.role !== 'admin' && currentUser.id !== id) {
+        throw new Error('Unauthorized');
+      }
+      
+      // Create audit log entry
+      await prisma.auditLog.create({
+        data: {
+          action: 'update',
+          resource: 'users',
+          resourceId: String(id),
+          userId: currentUser.id,
+          details: JSON.stringify(data)
+        }
+      });
+      
+      // Update the user
+      return prisma.user.update({
+        where: { id: Number(id) },
+        data
+      });
+    }
+  },
+  
+  products: {
+    // Custom handler for getting a list of products
+    getList: async (params) => {
+      const { prisma } = require('../lib/prisma');
+      
+      return prisma.product.findMany({
+        where: {
+          // Only show active products by default
+          active: true,
+          // Apply any query filters
+          ...params.query
+        },
+        // Include category relation
+        include: {
+          category: true
+        }
+      });
+    }
+  }
+});
+
+// Use the custom provider
+const users = await customProvider.getList({
+  resource: 'users',
+  query: { role: 'admin' },
+  currentUser: { id: 1, role: 'admin' }
+});
+```
+
+### Implementing Soft Deletes
+
+The advanced provider makes it easy to implement soft deletes:
+
+```tsx
+import { createAdvancedPrismaDataProvider } from '@repo/data-provider-prisma-advanced';
+
+const softDeleteProvider = createAdvancedPrismaDataProvider({
+  // Apply soft delete to all resources
+  '*': {
+    delete: async (id, { resource }) => {
+      const { prisma } = require('../lib/prisma');
+      
+      // Instead of deleting, update with deleted flag
+      return prisma[resource].update({
+        where: { id: Number(id) },
+        data: {
+          deleted: true,
+          deletedAt: new Date()
+        }
+      });
+    },
+    
+    // Modify getList to filter out deleted items
+    getList: async ({ resource, query }) => {
+      const { prisma } = require('../lib/prisma');
+      
+      return prisma[resource].findMany({
+        where: {
+          deleted: false,
+          ...query
+        }
+      });
+    }
+  }
+});
+```
+
+### Adding Audit Logging
+
+You can add comprehensive audit logging to track changes:
+
+```tsx
+import { createAdvancedPrismaDataProvider } from '@repo/data-provider-prisma-advanced';
+
+const auditedProvider = createAdvancedPrismaDataProvider({
+  // Apply audit logging to all resources
+  '*': {
+    create: async (data, { resource }) => {
+      const { prisma } = require('../lib/prisma');
+      const { currentUser } = require('../lib/auth');
+      
+      // Create the resource
+      const result = await prisma[resource].create({
+        data
+      });
+      
+      // Log the creation
+      await prisma.auditLog.create({
+        data: {
+          action: 'create',
+          resource,
+          resourceId: String(result.id),
+          userId: currentUser?.id,
+          details: JSON.stringify(data)
+        }
+      });
+      
+      return result;
+    },
+    
+    update: async (id, data, { resource }) => {
+      const { prisma } = require('../lib/prisma');
+      const { currentUser } = require('../lib/auth');
+      
+      // Get the previous state
+      const previous = await prisma[resource].findUnique({
+        where: { id: Number(id) }
+      });
+      
+      // Update the resource
+      const result = await prisma[resource].update({
+        where: { id: Number(id) },
+        data
+      });
+      
+      // Log the update with before/after
+      await prisma.auditLog.create({
+        data: {
+          action: 'update',
+          resource,
+          resourceId: String(id),
+          userId: currentUser?.id,
+          details: JSON.stringify({
+            previous,
+            updated: data,
+            result
+          })
+        }
+      });
+      
+      return result;
+    },
+    
+    delete: async (id, { resource }) => {
+      const { prisma } = require('../lib/prisma');
+      const { currentUser } = require('../lib/auth');
+      
+      // Get the resource before deletion
+      const resourceToDelete = await prisma[resource].findUnique({
+        where: { id: Number(id) }
+      });
+      
+      // Delete the resource
+      const result = await prisma[resource].delete({
+        where: { id: Number(id) }
+      });
+      
+      // Log the deletion
+      await prisma.auditLog.create({
+        data: {
+          action: 'delete',
+          resource,
+          resourceId: String(id),
+          userId: currentUser?.id,
+          details: JSON.stringify(resourceToDelete)
+        }
+      });
+      
+      return result;
+    }
+  }
+});
+```
+
+## Integration with Data Hooks and Data Query
+
+The advanced Prisma data provider works seamlessly with the data hooks and data query packages:
+
+```tsx
+import { useGetList } from '@repo/data-query';
+import { useUpdate } from '@repo/data-hooks';
+import { dataProvider } from '@repo/data-provider-prisma-advanced';
+
+function UserManagement() {
+  // Get users with the advanced provider
+  const { data: users, loading, refetch } = useGetList('users', {}, {
+    dataProvider
+  });
+  
+  // Update a user with the advanced provider
+  const { mutate: updateUser } = useUpdate('users', null, {
+    dataProvider,
+    onSuccess: () => refetch()
+  });
+  
+  const handleActivate = async (userId) => {
+    await updateUser({
+      id: userId,
+      active: true,
+      activatedAt: new Date()
+    });
+  };
+  
+  // Component implementation...
+}
+```
+
+## Creating a Custom Data Provider Factory
+
+You can create a factory function that produces customized data providers:
+
+```tsx
+import { createAdvancedPrismaDataProvider } from '@repo/data-provider-prisma-advanced';
+
+// Create a factory function for tenant-specific providers
+export function createTenantDataProvider(tenantId) {
+  return createAdvancedPrismaDataProvider({
+    // Apply tenant filtering to all resources
+    '*': {
+      getList: async ({ resource, query }) => {
+        const { prisma } = require('../lib/prisma');
+        
+        return prisma[resource].findMany({
+          where: {
+            tenantId,
+            ...query
+          }
+        });
+      },
+      
+      getOne: async (id, { resource }) => {
+        const { prisma } = require('../lib/prisma');
+        
+        const item = await prisma[resource].findUnique({
+          where: { id: Number(id) }
+        });
+        
+        // Check tenant access
+        if (item && item.tenantId !== tenantId) {
+          throw new Error('Access denied');
+        }
+        
+        return item;
+      },
+      
+      create: async (data, { resource }) => {
+        const { prisma } = require('../lib/prisma');
+        
+        // Automatically add tenant ID
+        return prisma[resource].create({
+          data: {
+            ...data,
+            tenantId
+          }
+        });
+      }
+    }
+  });
+}
+
+// Usage
+const tenantAProvider = createTenantDataProvider('tenant-a');
+const tenantBProvider = createTenantDataProvider('tenant-b');
+
+// Each provider will only access its own tenant's data
+const tenantAUsers = await tenantAProvider.getList({ resource: 'users' });
+const tenantBUsers = await tenantBProvider.getList({ resource: 'users' });
+```
+
+## API Reference
+
+### ResourceHandlers
+
+```tsx
+type ResourceHandlers = {
+  [resource: string]: {
+    getOne?: (id: number | string, params: DataParams) => Promise<unknown>;
+    getList?: (params: DataParams) => Promise<unknown[]>;
+    create?: (data: Record<string, unknown>, params: DataParams) => Promise<unknown>;
+    update?: (id: number | string, data: Record<string, unknown>, params: DataParams) => Promise<unknown>;
+    delete?: (id: number | string, params: DataParams) => Promise<unknown>;
+  };
+};
+```
+
+### createAdvancedPrismaDataProvider
+
+```tsx
+function createAdvancedPrismaDataProvider(
+  resourceHandlers?: ResourceHandlers
+): DataProvider;
+```
+
+## Best Practices
+
+1. **Resource-specific handlers**: Define custom handlers for resources with complex behavior
+2. **Audit logging**: Implement audit logging for sensitive operations
+3. **Soft deletes**: Use soft deletes instead of hard deletes for important data
+4. **Access control**: Implement access control checks in your resource handlers
+5. **Error handling**: Provide meaningful error messages for failed operations
+6. **Transaction safety**: Use Prisma transactions for operations that modify multiple records
+7. **Type safety**: Use TypeScript generics with your resource handlers for better type checking
+
+## When to Use
+
+Use the advanced Prisma data provider when:
+
+1. You need resource-specific behavior for different data types
+2. You require audit logging for data changes
+3. You want to implement soft deletes
+4. You need to add access control checks to data operations
+5. You have complex data relationships that require custom handling
+6. You want to extend the standard data provider interface with additional functionality
+
+For simpler applications, the basic `@repo/data-provider-prisma` package may be sufficient.

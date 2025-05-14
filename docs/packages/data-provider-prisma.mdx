@@ -1,0 +1,229 @@
+---
+title: Data Provider Prisma
+description: Prisma-based data provider implementation for Zopio
+---
+
+# Data Provider Prisma
+
+The `@repo/data-provider-prisma` package provides a Prisma-based implementation of the data provider interface for Zopio applications. It connects the standardized data operations from data-core to your Prisma database models.
+
+## Overview
+
+Data Provider Prisma offers a simple way to use Prisma with the Zopio data modules. It implements the standard data provider interface from data-core, allowing you to easily switch between different data sources without changing your application code.
+
+## Installation
+
+```bash
+npm install @repo/data-provider-prisma
+```
+
+## Basic Usage
+
+### Using the Default Provider
+
+```tsx
+import { dataProvider } from '@repo/data-provider-prisma';
+
+// Get a single user
+const user = await dataProvider.getOne({
+  resource: 'user',
+  id: 123
+});
+
+// Get a list of products
+const products = await dataProvider.getList({
+  resource: 'product'
+});
+
+// Create a new order
+const newOrder = await dataProvider.create({
+  resource: 'order',
+  variables: {
+    userId: 123,
+    items: [{ productId: 456, quantity: 1 }]
+  }
+});
+
+// Update a user
+const updatedUser = await dataProvider.update({
+  resource: 'user',
+  id: 123,
+  variables: { name: 'New Name' }
+});
+
+// Delete a product
+const deletedProduct = await dataProvider.delete({
+  resource: 'product',
+  id: 456
+});
+```
+
+### Creating a Custom Provider
+
+You can create a custom Prisma data provider with specific configurations:
+
+```tsx
+import { createPrismaDataProvider } from '@repo/data-provider-prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Create a new Prisma client with custom options
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error']
+});
+
+// Create a custom provider with the client
+const customProvider = createPrismaDataProvider(prisma);
+
+// Use the custom provider
+const users = await customProvider.getList({ resource: 'user' });
+```
+
+## Integration with Data Hooks and Data Query
+
+The Prisma data provider works seamlessly with the data hooks and data query packages:
+
+### With Data Hooks
+
+```tsx
+import { useCreate, useUpdate, useDelete } from '@repo/data-hooks';
+import { dataProvider } from '@repo/data-provider-prisma';
+
+function UserForm() {
+  // Use the Prisma data provider with the create hook
+  const { mutate: createUser, loading } = useCreate('user', {
+    dataProvider
+  });
+  
+  const handleSubmit = async (userData) => {
+    await createUser(userData);
+  };
+  
+  // Form implementation...
+}
+```
+
+### With Data Query
+
+```tsx
+import { useGetOne, useGetList } from '@repo/data-query';
+import { dataProvider } from '@repo/data-provider-prisma';
+
+function UserProfile({ userId }) {
+  // Use the Prisma data provider with the query hook
+  const { data: user, loading } = useGetOne('user', userId, {
+    dataProvider
+  });
+  
+  if (loading) return <div>Loading...</div>;
+  
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  );
+}
+```
+
+## Advanced Usage
+
+### Filtering with Query Parameters
+
+The Prisma data provider supports filtering using query parameters:
+
+```tsx
+import { dataProvider } from '@repo/data-provider-prisma';
+
+// Get active products in a specific category
+const products = await dataProvider.getList({
+  resource: 'product',
+  query: {
+    active: true,
+    category: 'electronics'
+  }
+});
+```
+
+### Handling Relations
+
+You can work with related data in Prisma:
+
+```tsx
+import { createPrismaDataProvider } from '@repo/data-provider-prisma';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// Create a custom provider that includes relations
+const providerWithRelations = {
+  ...createPrismaDataProvider(),
+  
+  // Override getOne to include relations
+  async getOne({ resource, id }) {
+    if (resource === 'order') {
+      return prisma.order.findUnique({
+        where: { id: Number(id) },
+        include: {
+          items: true,
+          user: true
+        }
+      });
+    }
+    
+    // Fall back to default implementation for other resources
+    return prisma[resource].findUnique({
+      where: { id: Number(id) }
+    });
+  }
+};
+
+// Get an order with its items and user
+const order = await providerWithRelations.getOne({
+  resource: 'order',
+  id: 123
+});
+
+console.log(order.items); // Access related items
+console.log(order.user);  // Access related user
+```
+
+## API Reference
+
+### DataProvider Interface
+
+The Prisma data provider implements the standard DataProvider interface from data-core:
+
+```tsx
+type DataProvider = {
+  getOne: (params: DataParams) => Promise<any>;
+  getList: (params: DataParams) => Promise<any[]>;
+  create: (params: DataParams) => Promise<any>;
+  update: (params: DataParams) => Promise<any>;
+  delete: (params: DataParams) => Promise<any>;
+};
+```
+
+### createPrismaDataProvider
+
+```tsx
+function createPrismaDataProvider(
+  prismaClient?: PrismaClient
+): DataProvider;
+```
+
+## Best Practices
+
+1. **Resource naming**: Use singular form for resource names to match Prisma model names
+2. **Error handling**: Wrap data provider calls in try/catch blocks to handle database errors
+3. **Type safety**: Use TypeScript generics with the data hooks and query hooks for type safety
+4. **Custom providers**: Create custom providers for specific needs like including relations
+5. **Connection pooling**: For production applications, consider using connection pooling with Prisma
+6. **Transactions**: For operations that require transactions, create a custom provider that uses Prisma's transaction API
+
+## Limitations
+
+1. The basic Prisma data provider assumes that your models follow standard conventions:
+   - Primary key field is named `id`
+   - Resource names match your Prisma model names
+
+2. For more complex scenarios, consider using the advanced Prisma data provider from `@repo/data-provider-prisma-advanced`.

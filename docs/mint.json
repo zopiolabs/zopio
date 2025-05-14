@@ -110,6 +110,16 @@
         "packages/collaboration",
         "packages/cron",
         "packages/crud",
+        {
+          "group": "Data",
+          "pages": [
+            "packages/data-core",
+            "packages/data-hooks",
+            "packages/data-query",
+            "packages/data-provider-prisma",
+            "packages/data-provider-prisma-advanced"
+          ]
+        },
         "packages/database",
         {
           "group": "Design System",

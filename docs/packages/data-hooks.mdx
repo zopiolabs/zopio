@@ -1,0 +1,372 @@
+---
+title: Data Hooks
+description: React hooks for data mutations in Zopio framework
+---
+
+# Data Hooks
+
+The `@repo/data-hooks` package provides a collection of React hooks for data mutations in Zopio applications. These hooks simplify the process of creating, updating, and deleting data while managing loading and error states.
+
+## Overview
+
+Data Hooks offers a set of React hooks that make it easy to perform data mutations with proper state management. The hooks integrate with the data-core package and support various data providers.
+
+## Installation
+
+```bash
+npm install @repo/data-hooks
+```
+
+## Basic Usage
+
+### Create Hook
+
+```tsx
+import { useCreate } from '@repo/data-hooks';
+
+function CreateUserForm() {
+  const { mutate, loading, error } = useCreate('users');
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const userData = {
+      name: formData.get('name'),
+      email: formData.get('email')
+    };
+    
+    try {
+      const newUser = await mutate(userData);
+      console.log('User created:', newUser);
+    } catch (err) {
+      console.error('Failed to create user:', err);
+    }
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" placeholder="Name" />
+      <input name="email" placeholder="Email" />
+      <button type="submit" disabled={loading}>
+        {loading ? 'Creating...' : 'Create User'}
+      </button>
+      {error && <div className="error">{error.message}</div>}
+    </form>
+  );
+}
+```
+
+### Update Hook
+
+```tsx
+import { useUpdate } from '@repo/data-hooks';
+
+function UpdateUserForm({ userId, initialData }) {
+  const { mutate, loading, error } = useUpdate('users', userId);
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const userData = {
+      name: formData.get('name'),
+      email: formData.get('email')
+    };
+    
+    try {
+      const updatedUser = await mutate(userData);
+      console.log('User updated:', updatedUser);
+    } catch (err) {
+      console.error('Failed to update user:', err);
+    }
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" defaultValue={initialData.name} />
+      <input name="email" defaultValue={initialData.email} />
+      <button type="submit" disabled={loading}>
+        {loading ? 'Updating...' : 'Update User'}
+      </button>
+      {error && <div className="error">{error.message}</div>}
+    </form>
+  );
+}
+```
+
+### Delete Hook
+
+```tsx
+import { useDelete } from '@repo/data-hooks';
+
+function DeleteUserButton({ userId }) {
+  const { mutate, loading, error } = useDelete('users');
+  
+  const handleDelete = async () => {
+    if (confirm('Are you sure you want to delete this user?')) {
+      try {
+        await mutate(userId);
+        console.log('User deleted');
+      } catch (err) {
+        console.error('Failed to delete user:', err);
+      }
+    }
+  };
+  
+  return (
+    <>
+      <button onClick={handleDelete} disabled={loading}>
+        {loading ? 'Deleting...' : 'Delete User'}
+      </button>
+      {error && <div className="error">{error.message}</div>}
+    </>
+  );
+}
+```
+
+## Advanced Usage
+
+### Using Custom Data Provider
+
+You can specify a custom data provider to use with the hooks:
+
+```tsx
+import { useCreate } from '@repo/data-hooks';
+import { dataProvider as prismaProvider } from '@repo/data-provider-prisma';
+
+function CreateProductForm() {
+  const { mutate, loading } = useCreate('products', {
+    dataProvider: prismaProvider,
+    onSuccess: (product) => {
+      console.log('Product created with Prisma:', product);
+    }
+  });
+  
+  // Form implementation...
+}
+```
+
+### Custom Mutation Hook
+
+For more complex cases, you can use the base mutation hook:
+
+```tsx
+import { useMutation } from '@repo/data-hooks';
+
+function ImportUsers() {
+  const { mutate, loading, error, data } = useMutation(
+    async (fileData) => {
+      const formData = new FormData();
+      formData.append('file', fileData);
+      
+      const response = await fetch('/api/import-users', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Import failed');
+      }
+      
+      return response.json();
+    },
+    {
+      onSuccess: (result) => {
+        console.log(`Successfully imported ${result.count} users`);
+      }
+    }
+  );
+  
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      await mutate(file);
+    }
+  };
+  
+  return (
+    <div>
+      <input type="file" onChange={handleFileChange} disabled={loading} />
+      {loading && <div>Importing users...</div>}
+      {error && <div className="error">{error.message}</div>}
+      {data && <div>Imported {data.count} users successfully!</div>}
+    </div>
+  );
+}
+```
+
+### Reset Mutation State
+
+You can reset the mutation state when needed:
+
+```tsx
+import { useCreate } from '@repo/data-hooks';
+
+function CreateUserForm() {
+  const { mutate, loading, error, data, reset } = useCreate('users');
+  
+  const handleSubmit = async (event) => {
+    // Submit implementation...
+  };
+  
+  const handleReset = () => {
+    reset(); // Clears data, error, and resets loading state
+    // Reset form fields...
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form fields */}
+      <div className="form-actions">
+        <button type="submit" disabled={loading}>Create</button>
+        <button type="button" onClick={handleReset}>Reset</button>
+      </div>
+      {data && <div className="success">User created successfully!</div>}
+      {error && <div className="error">{error.message}</div>}
+    </form>
+  );
+}
+```
+
+## Integration with Data Query
+
+Data Hooks works well with the `@repo/data-query` package for a complete data management solution:
+
+```tsx
+import { useGetOne } from '@repo/data-query';
+import { useUpdate } from '@repo/data-hooks';
+
+function EditUserForm({ userId }) {
+  // Fetch the user data
+  const { 
+    data: user, 
+    loading: fetchLoading, 
+    error: fetchError,
+    refetch
+  } = useGetOne('users', userId);
+  
+  // Update the user
+  const { 
+    mutate: updateUser, 
+    loading: updateLoading, 
+    error: updateError 
+  } = useUpdate('users', userId, {
+    onSuccess: () => refetch() // Refetch after successful update
+  });
+  
+  if (fetchLoading) return <div>Loading user...</div>;
+  if (fetchError) return <div>Error: {fetchError.message}</div>;
+  if (!user) return <div>User not found</div>;
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const userData = {
+      name: formData.get('name'),
+      email: formData.get('email')
+    };
+    
+    await updateUser(userData);
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" defaultValue={user.name} />
+      <input name="email" defaultValue={user.email} />
+      <button type="submit" disabled={updateLoading}>
+        {updateLoading ? 'Saving...' : 'Save Changes'}
+      </button>
+      {updateError && <div className="error">{updateError.message}</div>}
+    </form>
+  );
+}
+```
+
+## API Reference
+
+### useMutation
+
+```tsx
+function useMutation<TInput, TResult>(
+  fn: (input: TInput) => Promise<TResult>,
+  options?: {
+    onSuccess?: (result: TResult) => void;
+    onError?: (error: Error) => void;
+    invalidateQueries?: string[];
+  }
+): {
+  mutate: (input: TInput) => Promise<TResult>;
+  loading: boolean;
+  error: Error | null;
+  data: TResult | null;
+  reset: () => void;
+}
+```
+
+### useCreate
+
+```tsx
+function useCreate<TVariables = Record<string, unknown>, TResult = unknown>(
+  resource: string,
+  options?: {
+    onSuccess?: (result: TResult) => void;
+    onError?: (error: Error) => void;
+    invalidateQueries?: string[];
+    dataProvider?: DataProvider;
+  }
+): {
+  mutate: (variables: TVariables) => Promise<TResult>;
+  loading: boolean;
+  error: Error | null;
+  data: TResult | null;
+  reset: () => void;
+}
+```
+
+### useUpdate
+
+```tsx
+function useUpdate<TVariables = Record<string, unknown>, TResult = unknown>(
+  resource: string,
+  id?: number | string,
+  options?: {
+    onSuccess?: (result: TResult) => void;
+    onError?: (error: Error) => void;
+    invalidateQueries?: string[];
+    dataProvider?: DataProvider;
+  }
+): {
+  mutate: (variables: TVariables) => Promise<TResult>;
+  loading: boolean;
+  error: Error | null;
+  data: TResult | null;
+  reset: () => void;
+}
+```
+
+### useDelete
+
+```tsx
+function useDelete<TResult = unknown>(
+  resource: string,
+  options?: {
+    onSuccess?: (result: TResult) => void;
+    onError?: (error: Error) => void;
+    invalidateQueries?: string[];
+    dataProvider?: DataProvider;
+  }
+): {
+  mutate: (id: number | string) => Promise<TResult>;
+  loading: boolean;
+  error: Error | null;
+  data: TResult | null;
+  reset: () => void;
+}
+```
+
+## Best Practices
+
+1. **Handle loading states**: Always disable submit buttons or show loading indicators when mutations are in progress
+2. **Error handling**: Display error messages to users when mutations fail
+3. **Success feedback**: Show success messages or redirect users after successful mutations
+4. **Data validation**: Validate data before sending it to the server
+5. **Optimistic updates**: Consider implementing optimistic UI updates for better user experience

@@ -1,0 +1,17 @@
+{
+  "name": "@repo/data-mutation",
+  "version": "0.1.0",
+  "description": "Data mutation helper for Zopio framework",
+  "main": "./mutation.ts",
+  "types": "./mutation.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.2.0"
+  }
+}
