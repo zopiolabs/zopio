@@ -1,4 +1,4 @@
-# @core/api-keys
+# @repo/api-keys
 
 API key management module for Zopio framework.
 
@@ -14,7 +14,7 @@ API key management module for Zopio framework.
 ## Installation
 
 ```bash
-npm install @core/api-keys
+npm install @repo/api-keys
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ npm install @core/api-keys
 ### Creating an API Key
 
 ```ts
-import { createKey } from '@core/api-keys';
+import { createKey } from '@repo/api-keys';
 
 // Create a new API key for a user with specific scopes
 const apiKey = createKey('user_123', ['read', 'write']);
@@ -33,7 +33,7 @@ console.log(`Your API key: ${apiKey}`);
 ### Validating an API Key
 
 ```ts
-import { validateKey } from '@core/api-keys';
+import { validateKey } from '@repo/api-keys';
 
 // Check if an API key is valid
 const isValid = validateKey('zpk_a1b2c3d4e5f6...');
@@ -47,7 +47,7 @@ if (isValid) {
 ### Revoking an API Key
 
 ```ts
-import { revokeKey } from '@core/api-keys';
+import { revokeKey } from '@repo/api-keys';
 
 // Revoke an API key
 revokeKey('zpk_a1b2c3d4e5f6...');
@@ -56,7 +56,7 @@ revokeKey('zpk_a1b2c3d4e5f6...');
 ### Next.js Integration
 
 ```ts
-import { fromApiKey } from '@core/api-keys';
+import { fromApiKey } from '@repo/api-keys';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {

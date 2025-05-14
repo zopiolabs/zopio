@@ -5,12 +5,12 @@ description: "API key management module for Zopio framework"
 
 # API Keys
 
-The `@core/api-keys` package provides a secure and flexible API key management system for the Zopio framework. It handles the generation, validation, and revocation of API keys, with built-in integrations for common use cases.
+The `@repo/api-keys` package provides a secure and flexible API key management system for the Zopio framework. It handles the generation, validation, and revocation of API keys, with built-in integrations for common use cases.
 
 ## Installation
 
 ```bash
-npm install @core/api-keys
+npm install @repo/api-keys
 ```
 
 ## Features
@@ -26,7 +26,7 @@ npm install @core/api-keys
 ### Creating an API Key
 
 ```typescript
-import { createKey } from '@core/api-keys';
+import { createKey } from '@repo/api-keys';
 
 // Create a new API key for a user with specific scopes
 const apiKey = createKey('user_123', ['read', 'write']);
@@ -37,7 +37,7 @@ console.log(`Your API key: ${apiKey}`);
 ### Validating an API Key
 
 ```typescript
-import { validateKey } from '@core/api-keys';
+import { validateKey } from '@repo/api-keys';
 
 // Check if an API key is valid
 const isValid = validateKey('zpk_a1b2c3d4e5f6...');
@@ -51,7 +51,7 @@ if (isValid) {
 ### Revoking an API Key
 
 ```typescript
-import { revokeKey } from '@core/api-keys';
+import { revokeKey } from '@repo/api-keys';
 
 // Revoke an API key
 revokeKey('zpk_a1b2c3d4e5f6...');
@@ -62,7 +62,7 @@ revokeKey('zpk_a1b2c3d4e5f6...');
 ### Extracting User Identity from API Key
 
 ```typescript
-import { fromApiKey } from '@core/api-keys';
+import { fromApiKey } from '@repo/api-keys';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
 ### Rate Limiting Based on API Key
 
 ```typescript
-import { useApiKeyRateLimit } from '@core/api-keys';
+import { useApiKeyRateLimit } from '@repo/api-keys';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {

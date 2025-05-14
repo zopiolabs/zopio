@@ -1,8 +1,11 @@
 import type { ClerkUser, PolicyContext, PolicyRegistry } from './types';
 import { canInstallPlugin } from './rules/plugin';
+import { canManageUsers, canViewAnalytics } from './rules/metadata-permission';
 
 const registry: PolicyRegistry = {
   'plugin.install': canInstallPlugin,
+  'users.manage': canManageUsers,
+  'analytics.view': canViewAnalytics,
 };
 
 /**
@@ -17,6 +20,16 @@ export function createPolicyUser(clerkUser: ClerkUser | null) {
     id: clerkUser.id,
     roles: clerkUser.publicMetadata?.roles || [],
     organizationId: clerkUser.publicMetadata?.organizationId,
+    metadata: {
+      permissions: clerkUser.publicMetadata?.permissions as string[] || [],
+      // Include any other metadata fields that might be needed for policy decisions
+      ...Object.entries(clerkUser.publicMetadata || {}).reduce((acc, [key, value]) => {
+        if (key !== 'roles' && key !== 'organizationId' && key !== 'permissions') {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, unknown>)
+    }
   };
 }
 

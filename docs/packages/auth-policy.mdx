@@ -5,20 +5,27 @@ description: Lightweight policy engine for access control decisions integrated w
 
 # Auth Policy
 
-The `@repo/auth-policy` package provides a lightweight policy engine for making access control decisions in Zopio applications. It's designed to work seamlessly with Clerk authentication, using roles stored in Clerk's user metadata.
+The `@repo/auth-policy` package provides a lightweight policy engine for making access control decisions in Zopio applications. It's designed to work seamlessly with Clerk authentication, using roles and permissions stored in Clerk's user metadata.
 
 ## Overview
 
 The auth-policy package implements a simple policy-based authorization system that allows you to:
 
 - Define policy rules as simple functions
-- Check permissions based on user roles from Clerk
+- Check permissions based on user roles and metadata from Clerk
 - Make context-aware authorization decisions
+- Create reusable permission rules
 - Easily test with mock helpers
 
 ## Integration with Clerk
 
-This package is designed to work with Clerk authentication. It uses the roles stored in Clerk's `publicMetadata.roles` field to make authorization decisions.
+This package is designed to work with Clerk authentication. It uses the following fields from Clerk's `publicMetadata` to make authorization decisions:
+
+- `roles`: Array of role names (e.g., 'admin', 'developer')
+- `permissions`: Array of permission strings (e.g., 'manage-users', 'view-analytics')
+- `organizationId`: Optional organization identifier for multi-tenant applications
+
+You can configure these fields in your Clerk dashboard under User & Organization Metadata.
 
 ## Basic Usage
 
@@ -68,23 +75,28 @@ interface PolicyContext {
 
 The following policies are currently implemented:
 
-| Action | Description |
-|--------|-------------|
-| `plugin.install` | Controls who can install plugins |
+| Action | Description | Required Role/Permission |
+|--------|-------------|-------------------------|
+| `plugin.install` | Controls who can install plugins | 'admin' or 'developer' role |
+| `users.manage` | Controls who can manage users | 'manage-users' permission |
+| `analytics.view` | Controls who can view analytics | 'view-analytics' permission |
 
 ## Adding New Policies
 
-To add a new policy rule:
+There are two main approaches to creating policy rules:
 
-1. Create a new file in the `rules` directory
-2. Implement your policy rule function
-3. Register it in the `registry` object in `engine.ts`
+### 1. Role-Based Rules
+
+Create rules that check for specific roles:
 
 ```tsx
 // rules/myFeature.ts
 import type { PolicyRule } from '../types';
 
 export const canAccessMyFeature: PolicyRule = ({ user }) => {
+  if (!user || !user.roles || !Array.isArray(user.roles)) {
+    return false;
+  }
   return user.roles.includes('admin') || user.roles.includes('developer');
 };
 
@@ -92,6 +104,34 @@ export const canAccessMyFeature: PolicyRule = ({ user }) => {
 const registry: PolicyRegistry = {
   'plugin.install': canInstallPlugin,
   'myFeature.access': canAccessMyFeature
+};
+```
+
+### 2. Permission-Based Rules
+
+Create rules that check for specific permissions in the user's metadata:
+
+```tsx
+// rules/metadata-permission.ts
+import type { PolicyRule } from '../types';
+
+// Create a reusable permission rule factory
+export function createMetadataPermissionRule(permission: string): PolicyRule {
+  return ({ user }) => {
+    const permissions = user?.metadata?.permissions;
+    if (!permissions || !Array.isArray(permissions)) {
+      return false;
+    }
+    return permissions.includes(permission);
+  };
+}
+
+// Create specific permission rules
+export const canManageSettings = createMetadataPermissionRule('manage-settings');
+
+// Then in engine.ts
+const registry: PolicyRegistry = {
+  'settings.manage': canManageSettings
 };
 ```
 
@@ -110,3 +150,48 @@ const result = await allowAll({ user: { id: '1', roles: [] }, action: 'any' });
 const result = await denyAll({ user: { id: '1', roles: [] }, action: 'any' });
 // result is false
 ```
+
+## Advanced Usage
+
+### Combining Multiple Rules
+
+You can create complex authorization rules by combining multiple checks:
+
+```tsx
+export const canManageOrganization: PolicyRule = ({ user, resource }) => {
+  // Check if user is an admin
+  const isAdmin = user.roles.includes('admin');
+  
+  // Check if user has the manage-org permission
+  const hasPermission = user?.metadata?.permissions?.includes('manage-org') || false;
+  
+  // Check if user belongs to the organization
+  const isOrgMember = resource?.organizationId === user.organizationId;
+  
+  return isAdmin || (hasPermission && isOrgMember);
+};
+```
+
+### Using Context for Dynamic Rules
+
+You can use the context parameter for more dynamic rules:
+
+```tsx
+export const canAccessResource: PolicyRule = ({ user, resource, context }) => {
+  // Allow access during maintenance window
+  if (context?.maintenanceMode === true) {
+    return user.roles.includes('maintenance');
+  }
+  
+  // Normal access rules
+  return user.roles.includes('admin') || user.roles.includes('user');
+};
+```
+
+## Best Practices
+
+1. **Keep rules simple**: Each rule should have a single responsibility
+2. **Use descriptive names**: Name your rules clearly to indicate what they permit
+3. **Validate inputs**: Always check that user data exists and has the expected structure
+4. **Add tests**: Write tests for your policy rules to ensure they work as expected
+5. **Document policies**: Keep documentation updated when adding new policies

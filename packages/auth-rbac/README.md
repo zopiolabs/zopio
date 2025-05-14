@@ -1,4 +1,4 @@
-# @zopio/auth-rbac
+# @repo/auth-rbac
 
 Role-Based Access Control (RBAC) utilities using CASL, integrated with Clerk authentication.
 
@@ -25,7 +25,7 @@ The following roles are defined in the system:
 ## Usage with Clerk
 
 ```tsx
-import { createAbilityFor } from '@zopio/auth-rbac';
+import { createAbilityFor } from '@repo/auth-rbac';
 import { currentUser } from '@repo/auth/server';
 
 // In a server component
