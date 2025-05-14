@@ -1,0 +1,91 @@
+---
+title: TagUI
+description: Free and open-source RPA (Robotic Process Automation) tool by AI Singapore for automating repetitive tasks on websites, desktop applications, and command-line interfaces.
+---
+
+### Installation
+
+To install TagUI, you can download it directly from the GitHub repository:
+
+```sh Terminal
+# For Windows users, download and extract the ZIP file
+# For macOS/Linux users:
+bash -c "$(curl -s https://raw.githubusercontent.com/aisingapore/TagUI/master/src/setup/install.sh)"
+```
+
+### Usage
+
+TagUI uses a simple language designed specifically for RPA. Here's an example of automating a login process:
+
+```typescript tagui-login-example.txt
+// Navigate to the login page
+https://login.example.com
+
+// Enter credentials using web identifiers
+type email as user@example.com
+type password as securepassword
+click login
+
+// Wait for dashboard to load
+wait 2 seconds
+
+// Capture a screenshot
+snap page to dashboard.png
+
+// Extract data from a table
+table 1 to data.csv
+```
+
+You can also use image recognition to interact with UI elements:
+
+```typescript tagui-visual-example.txt
+// Use image snapshots to identify UI elements
+type email_field.png as user@example.com
+type password_field.png as securepassword
+click login_button.png
+
+// Use OCR to read text from the screen
+read success_message to result
+echo `Login result: ${result}`
+```
+
+### Excel Integration
+
+TagUI makes it easy to work with Excel files:
+
+```typescript tagui-excel-example.txt
+// Read data from Excel
+customer_name = [customers.xlsx]Sheet1!A2
+customer_email = [customers.xlsx]Sheet1!B2
+
+// Navigate to customer portal
+https://portal.example.com
+
+// Use the Excel data in your automation
+type name as `{customer_name}`
+type email as `{customer_email}`
+
+// Write results back to Excel
+[results.xlsx]Summary!A1 = "Process completed"
+[results.xlsx]Summary!B1 = now()
+```
+
+### Benefits
+
+- <Icon icon="check" iconType="solid" /> **Simple Syntax**: Easy-to-learn language designed specifically for automation.
+- <Icon icon="check" iconType="solid" /> **Cross-Platform**: Works on Windows, macOS, and Linux.
+- <Icon icon="check" iconType="solid" /> **Multi-Language Support**: Write flows in 23 different languages including English, Chinese, Japanese, and Spanish.
+- <Icon icon="check" iconType="solid" /> **Visual Automation**: Use image recognition to interact with UI elements.
+- <Icon icon="check" iconType="solid" /> **OCR Capabilities**: Read text directly from the screen.
+- <Icon icon="check" iconType="solid" /> **Excel Integration**: Seamlessly work with Excel files.
+- <Icon icon="check" iconType="solid" /> **Turbo Mode**: Run automations up to 10x faster than normal human speed.
+- <Icon icon="check" iconType="solid" /> **MS Office Plugins**: Create and deploy RPA robots directly from Word documents.
+
+### Community Support
+
+While AI Singapore has discontinued official maintenance of TagUI, the project continues to be supported by open-source contributors and the community. You can get help through:
+
+- [Telegram Community](https://t.me/rpa_chat)
+- [GitHub Issues](https://github.com/aisingapore/TagUI/issues)
+
+For more information and detailed documentation, visit the [TagUI GitHub repository](https://github.com/aisingapore/TagUI) or check out the [learning resources](https://github.com/aisingapore/TagUI#tagui).

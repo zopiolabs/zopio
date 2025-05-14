@@ -238,7 +238,7 @@
     },
     {
       "group": "Tools",
-      "pages": ["addons/dub", "addons/metabase"]
+      "pages": ["addons/dub", "addons/infisical", "addons/metabase", "addons/tagui", "addons/temporal-ui"]
     }
   ],
 

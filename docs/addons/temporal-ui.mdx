@@ -1,0 +1,101 @@
+---
+title: Temporal UI
+description: The web interface for Temporal, a durable execution system that makes it easy to build and operate resilient applications at scale.
+---
+
+### Installation
+
+Temporal UI is included with the Temporal server. You can run it using Docker Compose:
+
+```sh Terminal
+# Clone the Temporal Docker Compose repository
+git clone https://github.com/temporalio/docker-compose.git
+cd docker-compose
+
+# Start Temporal with UI
+docker-compose up -d
+```
+
+For development purposes, you can run the UI separately:
+
+```sh Terminal
+# Clone the repository
+git clone https://github.com/temporalio/ui.git
+cd ui
+
+# Install dependencies
+pnpm install
+
+# Run the development server
+pnpm dev
+```
+
+### Usage
+
+Temporal UI provides a visual interface for monitoring and managing your Temporal workflows. After starting Temporal with the UI, you can access it at http://localhost:8080.
+
+Here's how you might integrate Temporal with your application:
+
+```tsx temporal-workflow-example.tsx
+import { Client, Connection } from '@temporalio/client';
+import { nanoid } from 'nanoid';
+
+// Connect to Temporal server
+async function run() {
+  const connection = await Connection.connect({
+    address: 'localhost:7233', // Default Temporal server address
+  });
+
+  const client = new Client({
+    connection,
+    namespace: 'default', // Specify your namespace
+  });
+
+  // Start a workflow execution
+  const handle = await client.workflow.start('YourWorkflow', {
+    taskQueue: 'your-task-queue',
+    workflowId: 'workflow-' + nanoid(),
+    args: ['workflow input'],
+  });
+
+  console.log(`Started workflow ${handle.workflowId}`);
+  
+  // You can now view this workflow in the Temporal UI at:
+  // http://localhost:8080/namespaces/default/workflows/workflow-[id]
+}
+
+run().catch(err => console.error(err));
+```
+
+### Features
+
+- <Icon icon="check" iconType="solid" /> **Workflow Visualization**: View the execution history and current status of your workflows.
+- <Icon icon="check" iconType="solid" /> **Search and Filter**: Find workflows by ID, type, status, or custom search attributes.
+- <Icon icon="check" iconType="solid" /> **Namespace Management**: Manage different namespaces for organizing your workflows.
+- <Icon icon="check" iconType="solid" /> **Task Queue Monitoring**: Monitor task queue metrics and worker activity.
+- <Icon icon="check" iconType="solid" /> **Workflow Debugging**: Inspect workflow execution details for troubleshooting.
+- <Icon icon="check" iconType="solid" /> **Manual Operations**: Manually terminate, reset, or signal workflows when needed.
+- <Icon icon="check" iconType="solid" /> **Event History**: View the complete event history of workflow executions.
+- <Icon icon="check" iconType="solid" /> **System Health**: Monitor the health of your Temporal deployment.
+
+### Configuration
+
+Temporal UI can be configured using environment variables:
+
+```sh
+VITE_TEMPORAL_PORT="7134"
+VITE_API="http://localhost:8081"
+VITE_MODE="development"
+VITE_TEMPORAL_UI_BUILD_TARGET="local"
+```
+
+### Integration with Temporal Server
+
+Temporal UI works best with Temporal Server v1.16.0 or later. It provides a comprehensive view of your workflows, making it easier to:
+
+1. Monitor the execution of long-running business processes
+2. Debug failed workflows
+3. Analyze performance metrics
+4. Manage workflow deployments
+
+For more information and detailed documentation, visit the [Temporal UI GitHub repository](https://github.com/temporalio/ui) or the [official Temporal documentation](https://docs.temporal.io/).

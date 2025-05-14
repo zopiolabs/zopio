@@ -1,0 +1,81 @@
+---
+title: Infisical
+description: Open-source secrets management platform for securely storing and syncing API keys, database credentials, and configuration across your team and infrastructure.
+---
+
+### Installation
+
+To install Infisical, you can use Docker Compose for self-hosting:
+
+```sh Terminal
+# Clone the repository
+git clone https://github.com/Infisical/infisical.git
+
+# Navigate to the directory
+cd infisical
+
+# Start Infisical using Docker Compose
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+For client-side integration in your application:
+
+```sh Terminal
+# Install the Infisical SDK for Node.js
+npm install infisical-node
+```
+
+### Usage
+
+Here's an example of how to use Infisical in a Node.js application:
+
+```tsx infisical-example.tsx
+import { InfisicalClient } from 'infisical-node';
+
+// Initialize the Infisical client
+const infisical = new InfisicalClient({
+  clientId: process.env.INFISICAL_CLIENT_ID,
+  clientSecret: process.env.INFISICAL_CLIENT_SECRET,
+});
+
+async function getSecrets() {
+  try {
+    // Fetch secrets from a specific project and environment
+    const secrets = await infisical.getSecrets({
+      projectId: 'your-project-id',
+      environment: 'development',
+    });
+    
+    // Use the secrets in your application
+    const apiKey = secrets.find(secret => secret.key === 'API_KEY').value;
+    const dbPassword = secrets.find(secret => secret.key === 'DB_PASSWORD').value;
+    
+    console.log('Successfully retrieved secrets');
+    return { apiKey, dbPassword };
+  } catch (error) {
+    console.error('Error fetching secrets:', error);
+  }
+}
+```
+
+### Features
+
+- <Icon icon="check" iconType="solid" /> **Centralized Secret Management**: Store and manage all your secrets in one secure location with role-based access control.
+- <Icon icon="check" iconType="solid" /> **Secret Versioning**: Track changes to your secrets with complete version history and point-in-time recovery.
+- <Icon icon="check" iconType="solid" /> **Secret Rotation**: Automatically rotate secrets for various services like PostgreSQL, MySQL, and AWS IAM.
+- <Icon icon="check" iconType="solid" /> **Dynamic Secrets**: Generate ephemeral secrets on-demand for improved security.
+- <Icon icon="check" iconType="solid" /> **Secret Scanning**: Prevent accidental leaks of secrets to Git repositories.
+- <Icon icon="check" iconType="solid" /> **Kubernetes Integration**: Native integration with Kubernetes via the Infisical Operator.
+- <Icon icon="check" iconType="solid" /> **Internal PKI**: Manage your internal Public Key Infrastructure.
+
+### Integration Options
+
+Infisical integrates with various platforms and tools:
+
+- CI/CD platforms: GitHub Actions, GitLab CI, CircleCI
+- Cloud providers: AWS, GCP, Azure
+- Deployment platforms: Vercel, Netlify, Heroku
+- Infrastructure tools: Terraform, Ansible, Kubernetes
+- Frameworks: Next.js, Express, Django, Laravel
+
+For more information and detailed documentation, visit the [Infisical GitHub repository](https://github.com/Infisical/infisical) or the [official documentation](https://infisical.com/docs).
