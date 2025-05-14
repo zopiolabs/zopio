@@ -229,8 +229,10 @@
         "addons/fuse",
         "addons/motion",
         "addons/nuqs",
+        "addons/pdf-lib",
+        "addons/react-pdf",
         "addons/react-wrap-balancer",
-        "addons/zustand",
+        "addons/tiptap",
         "addons/next-safe-action"
       ]
     },

@@ -1,0 +1,70 @@
+---
+title: React PDF
+description: A React component library for displaying PDF documents in your web applications with a simple and intuitive API.
+---
+
+### Installation
+
+To install React PDF, run the following command:
+
+```sh Terminal
+pnpm add @react-pdf/renderer react-pdf
+```
+
+### Usage
+
+Here's an example of how to use React PDF to display a PDF document in your application:
+
+```tsx pdf-viewer.tsx
+import { useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
+
+// Configure PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
+function PDFViewer({ url }) {
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
+  return (
+    <div className="pdf-viewer">
+      <Document
+        file={url}
+        onLoadSuccess={onDocumentLoadSuccess}
+      >
+        <Page pageNumber={pageNumber} />
+      </Document>
+      <div className="controls">
+        <p>
+          Page {pageNumber} of {numPages}
+        </p>
+        <button
+          disabled={pageNumber <= 1}
+          onClick={() => setPageNumber(pageNumber - 1)}
+        >
+          Previous
+        </button>
+        <button
+          disabled={pageNumber >= numPages}
+          onClick={() => setPageNumber(pageNumber + 1)}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+### Benefits
+
+- <Icon icon="check" iconType="solid" /> **Seamless PDF Integration**: Display PDF documents directly in your React application without requiring users to download files.
+- <Icon icon="check" iconType="solid" /> **Customizable Rendering**: Control how PDFs are displayed with options for page navigation, zoom, and other viewing features.
+- <Icon icon="check" iconType="solid" /> **High Performance**: Efficiently renders PDFs even for large documents with many pages.
+- <Icon icon="check" iconType="solid" /> **Cross-Browser Compatibility**: Works consistently across modern browsers.
+
+For more information and detailed documentation, visit the [React PDF GitHub repository](https://github.com/wojtekmaj/react-pdf).

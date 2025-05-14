@@ -1,0 +1,90 @@
+---
+title: PDF-Lib
+description: A powerful JavaScript library for creating and modifying PDF documents in any JavaScript environment.
+---
+
+### Installation
+
+To install PDF-Lib, run the following command:
+
+```sh Terminal
+pnpm add pdf-lib
+```
+
+### Usage
+
+Here's an example of how to use PDF-Lib to create a simple PDF document:
+
+```tsx create-pdf.tsx
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+
+async function createPDF() {
+  // Create a new PDFDocument
+  const pdfDoc = await PDFDocument.create();
+  
+  // Add a blank page to the document
+  const page = pdfDoc.addPage([550, 750]);
+  
+  // Get the standard font
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  
+  // Draw some text on the page
+  page.drawText('Hello World!', {
+    x: 50,
+    y: 700,
+    size: 30,
+    font,
+    color: rgb(0, 0.53, 0.71),
+  });
+  
+  // Serialize the PDFDocument to bytes
+  const pdfBytes = await pdfDoc.save();
+  
+  // Create a blob from the bytes
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  
+  // Create a URL for the blob
+  const url = URL.createObjectURL(blob);
+  
+  // Open the PDF in a new tab
+  window.open(url);
+}
+```
+
+You can also modify existing PDFs:
+
+```tsx modify-pdf.tsx
+import { PDFDocument } from 'pdf-lib';
+
+async function modifyPDF(existingPdfBytes) {
+  // Load the existing PDF
+  const pdfDoc = await PDFDocument.load(existingPdfBytes);
+  
+  // Add a new page
+  const page = pdfDoc.addPage([550, 750]);
+  
+  // Get the font
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  
+  // Add content to the new page
+  page.drawText('This page was added with pdf-lib!', {
+    x: 50,
+    y: 700,
+    size: 24,
+    font,
+  });
+  
+  // Save the modified PDF
+  const modifiedPdfBytes = await pdfDoc.save();
+  return modifiedPdfBytes;
+}
+```
+
+### Benefits
+
+- <Icon icon="check" iconType="solid" /> **Pure JavaScript**: Works in any JavaScript environment (Node.js, browsers, React Native).
+- <Icon icon="check" iconType="solid" /> **No Dependencies**: Zero dependencies on native libraries or external tools.
+- <Icon icon="check" iconType="solid" /> **Feature Rich**: Create, modify, and extract content from PDFs with a simple API.
+- <Icon icon="check" iconType="solid" /> **TypeScript Support**: Fully typed API for better developer experience.
+
+For more information and detailed documentation, visit the [PDF-Lib GitHub repository](https://github.com/Hopding/pdf-lib).

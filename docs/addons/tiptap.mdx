@@ -1,0 +1,121 @@
+---
+title: Tiptap
+description: A headless, framework-agnostic rich text editor for modern web applications, built on top of ProseMirror.
+---
+
+### Installation
+
+To install Tiptap for React, run the following command:
+
+```sh Terminal
+pnpm add @tiptap/react @tiptap/pm @tiptap/starter-kit
+```
+
+### Usage
+
+Here's an example of how to use Tiptap to create a rich text editor in your React application:
+
+```tsx editor.tsx
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+
+function TextEditor() {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+    ],
+    content: '<p>Hello World! 🌎️</p>',
+  });
+
+  return (
+    <div className="editor-container">
+      <div className="menu">
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'is-active' : ''}
+        >
+          Bold
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'is-active' : ''}
+        >
+          Italic
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
+        >
+          H1
+        </button>
+      </div>
+      <EditorContent editor={editor} />
+    </div>
+  );
+}
+```
+
+### Advanced Usage
+
+Tiptap is highly extensible. You can add custom extensions for additional functionality:
+
+```tsx advanced-editor.tsx
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import Image from '@tiptap/extension-image';
+import Link from '@tiptap/extension-link';
+
+function AdvancedEditor() {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: 'Write something amazing...',
+      }),
+      Image,
+      Link.configure({
+        openOnClick: false,
+      }),
+    ],
+    content: '<p>This is an advanced editor with image and link support.</p>',
+  });
+
+  // Function to add an image
+  const addImage = () => {
+    const url = window.prompt('URL');
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  };
+
+  // Function to add a link
+  const setLink = () => {
+    const url = window.prompt('URL');
+    if (url) {
+      editor.chain().focus().setLink({ href: url }).run();
+    }
+  };
+
+  return (
+    <div className="editor-container">
+      <div className="menu">
+        {/* Basic formatting buttons */}
+        <button onClick={addImage}>Image</button>
+        <button onClick={setLink}>Link</button>
+      </div>
+      <EditorContent editor={editor} />
+    </div>
+  );
+}
+```
+
+### Benefits
+
+- <Icon icon="check" iconType="solid" /> **Headless Design**: Complete control over the UI while Tiptap handles the editor logic.
+- <Icon icon="check" iconType="solid" /> **Extensible**: Rich ecosystem of extensions for adding features like tables, images, and code blocks.
+- <Icon icon="check" iconType="solid" /> **Collaborative Editing**: Built-in support for real-time collaboration.
+- <Icon icon="check" iconType="solid" /> **Framework Agnostic**: Works with React, Vue, and vanilla JavaScript.
+- <Icon icon="check" iconType="solid" /> **TypeScript Support**: Fully typed API for better developer experience.
+
+For more information and detailed documentation, visit the [Tiptap website](https://tiptap.dev/).
