@@ -1,6 +1,5 @@
-import type { Actions, Subjects } from './types';
-import type { Role } from './roles';
-import { getAbilitiesForRole } from './roles';
+import type { Actions, Subjects, UserWithRole, PermissionRule } from './types';
+import { getAllPermissionsForRole } from './roles';
 
 // Define regex at the top level for better performance
 const USER_VARIABLE_REGEX = /\$\{user\.([^}]+)\}/;
@@ -13,30 +12,70 @@ const USER_VARIABLE_REGEX = /\$\{user\.([^}]+)\}/;
  * @param cannot - CASL's cannot function to define restrictions
  */
 export function defineRulesFor(
-  user: { role: Role; id: string; [key: string]: unknown },
+  user: UserWithRole,
   can: (action: Actions, subject: Subjects, conditions?: Record<string, unknown> | undefined) => void,
   cannot: (action: Actions, subject: Subjects, conditions?: Record<string, unknown> | undefined) => void
 ): void {
   if (!user || !user.role) {
     // Default to guest permissions if no role is specified
-    const guestAbilities = getAbilitiesForRole('guest');
-    for (const rule of guestAbilities) {
-      can(rule.action, rule.subject);
-    }
+    const guestAbilities = getAllPermissionsForRole('guest');
+    applyRules(guestAbilities, user, can, cannot);
     return;
   }
 
-  const rawAbilities = getAbilitiesForRole(user.role);
+  // Get all permissions for the role, including inherited permissions
+  const permissions = getAllPermissionsForRole(user.role);
+  applyRules(permissions, user, can, cannot);
+}
 
-  for (const rule of rawAbilities) {
-    const conditions = substituteVariables('conditions' in rule ? rule.conditions : undefined, user);
+/**
+ * Apply permission rules to CASL ability builder
+ * 
+ * @param rules - Array of permission rules to apply
+ * @param user - User object with values for variable substitution
+ * @param can - CASL's can function to define permissions
+ * @param cannot - CASL's cannot function to define restrictions
+ */
+export function applyRules(
+  rules: PermissionRule[],
+  user: { id: string; [key: string]: unknown },
+  can: (action: Actions, subject: Subjects, conditions?: Record<string, unknown> | undefined) => void,
+  cannot: (action: Actions, subject: Subjects, conditions?: Record<string, unknown> | undefined) => void
+): void {
+  for (const rule of rules) {
+    const conditions = substituteVariables(rule.conditions, user);
     
-    if ('inverted' in rule && rule.inverted) {
-      cannot(rule.action, rule.subject, conditions);
+    if (rule.inverted) {
+      cannot(rule.action as Actions, rule.subject as Subjects, conditions);
     } else {
-      can(rule.action, rule.subject, conditions);
+      can(rule.action as Actions, rule.subject as Subjects, conditions);
     }
   }
+}
+
+/**
+ * Process a string value for variable substitution
+ * 
+ * @param value - String value that might contain variables
+ * @param user - User object with values to substitute
+ * @returns Processed value with substitutions
+ */
+function processStringValue(value: string, user: { [key: string]: unknown }): unknown {
+  // Handle special placeholder for user ID
+  if (value === 'USER_ID_PLACEHOLDER') {
+    return user.id;
+  } 
+  
+  // Handle legacy template string format
+  if (value.includes('${user.')) {
+    const userKey = value.match(USER_VARIABLE_REGEX)?.[1];
+    if (userKey && userKey in user) {
+      return user[userKey];
+    }
+  }
+  
+  // Return original value if no substitution was made
+  return value;
 }
 
 /**
@@ -58,20 +97,7 @@ function substituteVariables(
   
   for (const [key, value] of Object.entries(conditions)) {
     if (typeof value === 'string') {
-      // Handle special placeholder for user ID
-      if (value === 'USER_ID_PLACEHOLDER') {
-        result[key] = user.id;
-      } else if (value.includes('${user.')) {
-        // Handle legacy template string format
-        const userKey = value.match(USER_VARIABLE_REGEX)?.[1];
-        if (userKey && userKey in user) {
-          result[key] = user[userKey];
-        } else {
-          result[key] = value;
-        }
-      } else {
-        result[key] = value;
-      }
+      result[key] = processStringValue(value, user);
     } else {
       result[key] = value;
     }

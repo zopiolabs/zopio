@@ -30,14 +30,29 @@ export type AppAbility = MongoAbility<[Actions, Subjects]>;
 export type SubjectType = ExtractSubjectType<Subject>;
 
 /**
- * Clerk user structure with publicMetadata
+ * User with role information for RBAC
  */
-export interface ClerkUser {
+export interface UserWithRole {
   id: string;
-  publicMetadata?: {
-    roles?: string[];
-    organizationId?: string;
-    [key: string]: unknown;
-  };
+  role: string;
   [key: string]: unknown;
+}
+
+/**
+ * Permission rule structure
+ */
+export interface PermissionRule {
+  action: Actions | string;
+  subject: Subjects | string;
+  conditions?: Record<string, unknown>;
+  inverted?: boolean;
+}
+
+/**
+ * Role definition with permissions
+ */
+export interface RoleDefinition {
+  name: string;
+  permissions: PermissionRule[];
+  inherits?: string[];
 }

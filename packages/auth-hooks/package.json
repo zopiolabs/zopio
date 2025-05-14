@@ -1,0 +1,19 @@
+{
+  "name": "@repo/auth-hooks",
+  "version": "0.1.0",
+  "description": "React access control hooks for Zopio framework",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.2.0"
+  }
+}

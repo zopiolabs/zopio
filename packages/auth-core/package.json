@@ -1,0 +1,30 @@
+{
+  "name": "@repo/auth-core",
+  "version": "0.1.0",
+  "description": "Core authentication utilities for integrating auth modules",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts"
+    }
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "22.14.1",
+    "@types/react": "19.1.1",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@repo/auth": "workspace:*",
+    "@repo/auth-rbac": "workspace:*",
+    "@repo/auth-policy": "workspace:*"
+  }
+}
