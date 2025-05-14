@@ -1,0 +1,44 @@
+{
+  "structure": {
+    "core": {
+      "location": "packages/core",
+      "type": "essential",
+      "description": "Critical core modules required by all apps, including security, auth, token, and base runtime utilities."
+    },
+    "data-layer": {
+      "location": "packages/data",
+      "type": "modular-core",
+      "description": "Reusable, tree-shakable data layer modules including data fetching, mutation, provider abstraction, and advanced table utilities."
+    },
+    "addons": {
+      "location": "packages/addons",
+      "type": "optional",
+      "description": "Advanced but optional modules that enhance Zopio’s capabilities. All addons must declare core dependencies as peerDependencies."
+    }
+  },
+  "rules": {
+    "core": {
+      "dependencies": "regular",
+      "edge-compatible": true,
+      "tree-shakable": true,
+      "side-effects": false
+    },
+    "data-layer": {
+      "dependencies": "regular",
+      "edge-compatible": true,
+      "tree-shakable": true,
+      "side-effects": false
+    },
+    "addons": {
+      "dependencies": "peer",
+      "edge-compatible": "optional",
+      "tree-shakable": true,
+      "side-effects": false
+    }
+  },
+  "notes": [
+    "Modules inside 'data-layer' are still considered part of the core framework, but isolated for developer clarity and future extensibility.",
+    "Addons are opt-in by design and must not be imported unless explicitly needed by the app.",
+    "All module types should follow TypeScript and ESM conventions."
+  ]
+}

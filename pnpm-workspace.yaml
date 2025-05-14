@@ -1,6 +1,8 @@
 packages:
+  - packages/core/*
+  - packages/data/*
+  - packages/addons/*
   - apps/*
-  - packages/*
 
 onlyBuiltDependencies:
   - '@biomejs/biome'

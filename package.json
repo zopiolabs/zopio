@@ -4,15 +4,8 @@
   "bin": {
     "Zopio": "dist/index.js"
   },
-  "files": [
-    "dist/index.js"
-  ],
-  "workspaces": [
-    "apps/*",
-    "apps/jobs",
-    "packages/*",
-    "addons/*"
-  ],
+  "files": ["dist/index.js"],
+  "workspaces": ["apps/*", "packages/*", "addons/*"],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",

@@ -1,0 +1,16 @@
+{
+  "name": "@repo/data-form",
+  "version": "0.2.0",
+  "description": "useForm hook with Zod validation for Zopio framework",
+  "main": "./useForm.ts",
+  "types": "./useForm.ts",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.2.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@repo/data-table",
+  "version": "0.8.0",
+  "description": "Live update support for Zopio useTable (polling/WebSocket-ready)",
+  "main": "./useTable.ts",
+  "types": "./useTable.ts",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.0.0",
+    "@repo/data-provider": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.2.0"
+  }
+}
