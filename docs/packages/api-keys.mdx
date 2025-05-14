@@ -1,0 +1,144 @@
+---
+title: "API Keys"
+description: "API key management module for Zopio framework"
+---
+
+# API Keys
+
+The `@core/api-keys` package provides a secure and flexible API key management system for the Zopio framework. It handles the generation, validation, and revocation of API keys, with built-in integrations for common use cases.
+
+## Installation
+
+```bash
+npm install @core/api-keys
+```
+
+## Features
+
+- **Secure Key Generation**: Creates cryptographically secure API keys with proper hashing
+- **Key Validation**: Validates API keys against stored hashed values
+- **Key Revocation**: Easily revoke API keys when needed
+- **Next.js Integration**: Built-in utilities for Next.js API routes
+- **Rate Limiting**: Optional rate limiting for API keys
+
+## Basic Usage
+
+### Creating an API Key
+
+```typescript
+import { createKey } from '@core/api-keys';
+
+// Create a new API key for a user with specific scopes
+const apiKey = createKey('user_123', ['read', 'write']);
+console.log(`Your API key: ${apiKey}`);
+// Output: Your API key: zpk_a1b2c3d4e5f6...
+```
+
+### Validating an API Key
+
+```typescript
+import { validateKey } from '@core/api-keys';
+
+// Check if an API key is valid
+const isValid = validateKey('zpk_a1b2c3d4e5f6...');
+if (isValid) {
+  // Proceed with the API request
+} else {
+  // Return unauthorized response
+}
+```
+
+### Revoking an API Key
+
+```typescript
+import { revokeKey } from '@core/api-keys';
+
+// Revoke an API key
+revokeKey('zpk_a1b2c3d4e5f6...');
+```
+
+## Next.js Integration
+
+### Extracting User Identity from API Key
+
+```typescript
+import { fromApiKey } from '@core/api-keys';
+import { NextRequest } from 'next/server';
+
+export async function GET(req: NextRequest) {
+  const user = fromApiKey(req);
+  
+  if (!user) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  
+  return Response.json({ 
+    userId: user.userId,
+    scopes: user.scopes
+  });
+}
+```
+
+### Rate Limiting Based on API Key
+
+```typescript
+import { useApiKeyRateLimit } from '@core/api-keys';
+import { NextRequest } from 'next/server';
+
+export async function GET(req: NextRequest) {
+  const rateLimit = await useApiKeyRateLimit(req);
+  
+  if (!rateLimit.allowed) {
+    return Response.json({ error: 'Rate limit exceeded' }, { status: 429 });
+  }
+  
+  // Process the request
+  return Response.json({ data: 'Success' });
+}
+```
+
+## Database Schema
+
+The package uses Prisma for database operations. The schema includes:
+
+```prisma
+model ApiKey {
+  id         String    @id @default(cuid())
+  userId     String
+  hashedKey  String    @unique
+  scopes     String[]
+  revoked    Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+  
+  @@index([userId])
+  @@index([hashedKey])
+}
+```
+
+## Configuration
+
+By default, the package uses PostgreSQL as the database provider. You can configure the database connection by setting the `DATABASE_URL` environment variable.
+
+## Security Considerations
+
+- API keys are hashed using SHA-256 before being stored in the database
+- The original API key is only returned once during creation and never stored in plain text
+- Keys can be revoked at any time, immediately invalidating them
+- Scopes can be used to limit the permissions of each API key
+
+## Error Handling
+
+The package throws appropriate errors when operations fail:
+
+- `InvalidApiKeyError`: When an API key format is invalid
+- `ApiKeyNotFoundError`: When an API key doesn't exist
+- `RevokedApiKeyError`: When trying to use a revoked API key
+
+## Best Practices
+
+1. **Store API keys securely**: Never log or expose API keys in client-side code
+2. **Use scopes**: Limit the permissions of each API key to only what's needed
+3. **Implement rate limiting**: Prevent abuse by limiting the rate of API requests
+4. **Rotate keys regularly**: Encourage users to rotate their API keys periodically
+5. **Monitor usage**: Track API key usage to detect suspicious activity

@@ -4,12 +4,17 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch"
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "biome check src",
+    "lint:fix": "biome check --apply src",
+    "test": "vitest run"
   },
   "dependencies": {},
   "devDependencies": {
+    "@biomejs/biome": "^1.4.0",
     "tsup": "^8.4.0",
-    "typescript": "^5.2.0"
+    "typescript": "^5.2.0",
+    "vitest": "^1.0.0"
   }
 }

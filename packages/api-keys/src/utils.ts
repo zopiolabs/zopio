@@ -1,32 +1,57 @@
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
+
+/**
+ * API Key record type
+ */
+export interface ApiKeyRecord {
+  hashedKey: string;
+  userId: string;
+  scopes: string[];
+  revoked: boolean;
+  createdAt: Date;
+  lastUsedAt?: Date;
+}
 
 /**
  * Hashes an API key string using SHA-256.
  */
-export async function hashKey(rawKey: string): Promise<string> {
+export function hashKey(rawKey: string): string {
   return createHash('sha256').update(rawKey).digest('hex');
 }
 
+// In-memory store for development/testing
+const keyStore: Record<string, ApiKeyRecord> = {};
+
 /**
- * Simulated DB insert operation.
+ * Saves a new API key to the database.
  */
-export async function saveKeyToDB(data: { hashedKey: string; userId: string; scopes: string[] }) {
-  // Replace with actual DB logic using Prisma or equivalent ORM
-  console.log('Saving key to DB:', data);
+export function saveKeyToDB(data: { hashedKey: string; userId: string; scopes: string[] }): ApiKeyRecord {
+  // In a real implementation, this would use Prisma to insert into the database
+  const record: ApiKeyRecord = {
+    ...data,
+    revoked: false,
+    createdAt: new Date(),
+  };
+  
+  keyStore[data.hashedKey] = record;
+  return record;
 }
 
 /**
- * Simulated DB fetch operation.
+ * Finds an API key in the database by its hashed value.
  */
-export async function findKeyInDB(hashedKey: string) {
-  // Replace with actual DB lookup
-  return { hashedKey, userId: '123', revoked: false };
+export function findKeyInDB(hashedKey: string): ApiKeyRecord | null {
+  // In a real implementation, this would use Prisma to query the database
+  return keyStore[hashedKey] || null;
 }
 
 /**
- * Simulated DB revoke operation.
+ * Marks an API key as revoked in the database.
  */
-export async function revokeKeyInDB(hashedKey: string) {
-  // Replace with actual DB update logic
-  console.log('Revoking key in DB:', hashedKey);
+export function revokeKeyInDB(hashedKey: string): void {
+  // In a real implementation, this would use Prisma to update the database
+  const record = keyStore[hashedKey];
+  if (record) {
+    record.revoked = true;
+  }
 }

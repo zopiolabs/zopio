@@ -146,6 +146,7 @@
         {
           "group": "Security",
           "pages": [
+            "packages/api-keys",
             "packages/security/application",
             "packages/security/rate-limiting",
             "packages/security/dependencies",
