@@ -81,7 +81,6 @@
         "apps/docs",
         "apps/email",
         "apps/storybook",
-        "apps/dbviewer",
         "apps/web"
       ]
     },
