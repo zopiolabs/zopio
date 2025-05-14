@@ -4,6 +4,7 @@ packages:
   - packages/data/*
   - packages/addons/*
   - apps/*
+  - cli/*
 
 onlyBuiltDependencies:
   - '@biomejs/biome'

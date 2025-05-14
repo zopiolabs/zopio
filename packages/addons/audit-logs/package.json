@@ -1,0 +1,15 @@
+{
+  "name": "@addon/audit-logs",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup index.ts --dts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.3.3"
+  }
+}

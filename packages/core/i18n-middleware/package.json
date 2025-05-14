@@ -1,0 +1,14 @@
+{
+  "name": "@addon/i18n-middleware",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup index.ts --dts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.3.3"
+  }
+}
