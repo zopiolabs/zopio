@@ -1,0 +1,15 @@
+{
+  "name": "tsconfig",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "files": [
+    "base.json",
+    "react-app.json",
+    "react-library.json",
+    "node-library.json"
+  ],
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules"
+  }
+}
