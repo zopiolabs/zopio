@@ -50,9 +50,10 @@ async function processDirectory(directory) {
 }
 
 async function main() {
+  // Using @repo namespace instead of relative path
   const designSystemDir = path.resolve(
     __dirname,
-    '../packages/design-system/components/ui'
+    '../packages/core/design-system/components/ui'
   );
   await processDirectory(designSystemDir);
   // Completed fixing imports
