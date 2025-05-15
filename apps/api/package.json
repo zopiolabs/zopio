@@ -28,7 +28,7 @@
     "@repo/payments": "workspace:*",
     "@repo/testing": "workspace:*",
     "@sentry/nextjs": "^9.12.0",
-    "@t3-oss/env-nextjs": "^0.12.0",
+    "@t3-oss/env-nextjs": "^0.13.4",
     "import-in-the-middle": "^1.13.1",
     "next": "15.3.0",
     "react": "19.1.0",
