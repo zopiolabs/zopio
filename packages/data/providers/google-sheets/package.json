@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data-providers-google-sheets",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Google Sheets data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "google-sheets"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*",
+    "googleapis": "^126.0.0"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "googleapis": "^126.0.0",
+    "typescript": "^5.0.0"
+  }
+}

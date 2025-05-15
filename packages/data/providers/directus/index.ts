@@ -187,42 +187,36 @@ export function createDirectusProvider(config: DirectusProviderConfig): CrudProv
     
     return { data: result.data || {} };
   };
-  
+
+  // Extracted helper for getList
+  function buildDirectusListUrl(
+    resource: string,
+    pagination?: { page: number; perPage: number },
+    sort?: { field: string; order: string },
+    filter?: Record<string, unknown>
+  ): string {
+    const directusFilter = buildFilterParams(filter);
+    const sortParams = buildSortParams(sort);
+    const url = new URL(buildUrl({ resource }));
+    if (pagination) {
+      url.searchParams.append('limit', String(pagination.perPage));
+      url.searchParams.append('page', String(pagination.page));
+    }
+    if (sortParams.length > 0) {
+      url.searchParams.append('sort', sortParams.join(','));
+    }
+    if (Object.keys(directusFilter).length > 0) {
+      url.searchParams.append('filter', JSON.stringify(directusFilter));
+    }
+    url.searchParams.append('meta', '*');
+    return url.toString();
+  }
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
-        // Build query parameters
-        const directusFilter = buildFilterParams(filter);
-        const sortParams = buildSortParams(sort);
-        
-        // Build URL
-        const url = new URL(buildUrl({ resource }));
-        
-        // Add pagination
-        if (pagination) {
-          url.searchParams.append('limit', String(pagination.perPage));
-          url.searchParams.append('page', String(pagination.page));
-        }
-        
-        // Add sorting
-        if (sortParams.length > 0) {
-          url.searchParams.append('sort', sortParams.join(','));
-        }
-        
-        // Add filtering
-        if (Object.keys(directusFilter).length > 0) {
-          url.searchParams.append('filter', JSON.stringify(directusFilter));
-        }
-        
-        // Add meta flag to get total count
-        url.searchParams.append('meta', '*');
-        
-        // Fetch data
-        const response = await fetch(url.toString(), { 
-          headers: getHeaders()
-        });
-        
-        // Process response
+        const url = buildDirectusListUrl(resource, pagination, sort, filter);
+        const response = await fetch(url, { headers: getHeaders() });
         return await processListResponse(response);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));

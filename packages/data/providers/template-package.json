@@ -1,0 +1,17 @@
+{
+  "name": "@repo/data-providers-PROVIDER_NAME",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "PROVIDER_DESCRIPTION for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "PROVIDER_NAME"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "typescript": "^5.0.0"
+  }
+}

@@ -58,41 +58,38 @@ export function createFormbricksProvider(config: FormbricksProviderConfig): Crud
     'Content-Type': 'application/json'
   };
 
+  // Extracted helpers for getList
+  function buildFormbricksListUrl(resource: string, pagination?: { page: number; perPage: number }, filter?: Record<string, unknown>): string {
+    const url = new URL(buildUrl(resource));
+    if (pagination) {
+      url.searchParams.append('limit', String(pagination.perPage));
+      url.searchParams.append('offset', String((pagination.page - 1) * pagination.perPage));
+    }
+    if (filter) {
+      for (const [key, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, String(value));
+        }
+      }
+    }
+    return url.toString();
+  }
+  async function processFormbricksListResponse(response: Response): Promise<GetListResult> {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch resource: ${response.statusText}`);
+    }
+    const result = await response.json();
+    const data = Array.isArray(result) ? result : result.data;
+    const total = Array.isArray(result) ? result.length : (result.meta?.total || data.length);
+    return { data, total };
+  }
+
   return {
     async getList({ resource, pagination, filter }: GetListParams): Promise<GetListResult> {
       try {
-        // Build URL with query parameters
-        const url = new URL(buildUrl(resource));
-        
-        // Add pagination params if supported
-        if (pagination) {
-          url.searchParams.append('limit', String(pagination.perPage));
-          url.searchParams.append('offset', String((pagination.page - 1) * pagination.perPage));
-        }
-        
-        // Add filter params if supported
-        if (filter) {
-          for (const [key, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              url.searchParams.append(key, String(value));
-            }
-          }
-        }
-        
-        // Fetch data
-        const response = await fetch(url.toString(), { headers });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
-        }
-        
-        const result = await response.json();
-        
-        // Handle different response formats
-        const data = Array.isArray(result) ? result : result.data;
-        const total = Array.isArray(result) ? result.length : (result.meta?.total || data.length);
-        
-        return { data, total };
+        const url = buildFormbricksListUrl(resource, pagination, filter);
+        const response = await fetch(url, { headers });
+        return await processFormbricksListResponse(response);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }

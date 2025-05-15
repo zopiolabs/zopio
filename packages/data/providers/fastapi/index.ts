@@ -156,6 +156,32 @@ export function createFastAPIProvider(config: FastAPIProviderConfig): CrudProvid
     return operatorMap[operator] || operator.replace('$', '__');
   };
   
+  // Extracted helpers for response handling
+  function handleSimpleArrayResponse(result: any[]): { data: any[]; total: number } {
+    return {
+      data: result,
+      total: result.length
+    };
+  }
+  function handlePaginatedResponse(result: any): { data: any[]; total: number } {
+    return {
+      data: result.items,
+      total: result.total || result.count || result.items.length
+    };
+  }
+  function handleDataMetaResponse(result: any): { data: any[]; total: number } {
+    return {
+      data: result.data,
+      total: result.meta?.total || result.total || result.data.length
+    };
+  }
+  function handleFallbackResponse(): { data: any[]; total: number } {
+    return {
+      data: [],
+      total: 0
+    };
+  }
+
   // Helper function to process list response
   const processListResponse = async (response: Response): Promise<{ data: unknown[]; total: number }> => {
     if (!response.ok) {
@@ -168,29 +194,18 @@ export function createFastAPIProvider(config: FastAPIProviderConfig): CrudProvid
     // Handle different response formats
     if (Array.isArray(result)) {
       // Simple array response
-      return { 
-        data: result,
-        total: result.length
-      };
-    } else if (result.items && Array.isArray(result.items)) {
-      // Paginated response with items and total
-      return {
-        data: result.items,
-        total: result.total || result.count || result.items.length
-      };
-    } else if (result.data && Array.isArray(result.data)) {
-      // Response with data and meta
-      return {
-        data: result.data,
-        total: result.meta?.total || result.total || result.data.length
-      };
+      return handleSimpleArrayResponse(result);
     }
-    
+    if (result.items && Array.isArray(result.items)) {
+      // Paginated response with items and total
+      return handlePaginatedResponse(result);
+    }
+    if (result.data && Array.isArray(result.data)) {
+      // Response with data and meta
+      return handleDataMetaResponse(result);
+    }
     // Fallback for unexpected formats
-    return {
-      data: [],
-      total: 0
-    };
+    return handleFallbackResponse();
   };
   
   // Helper function to process a single item response

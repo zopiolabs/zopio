@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data-providers-kysely",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Kysely SQL query builder data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "kysely", "sql"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*",
+    "kysely": "^0.26.0"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "kysely": "^0.26.0",
+    "typescript": "^5.0.0"
+  }
+}

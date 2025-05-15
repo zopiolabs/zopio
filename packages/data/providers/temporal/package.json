@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data-providers-temporal",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Temporal workflow data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "temporal", "workflow"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@temporalio/client": "^1.7.0"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@temporalio/client": "^1.7.0",
+    "typescript": "^5.0.0"
+  }
+}

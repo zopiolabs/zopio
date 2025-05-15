@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data-providers-xata",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Xata data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "xata", "database"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@xata.io/client": "^0.25.0"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@xata.io/client": "^0.25.0",
+    "typescript": "^5.0.0"
+  }
+}

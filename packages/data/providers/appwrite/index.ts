@@ -207,36 +207,35 @@ export function createAppwriteProvider(config: AppwriteProviderConfig): CrudProv
     return { data: result || {} };
   };
   
+  // Extracted helpers for getList
+  function buildAppwriteQueries(filter?: Record<string, unknown>, sort?: { field: string; order: string }): string[] {
+    return [
+      ...buildFilterParams(filter),
+      ...buildSortParams(sort)
+    ];
+  }
+  function getPaginationParams(pagination?: { page: number; perPage: number }): { limit: number; offset: number } {
+    const limit = pagination?.perPage || 25;
+    const offset = pagination ? (pagination.page - 1) * pagination.perPage : 0;
+    return { limit, offset };
+  }
+  function buildAppwriteListUrl(resource: string, limit: number, offset: number, queries: string[]): string {
+    const url = new URL(buildUrl({ resource }));
+    url.searchParams.append('limit', String(limit));
+    url.searchParams.append('offset', String(offset));
+    if (queries.length > 0) {
+      url.searchParams.append('queries', JSON.stringify(queries));
+    }
+    return url.toString();
+  }
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
-        // Build query parameters
-        const queries: string[] = [
-          ...buildFilterParams(filter),
-          ...buildSortParams(sort)
-        ];
-        
-        // Add pagination
-        const limit = pagination?.perPage || 25;
-        const offset = pagination ? (pagination.page - 1) * pagination.perPage : 0;
-        
-        // Build URL
-        const url = new URL(buildUrl({ resource }));
-        
-        // Add query parameters
-        url.searchParams.append('limit', String(limit));
-        url.searchParams.append('offset', String(offset));
-        
-        if (queries.length > 0) {
-          url.searchParams.append('queries', JSON.stringify(queries));
-        }
-        
-        // Fetch data
-        const response = await fetch(url.toString(), { 
-          headers: getHeaders()
-        });
-        
-        // Process response
+        const queries = buildAppwriteQueries(filter, sort);
+        const { limit, offset } = getPaginationParams(pagination);
+        const url = buildAppwriteListUrl(resource, limit, offset, queries);
+        const response = await fetch(url, { headers: getHeaders() });
         return await processListResponse(response);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));

@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data-providers-notion",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Notion data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "notion"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@notionhq/client": "^2.0.0"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@notionhq/client": "^2.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -75,87 +75,87 @@ export function createDataProvider(options: CreateDataProviderOptions): CrudProv
 
   switch (type) {
     case 'rest':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createRestProvider(config);
+      // Type assertion for provider-specific config
+      return createRestProvider(config as any);
     case 'mock':
       return createMockProvider();
     case 'graphql':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createGraphQLProvider(config);
+      // Type assertion for provider-specific config
+      return createGraphQLProvider(config as any);
     case 'firebase':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createFirebaseProvider(config);
+      // Type assertion for provider-specific config
+      return createFirebaseProvider(config as any);
     case 'supabase':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createSupabaseProvider(config);
+      // Type assertion for provider-specific config
+      return createSupabaseProvider(config as any);
     case 'local':
       return createLocalProvider(config);
     case 'drizzle':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createDrizzleProvider(config);
+      // Type assertion for provider-specific config
+      return createDrizzleProvider(config as any);
     case 'kysely':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createKyselyProvider(config);
+      // Type assertion for provider-specific config
+      return createKyselyProvider(config as any);
     case 'prisma':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createPrismaProvider(config);
+      // Type assertion for provider-specific config
+      return createPrismaProvider(config as any);
     case 'zopio':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createZopioProvider(config);
+      // Type assertion for provider-specific config
+      return createZopioProvider(config as any);
     case 'airtable':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createAirtableProvider(config);
+      // Type assertion for provider-specific config
+      return createAirtableProvider(config as any);
     case 'baserow':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createBaserowProvider(config);
+      // Type assertion for provider-specific config
+      return createBaserowProvider(config as any);
     case 'formbricks':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createFormbricksProvider(config);
+      // Type assertion for provider-specific config
+      return createFormbricksProvider(config as any);
     case 'github':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createGithubProvider(config);
+      // Type assertion for provider-specific config
+      return createGithubProvider(config as any);
     case 'google-sheets':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createGoogleSheetsProvider(config);
+      // Type assertion for provider-specific config
+      return createGoogleSheetsProvider(config as any);
     case 'killbill':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createKillbillProvider(config);
+      // Type assertion for provider-specific config
+      return createKillbillProvider(config as any);
     case 'medusa':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createMedusaProvider(config);
+      // Type assertion for provider-specific config
+      return createMedusaProvider(config as any);
     case 'n8n':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createN8nProvider(config);
+      // Type assertion for provider-specific config
+      return createN8nProvider(config as any);
     case 'neon':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createNeonProvider(config);
+      // Type assertion for provider-specific config
+      return createNeonProvider(config as any);
     case 'nocodb':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createNocodbProvider(config);
+      // Type assertion for provider-specific config
+      return createNocodbProvider(config as any);
     case 'notion':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createNotionProvider(config);
+      // Type assertion for provider-specific config
+      return createNotionProvider(config as any);
     case 'odoo':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createOdooProvider(config);
+      // Type assertion for provider-specific config
+      return createOdooProvider(config as any);
     case 'sap':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createSAPProvider(config);
+      // Type assertion for provider-specific config
+      return createSAPProvider(config as any);
     case 'shopify':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createShopifyProvider(config);
+      // Type assertion for provider-specific config
+      return createShopifyProvider(config as any);
     case 'stripe':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createStripeProvider(config);
+      // Type assertion for provider-specific config
+      return createStripeProvider(config as any);
     case 'syncops':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createSyncOpsProvider(config);
+      // Type assertion for provider-specific config
+      return createSyncOpsProvider(config as any);
     case 'temporal':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createTemporalProvider(config);
+      // Type assertion for provider-specific config
+      return createTemporalProvider(config as any);
     case 'xata':
-      // @ts-expect-error Config type is handled internally by the provider
-      return createXataProvider(config);
+      // Type assertion for provider-specific config
+      return createXataProvider(config as any);
     default:
       throw new Error(`Unsupported data provider type: ${type}`);
   }

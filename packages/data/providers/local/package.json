@@ -1,0 +1,17 @@
+{
+  "name": "@repo/data-providers-local",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Local storage data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "local", "storage"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data-providers-supabase",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Supabase data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "supabase"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@supabase/supabase-js": "^2.0.0"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "@supabase/supabase-js": "^2.0.0",
+    "typescript": "^5.0.0"
+  }
+}

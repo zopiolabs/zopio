@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data-providers-stripe",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Stripe data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "stripe", "payments"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*",
+    "stripe": "^12.0.0"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "stripe": "^12.0.0",
+    "typescript": "^5.0.0"
+  }
+}

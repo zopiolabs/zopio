@@ -1,0 +1,17 @@
+{
+  "name": "@repo/data-providers-baserow",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./index.ts",
+  "description": "Baserow data provider for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud", "baserow"],
+  "dependencies": {},
+  "peerDependencies": {
+    "@repo/data-base": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/data-base": "workspace:*",
+    "typescript": "^5.0.0"
+  }
+}
