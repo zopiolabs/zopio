@@ -16,8 +16,28 @@ import type {
   DeleteResult
 } from '@repo/data-base';
 
+// Define Prisma client model interface
+interface PrismaModel {
+  count: (args?: { where?: Record<string, unknown> }) => Promise<number>;
+  findMany: (args?: { 
+    where?: Record<string, unknown>;
+    orderBy?: Record<string, string>;
+    skip?: number;
+    take?: number;
+  }) => Promise<Record<string, unknown>[]>;
+  findUnique: (args: { where: Record<string, unknown> }) => Promise<Record<string, unknown> | null>;
+  create: (args: { data: Record<string, unknown> }) => Promise<Record<string, unknown>>;
+  update: (args: { where: Record<string, unknown>; data: Record<string, unknown> }) => Promise<Record<string, unknown>>;
+  delete: (args: { where: Record<string, unknown> }) => Promise<Record<string, unknown>>;
+}
+
+// Define Prisma client interface
+interface PrismaClient {
+  [model: string]: PrismaModel;
+}
+
 export interface PrismaProviderConfig {
-  client: any; // Prisma client instance
+  client: PrismaClient; // Prisma client instance
   modelMapping?: Record<string, string>; // Maps resource names to Prisma models
 }
 
@@ -36,9 +56,9 @@ export function createPrismaProvider(config: PrismaProviderConfig): CrudProvider
   };
 
   // Helper to get Prisma model client
-  const getModelClient = (resource: string): any => {
+  const getModelClient = (resource: string): PrismaModel => {
     const model = getPrismaModel(resource);
-    const modelClient = (client as any)[model];
+    const modelClient = client[model];
     
     if (!modelClient) {
       throw new Error(`Prisma model not found: ${model}`);
@@ -47,32 +67,35 @@ export function createPrismaProvider(config: PrismaProviderConfig): CrudProvider
     return modelClient;
   };
 
+  // Helper to build where clause from filter
+  const buildWhereClause = (filter: Record<string, unknown> = {}): Record<string, unknown> => {
+    return filter || {};
+  };
+  
+  // Helper to build orderBy from sort
+  const buildOrderBy = (sort: { field: string; order: string } | undefined): Record<string, string> => {
+    const orderBy: Record<string, string> = {};
+    if (sort) {
+      orderBy[sort.field] = sort.order;
+    }
+    return orderBy;
+  };
+  
+  // Helper to build pagination
+  const buildPagination = (pagination?: { page: number; perPage: number }): { skip: number | undefined; take: number | undefined } => {
+    const skip = pagination ? (pagination.page - 1) * pagination.perPage : undefined;
+    const take = pagination ? pagination.perPage : undefined;
+    return { skip, take };
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         const modelClient = getModelClient(resource);
         
-        // Build where clause from filter
-        const where = filter || {};
-        
-        // Build orderBy from sort
-        const buildOrderBy = (sort: any): Record<string, string> => {
-          const orderBy: Record<string, string> = {};
-          if (sort) {
-            orderBy[sort.field] = sort.order;
-          }
-          return orderBy;
-        };
-        
+        // Apply filters, sorting, and pagination
+        const where = buildWhereClause(filter);
         const orderBy = buildOrderBy(sort);
-        
-        // Build pagination
-        const buildPagination = (pagination: any): { skip: number | undefined; take: number | undefined } => {
-          const skip = pagination ? (pagination.page - 1) * pagination.perPage : undefined;
-          const take = pagination ? pagination.perPage : undefined;
-          return { skip, take };
-        };
-        
         const { skip, take } = buildPagination(pagination);
         
         // Get total count
@@ -100,7 +123,7 @@ export function createPrismaProvider(config: PrismaProviderConfig): CrudProvider
         
         // Get data
         const data = await modelClient.findUnique({
-          where: { id }
+          where: { id: id }
         });
         
         if (!data) {
@@ -119,7 +142,7 @@ export function createPrismaProvider(config: PrismaProviderConfig): CrudProvider
         
         // Create data
         const data = await modelClient.create({
-          data: variables
+          data: variables as Record<string, unknown>
         });
         
         return { data };

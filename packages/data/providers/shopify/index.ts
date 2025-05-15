@@ -16,6 +16,9 @@ import type {
   DeleteResult
 } from '@repo/data-base';
 
+// Pre-defined regex patterns for better performance
+const lastPageRegex = /page=(\d+)>; rel="last"/
+
 export interface ShopifyProviderConfig {
   shopDomain: string;
   accessToken: string;
@@ -64,30 +67,41 @@ export function createShopifyProvider(config: ShopifyProviderConfig): CrudProvid
     'Content-Type': 'application/json'
   };
 
+  // Helper functions to build URL parameters
+  const addPaginationParams = (url: URL, pagination?: { page: number; perPage: number }): void => {
+    if (!pagination) {
+      return;
+    }
+    
+    url.searchParams.append('limit', String(pagination.perPage));
+    
+    if (pagination.page > 1) {
+      // Shopify uses page-based pagination
+      url.searchParams.append('page', String(pagination.page));
+    }
+  };
+
+  const addFilterParams = (url: URL, filter?: Record<string, unknown>): void => {
+    if (!filter) {
+      return;
+    }
+    
+    for (const [key, value] of Object.entries(filter)) {
+      if (value !== undefined && value !== null) {
+        url.searchParams.append(key, String(value));
+      }
+    }
+  };
+
   return {
-    async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
+    async getList({ resource, pagination, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build URL with query parameters
         const url = new URL(buildUrl(resource));
         
-        // Add pagination params
-        if (pagination) {
-          url.searchParams.append('limit', String(pagination.perPage));
-          
-          if (pagination.page > 1) {
-            // Shopify uses page-based pagination
-            url.searchParams.append('page', String(pagination.page));
-          }
-        }
-        
-        // Add filter params if supported
-        if (filter) {
-          for (const [key, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              url.searchParams.append(key, String(value));
-            }
-          }
-        }
+        // Add parameters
+        addPaginationParams(url, pagination);
+        addFilterParams(url, filter);
         
         // Fetch data
         const response = await fetch(url.toString(), { headers });
@@ -109,9 +123,9 @@ export function createShopifyProvider(config: ShopifyProviderConfig): CrudProvid
         
         if (linkHeader) {
           // Parse Link header to get total pages
-          const matches = linkHeader.match(/page=(\d+)>; rel="last"/);
+          const matches = linkHeader.match(lastPageRegex);
           if (matches && pagination) {
-            const lastPage = parseInt(matches[1], 10);
+            const lastPage = Number.parseInt(matches[1], 10);
             total = lastPage * pagination.perPage;
           }
         }

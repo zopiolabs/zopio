@@ -73,71 +73,87 @@ export function createSAPProvider(config: SAPProviderConfig): CrudProvider {
     };
   };
 
+  // Helper function to build filter parameters for OData
+  const buildFilterParams = (url: URL, filter?: Record<string, unknown>): void => {
+    if (filter && Object.keys(filter).length > 0) {
+      const filterStrings = [];
+      
+      for (const [key, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          // Handle different types of values
+          if (typeof value === 'string') {
+            filterStrings.push(`${key} eq '${value}'`);
+          } else {
+            filterStrings.push(`${key} eq ${value}`);
+          }
+        }
+      }
+      
+      if (filterStrings.length > 0) {
+        url.searchParams.append('$filter', filterStrings.join(' and '));
+      }
+    }
+  };
+
+  // Helper function to add sort parameters for OData
+  const addSortParams = (url: URL, sort?: { field: string; order: string }): void => {
+    if (sort) {
+      url.searchParams.append('$orderby', `${sort.field} ${sort.order === 'asc' ? 'asc' : 'desc'}`);
+    }
+  };
+
+  // Helper function to add pagination parameters for OData
+  const addPaginationParams = (url: URL, pagination?: { page: number; perPage: number }): void => {
+    if (pagination) {
+      const skip = (pagination.page - 1) * pagination.perPage;
+      url.searchParams.append('$skip', String(skip));
+      url.searchParams.append('$top', String(pagination.perPage));
+      
+      // Add $inlinecount to get total
+      url.searchParams.append('$inlinecount', 'allpages');
+    }
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build URL with query parameters
-        const url = new URL(buildUrl(resource));
+        const url = new URL(buildUrl({ resource }));
         
         // Add $format=json
         url.searchParams.append('$format', 'json');
         
-        // Add $filter for OData
-        if (filter && Object.keys(filter).length > 0) {
-          const filterStrings = [];
+        // Add query parameters
+        buildFilterParams(url, filter);
+        addSortParams(url, sort);
+        addPaginationParams(url, pagination);
+        
+        // Helper function to fetch data and process the response
+        const fetchAndProcessData = async (url: URL, resource: string): Promise<{ data: unknown[]; total: number }> => {
+          const response = await fetch(url.toString(), { 
+            headers: getHeaders()
+          });
           
-          for (const [key, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              // Handle different types of values
-              if (typeof value === 'string') {
-                filterStrings.push(`${key} eq '${value}'`);
-              } else {
-                filterStrings.push(`${key} eq ${value}`);
-              }
-            }
+          if (!response.ok) {
+            throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
           }
           
-          if (filterStrings.length > 0) {
-            url.searchParams.append('$filter', filterStrings.join(' and '));
-          }
-        }
-        
-        // Add $orderby for sorting
-        if (sort) {
-          url.searchParams.append('$orderby', `${sort.field} ${sort.order === 'asc' ? 'asc' : 'desc'}`);
-        }
-        
-        // Add $skip and $top for pagination
-        if (pagination) {
-          const skip = (pagination.page - 1) * pagination.perPage;
-          url.searchParams.append('$skip', String(skip));
-          url.searchParams.append('$top', String(pagination.perPage));
+          const result = await response.json() as { d?: { results?: unknown[]; __count?: string } };
           
-          // Add $inlinecount to get total
-          url.searchParams.append('$inlinecount', 'allpages');
-        }
+          // SAP OData responses typically have a specific structure
+          const data = result.d?.results || [];
+          
+          // Get total count
+          let total = data.length;
+          if (result.d?.__count) {
+            total = Number.parseInt(result.d.__count, 10);
+          }
+          
+          return { data, total };
+        };
         
-        // Fetch data
-        const response = await fetch(url.toString(), { 
-          headers: getHeaders()
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
-        }
-        
-        const result = await response.json();
-        
-        // SAP OData responses typically have a specific structure
-        const data = result.d?.results || [];
-        
-        // Get total count
-        let total = data.length;
-        if (result.d?.__count) {
-          total = parseInt(result.d.__count, 10);
-        }
-        
-        return { data, total };
+        // Fetch and process the data
+        return await fetchAndProcessData(url, resource);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }
@@ -146,7 +162,7 @@ export function createSAPProvider(config: SAPProviderConfig): CrudProvider {
     async getOne({ resource, id }: GetOneParams): Promise<GetOneResult> {
       try {
         // Build URL
-        const url = new URL(buildUrl(resource, id));
+        const url = new URL(buildUrl({ resource, id }));
         url.searchParams.append('$format', 'json');
         
         // Fetch data
@@ -172,7 +188,7 @@ export function createSAPProvider(config: SAPProviderConfig): CrudProvider {
     async create({ resource, variables }: CreateParams): Promise<CreateResult> {
       try {
         // Build URL
-        const url = new URL(buildUrl(resource));
+        const url = new URL(buildUrl({ resource }));
         
         // Create data
         const response = await fetch(url.toString(), {
@@ -199,7 +215,7 @@ export function createSAPProvider(config: SAPProviderConfig): CrudProvider {
     async update({ resource, id, variables }: UpdateParams): Promise<UpdateResult> {
       try {
         // Build URL
-        const url = new URL(buildUrl(resource, id));
+        const url = new URL(buildUrl({ resource, id }));
         
         // Update data
         const response = await fetch(url.toString(), {
@@ -230,7 +246,7 @@ export function createSAPProvider(config: SAPProviderConfig): CrudProvider {
         const { data } = await this.getOne({ resource, id });
         
         // Build URL
-        const url = new URL(buildUrl(resource, id));
+        const url = new URL(buildUrl({ resource, id }));
         
         // Delete data
         const response = await fetch(url.toString(), {

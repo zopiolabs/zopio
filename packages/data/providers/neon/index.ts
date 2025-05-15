@@ -18,7 +18,7 @@ import type {
 
 export interface NeonProviderConfig {
   connectionString: string;
-  pool?: any; // Database pool instance
+  pool?: unknown; // Database pool instance
   schema?: string;
   tableMapping?: Record<string, string>; // Maps resource names to table names
 }
@@ -28,7 +28,7 @@ export interface NeonProviderConfig {
  */
 export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
   const { 
-    connectionString,
+    // connectionString is not directly used but kept for future reference
     pool,
     schema = 'public',
     tableMapping = {}
@@ -46,13 +46,17 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
   };
 
   // Helper to execute SQL queries
-  const executeQuery = async (sql: string, params: unknown[] = []): Promise<unknown[]> => {
+  const executeQuery = async (sql: string, params: unknown[] = []): Promise<Record<string, unknown>[]> => {
     // Use provided pool or create a new connection
-    const client = pool || { query: async () => { throw new Error('Database pool not provided'); } };
+    const client = pool as { query: (sql: string, params: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> };
+    
+    if (!client || typeof client.query !== 'function') {
+      throw new Error('Database pool not provided or invalid');
+    }
     
     try {
       const result = await client.query(sql, params);
-      return result.rows;
+      return result.rows || [];
     } catch (error) {
       throw error instanceof Error ? error : new Error(String(error));
     }
@@ -60,9 +64,10 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
 
   // Helper to build WHERE clause from filter
   type FilterType = Record<string, unknown>;
-  const buildWhereClause = (filter: FilterType = {}): { clause: string, params: unknown[] } => {
+  const buildWhereClause = (filter: FilterType = {}): { clause: string; params: unknown[] } => {
     const conditions: string[] = [];
     let paramIndex = 1;
+    const params: unknown[] = [];
     
     for (const [key, value] of Object.entries(filter)) {
       if (value !== undefined && value !== null) {
@@ -94,7 +99,7 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
         // Build LIMIT and OFFSET clauses from pagination
         let limitClause = '';
         let offsetClause = '';
-        let limitParams: any[] = [];
+        let limitParams: unknown[] = [];
         
         if (pagination) {
           const { page, perPage } = pagination;
@@ -106,7 +111,8 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
         // Get total count
         const countSql = `SELECT COUNT(*) AS total FROM ${tableName} ${whereClause}`;
         const countResult = await executeQuery(countSql, whereParams);
-        const total = parseInt(countResult[0].total, 10);
+        const totalRecord = countResult[0] as Record<string, unknown>;
+        const total = totalRecord && typeof totalRecord.total === 'string' ? Number.parseInt(totalRecord.total, 10) : 0;
         
         // Get data
         const dataSql = `
@@ -148,9 +154,11 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
         const tableName = getFullTableName(resource);
         
         // Build column names and placeholders
-        const columns = Object.keys(variables);
+        // Ensure variables is treated as a proper object
+        const variablesObj = variables as Record<string, unknown>;
+        const columns = Object.keys(variablesObj);
         const placeholders = columns.map((_, index) => `$${index + 1}`);
-        const values = Object.values(variables);
+        const values = Object.values(variablesObj);
         
         // Create data
         const sql = `
@@ -199,14 +207,15 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
       try {
         const tableName = getFullTableName(resource);
         
-        // Get the record before deleting
-        const { data } = await this.getOne({ resource, id });
+        // Get data before deleting
+        const data = await this.getOne({ resource, id });
         
         // Delete data
         const sql = `DELETE FROM ${tableName} WHERE id = $1`;
         await executeQuery(sql, [id]);
         
-        return { data };
+        // Return the data that was deleted
+        return { data: data.data };
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }

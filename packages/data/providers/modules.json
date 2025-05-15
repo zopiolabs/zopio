@@ -1,0 +1,86 @@
+{
+  "category": "data-layer",
+  "name": "Data Providers",
+  "definition": "Unified data providers for Zopio framework that implement the CRUD interface for various backends and services",
+  "importCode": "import { createDataProvider } from '@repo/data-providers';",
+  "modules": [
+    {
+      "category": "core-providers",
+      "name": "REST Provider",
+      "definition": "Standard REST API data provider",
+      "importCode": "import { createRestProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "core-providers",
+      "name": "GraphQL Provider",
+      "definition": "GraphQL API data provider",
+      "importCode": "import { createGraphQLProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "core-providers",
+      "name": "Mock Provider",
+      "definition": "Mock data provider for testing",
+      "importCode": "import { createMockProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "core-providers",
+      "name": "Local Provider",
+      "definition": "Local storage data provider",
+      "importCode": "import { createLocalProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "database-providers",
+      "name": "Prisma Provider",
+      "definition": "Prisma ORM data provider",
+      "importCode": "import { createPrismaProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "database-providers",
+      "name": "Drizzle Provider",
+      "definition": "Drizzle ORM data provider",
+      "importCode": "import { createDrizzleProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "database-providers",
+      "name": "Kysely Provider",
+      "definition": "Kysely SQL query builder data provider",
+      "importCode": "import { createKyselyProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "database-providers",
+      "name": "Supabase Provider",
+      "definition": "Supabase platform data provider",
+      "importCode": "import { createSupabaseProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "database-providers",
+      "name": "Firebase Provider",
+      "definition": "Firebase Firestore data provider",
+      "importCode": "import { createFirebaseProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "database-providers",
+      "name": "Neon Provider",
+      "definition": "Neon serverless Postgres data provider",
+      "importCode": "import { createNeonProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "external-providers",
+      "name": "NocoDB Provider",
+      "definition": "NocoDB API data provider",
+      "importCode": "import { createNocodbProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "external-providers",
+      "name": "Airtable Provider",
+      "definition": "Airtable API data provider",
+      "importCode": "import { createAirtableProvider } from '@repo/data-providers';"
+    },
+    {
+      "category": "external-providers",
+      "name": "Notion Provider",
+      "definition": "Notion API data provider",
+      "importCode": "import { createNotionProvider } from '@repo/data-providers';"
+    }
+  ]
+}

@@ -7,13 +7,13 @@
   "license": "UNLICENSED",
   "description": "Unified data providers for Zopio framework",
   "keywords": ["zopio", "data", "providers", "crud"],
-  "dependencies": {
-    "@repo/data-base": "workspace:*"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "@repo/data-base": "workspace:*",
     "react": "^18.0.0"
   },
   "devDependencies": {
+    "@repo/data-base": "workspace:*",
     "react": "^18.0.0",
     "typescript": "^5.0.0"
   }

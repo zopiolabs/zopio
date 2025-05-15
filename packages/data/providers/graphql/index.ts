@@ -45,14 +45,22 @@ export function createGraphQLProvider(config: GraphQLProviderConfig): CrudProvid
     return resourceMapping[resource] || resource;
   };
 
+  // Define a type for GraphQL errors
+  type GraphQLError = {
+    message: string;
+    locations?: { line: number; column: number }[];
+    path?: string[];
+  };
+
   // Define a type for the response data
   type ResponseData = {
-    data: any;
-    errors?: any[];
+    data: Record<string, unknown>;
+    errors?: GraphQLError[];
+    [key: string]: unknown;
   };
 
   // Helper to execute GraphQL queries
-  const executeQuery = async (query: string, variables: Record<string, any> = {}): Promise<ResponseData> => {
+  const executeQuery = async (query: string, variables: Record<string, unknown> = {}): Promise<ResponseData> => {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -72,10 +80,98 @@ export function createGraphQLProvider(config: GraphQLProviderConfig): CrudProvid
     const result = await response.json();
     
     if (result.errors) {
-      throw new Error(result.errors.map((e: any) => e.message).join(', '));
+      throw new Error(result.errors.map((e: GraphQLError) => e.message).join(', '));
     }
     
     return result.data;
+  };
+
+  // Helper function to process custom query results
+  const processCustomQueryResult = (data: Record<string, unknown>, resource: string): GetListResult => {
+    // Extract data and total from the response
+    const result: {
+      items?: unknown[];
+      data?: unknown[];
+      total?: number;
+    } = data[resource] || data[`${resource}s`] || data.result || data;
+    
+    return { 
+      data: result.items || result.data || (Array.isArray(result) ? result : []), 
+      total: result.total || (Array.isArray(result) ? result.length : 0) 
+    };
+  };
+  
+  // Helper function to create default GraphQL query
+  const createDefaultQuery = (type: string): string => {
+    return `
+      query GetList($page: Int, $perPage: Int, $sortField: String, $sortOrder: String, $filter: ${type}Filter) {
+        ${type}s(page: $page, perPage: $perPage, sortField: $sortField, sortOrder: $sortOrder, filter: $filter) {
+          data {
+            id
+            # This is a placeholder, actual fields would depend on the resource
+            # and should be customized for each implementation
+            ...${type}Fields
+          }
+          total
+        }
+      }
+    `;
+  };
+  
+  // Helper function to create variables for GraphQL query
+  const createQueryVariables = (pagination?: { page?: number; perPage?: number }, 
+                              sort?: { field?: string; order?: string },
+                              filter?: Record<string, unknown>): Record<string, unknown> => {
+    return {
+      page: pagination?.page,
+      perPage: pagination?.perPage,
+      sortField: sort?.field,
+      sortOrder: sort?.order,
+      filter
+    };
+  };
+
+  // Helper function to execute a custom query if available
+  const executeCustomQuery = async (
+    resource: string,
+    pagination?: { page: number; perPage: number },
+    sort?: { field: string; order: string },
+    filter?: Record<string, unknown>
+  ): Promise<{ data: unknown[]; total: number } | null> => {
+    const customQuery = queryMapping[resource]?.getList;
+    
+    if (customQuery) {
+      const variables = createQueryVariables(pagination, sort, filter);
+      const data = await executeQuery(customQuery, variables);
+      return processCustomQueryResult(data, resource);
+    }
+    
+    return null;
+  };
+
+  // Helper function to execute a default query
+  const executeDefaultQuery = async (
+    type: string,
+    pagination?: { page: number; perPage: number },
+    sort?: { field: string; order: string },
+    filter?: Record<string, unknown>
+  ): Promise<{ data: unknown[]; total: number }> => {
+    const defaultQuery = createDefaultQuery(type);
+    const variables = createQueryVariables(pagination, sort, filter);
+    const data = await executeQuery(defaultQuery, variables);
+    
+    // Define the expected response type to avoid TypeScript errors
+    interface GraphQLResponse {
+      data: unknown[];
+      total: number;
+    }
+    
+    // Cast the response data to the expected type
+    const responseData = (data[`${type}s`] || {}) as GraphQLResponse;
+    return { 
+      data: responseData.data || [], 
+      total: responseData.total || 0 
+    };
   };
 
   return {
@@ -83,57 +179,14 @@ export function createGraphQLProvider(config: GraphQLProviderConfig): CrudProvid
       try {
         const type = getGraphQLType(resource);
         
-        // Use custom query if provided
-        const customQuery = queryMapping[resource]?.getList;
-        
-        if (customQuery) {
-          const variables = {
-            pagination,
-            sort,
-            filter
-          };
-          
-          const data = await executeQuery(customQuery, variables);
-          
-          // Extract data and total from the response
-          // This assumes a specific response structure
-          const result = data[resource] || data[`${resource}s`] || data.result || data;
-          
-          return { 
-            data: result.items || result.data || result, 
-            total: result.total || (Array.isArray(result) ? result.length : 0) 
-          };
+        // Try to execute a custom query first
+        const customResult = await executeCustomQuery(resource, pagination, sort, filter);
+        if (customResult) {
+          return customResult;
         }
         
-        // Default query if no custom query is provided
-        const defaultQuery = `
-          query GetList($page: Int, $perPage: Int, $sortField: String, $sortOrder: String, $filter: ${type}Filter) {
-            ${type}s(page: $page, perPage: $perPage, sortField: $sortField, sortOrder: $sortOrder, filter: $filter) {
-              data {
-                id
-                # This is a placeholder, actual fields would depend on the resource
-                # and should be customized for each implementation
-                ...${type}Fields
-              }
-              total
-            }
-          }
-        `;
-        
-        const variables = {
-          page: pagination?.page,
-          perPage: pagination?.perPage,
-          sortField: sort?.field,
-          sortOrder: sort?.order,
-          filter
-        };
-        
-        const data = await executeQuery(defaultQuery, variables);
-        
-        return { 
-          data: data[`${type}s`]?.data || [], 
-          total: data[`${type}s`]?.total || 0 
-        };
+        // Fall back to default query
+        return await executeDefaultQuery(type, pagination, sort, filter);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }

@@ -16,8 +16,60 @@ import type {
   DeleteResult
 } from '@repo/data-base';
 
+// Define interfaces for Kysely types without direct import
+// Type used for table structure
+
+interface KyselyInstance {
+  selectFrom: (table: string) => KyselySelectBuilder;
+  insertInto: (table: string) => KyselyInsertBuilder;
+  updateTable: (table: string) => KyselyUpdateBuilder;
+  deleteFrom: (table: string) => KyselyDeleteBuilder;
+}
+
+interface KyselySelectBuilder {
+  selectAll: () => KyselySelectBuilder;
+  select: (selector: (eb: KyselyExpressionBuilder) => KyselyCountExpression | string) => KyselySelectBuilder;
+  where: (field: string, operator: string, value: unknown) => KyselySelectBuilder;
+  orderBy: (field: string, direction?: 'asc' | 'desc') => KyselySelectBuilder;
+  limit: (limit: number) => KyselySelectBuilder;
+  offset: (offset: number) => KyselySelectBuilder;
+  execute: () => Promise<Record<string, unknown>[]>;
+}
+
+interface KyselyInsertBuilder {
+  values: (values: Record<string, unknown>) => KyselyInsertBuilder;
+  returning: (columns: string | string[]) => KyselyInsertBuilder;
+  returningAll: () => KyselyInsertBuilder;
+  execute: () => Promise<Record<string, unknown>[]>;
+}
+
+interface KyselyUpdateBuilder {
+  set: (values: Record<string, unknown>) => KyselyUpdateBuilder;
+  where: (field: string, operator: string, value: unknown) => KyselyUpdateBuilder;
+  returning: (columns: string | string[]) => KyselyUpdateBuilder;
+  returningAll: () => KyselyUpdateBuilder;
+  execute: () => Promise<Record<string, unknown>[]>;
+}
+
+interface KyselyDeleteBuilder {
+  where: (field: string, operator: string, value: unknown) => KyselyDeleteBuilder;
+  returning: (columns: string | string[]) => KyselyDeleteBuilder;
+  returningAll: () => KyselyDeleteBuilder;
+  execute: () => Promise<Record<string, unknown>[]>;
+}
+
+interface KyselyExpressionBuilder {
+  fn: {
+    count: (column: string) => KyselyCountExpression;
+  };
+}
+
+interface KyselyCountExpression {
+  as: (alias: string) => KyselyCountExpression;
+}
+
 export interface KyselyProviderConfig {
-  db: any; // Kysely database instance
+  db: KyselyInstance; // Kysely database instance
   schema?: Record<string, string>; // Maps resource names to table names
 }
 
@@ -54,7 +106,7 @@ export function createKyselyProvider(config: KyselyProviderConfig): CrudProvider
         
         // Get total count
         const countQuery = db.selectFrom(tableName)
-          .select(eb => eb.fn.count('id').as('count'));
+          .select((eb: KyselyExpressionBuilder) => eb.fn.count('id').as('count'));
           
         // Apply filters to count query as well
         if (filter) {
@@ -118,7 +170,7 @@ export function createKyselyProvider(config: KyselyProviderConfig): CrudProvider
         
         // Build query
         const query = db.insertInto(tableName)
-          .values(variables)
+          .values(variables as Record<string, unknown>)
           .returningAll();
         
         // Execute query

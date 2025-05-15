@@ -81,36 +81,48 @@ export function createStripeProvider(config: StripeProviderConfig): CrudProvider
       .join('&');
   };
 
+  // Helper functions to build URL parameters
+  const addPaginationParams = (url: URL, pagination?: { page: number; perPage: number }): void => {
+    if (!pagination) {
+      return;
+    }
+    
+    url.searchParams.append('limit', String(pagination.perPage));
+    
+    if (pagination.page > 1) {
+      // Stripe uses cursor-based pagination
+      // This is a simplified approach - in a real implementation,
+      // you would need to store and use the 'starting_after' cursor
+      const offset = (pagination.page - 1) * pagination.perPage;
+      url.searchParams.append('offset', String(offset));
+    }
+  };
+
+  const addFilterParams = (url: URL, filter?: Record<string, unknown>): void => {
+    if (!filter) {
+      return;
+    }
+    
+    for (const [key, value] of Object.entries(filter)) {
+      if (value !== undefined && value !== null) {
+        if (typeof value === 'object') {
+          url.searchParams.append(key, JSON.stringify(value));
+        } else {
+          url.searchParams.append(key, String(value));
+        }
+      }
+    }
+  };
+
   return {
-    async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
+    async getList({ resource, pagination, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build URL with query parameters
         const url = new URL(buildUrl(resource));
         
-        // Add pagination params
-        if (pagination) {
-          url.searchParams.append('limit', String(pagination.perPage));
-          
-          if (pagination.page > 1) {
-            // Stripe uses cursor-based pagination
-            // This is a simplified approach - in a real implementation,
-            // you would need to handle starting_after based on previous responses
-            url.searchParams.append('starting_after', `page_${pagination.page - 1}`);
-          }
-        }
-        
-        // Add filter params
-        if (filter) {
-          for (const [key, value] of Object.entries(filter as Record<string, unknown>)) {
-            if (value !== undefined && value !== null) {
-              if (typeof value === 'object') {
-                url.searchParams.append(key, JSON.stringify(value));
-              } else {
-                url.searchParams.append(key, String(value));
-              }
-            }
-          }
-        }
+        // Add parameters
+        addPaginationParams(url, pagination);
+        addFilterParams(url, filter);
         
         // Fetch data
         const response = await fetch(url.toString(), { 

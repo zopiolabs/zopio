@@ -1,16 +1,15 @@
 {
-  "name": "@repo/data-providers-drizzle",
+  "name": "@repo/data-providers-rest",
   "version": "0.1.0",
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
-  "description": "Drizzle ORM data provider for Zopio framework",
+  "description": "REST API data provider for Zopio framework",
 
   "dependencies": {},
 
   "peerDependencies": {
-    "@repo/data-base": "workspace:*",
-    "drizzle-orm": "^0.29.3"
+    "@repo/data-base": "workspace:*"
   },
   "devDependencies": {
     "@repo/data-base": "workspace:*",

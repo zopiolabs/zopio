@@ -336,7 +336,6 @@ export function useFormValidation<T extends Record<string, unknown>>({
     
     if (error instanceof z.ZodError) {
       for (const err of error.errors) {
-        // Add proper type annotation to fix 'error is of type unknown' error
         const field = (err.path[0] as string) as keyof T;
         newErrors[field] = err.message;
       }

@@ -16,6 +16,9 @@ import type {
   DeleteResult
 } from '@repo/data-base';
 
+// Define regex pattern at the top level scope to avoid performance issues
+const CONTENT_RANGE_PATTERN = /\d+-\d+\/(\d+)/;
+
 export interface SupabaseProviderConfig {
   url: string;
   apiKey: string;
@@ -51,57 +54,83 @@ export function createSupabaseProvider(config: SupabaseProviderConfig): CrudProv
     'Prefer': 'return=representation'
   };
 
+  // Helper function to add pagination parameters to request headers
+  const addPaginationParams = (
+    pagination?: { page: number; perPage: number }
+  ): void => {
+    if (pagination) {
+      const { page, perPage } = pagination;
+      const start = (page - 1) * perPage;
+      const end = start + perPage - 1;
+      
+      // Supabase uses Range header for pagination
+      // Use type assertion to avoid TypeScript error
+      (headers as Record<string, string>).Range = `${start}-${end}`;
+    }
+  };
+
+  // Helper function to add filter parameters to URL
+  const addFilterParams = (
+    url: URL,
+    filter?: Record<string, unknown>
+  ): void => {
+    if (filter) {
+      for (const [key, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, `eq.${value}`);
+        }
+      }
+    }
+  };
+
+  // Helper function to add sort parameters to URL
+  const addSortParams = (
+    url: URL,
+    sort?: { field: string; order: string }
+  ): void => {
+    if (sort) {
+      url.searchParams.append('order', `${sort.field}.${sort.order}`);
+    }
+  };
+
+  // Helper function to process response and extract total count
+  const processResponse = async (response: Response): Promise<{ data: unknown[]; total: number }> => {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    
+    // Get total count from Content-Range header
+    let total = data.length;
+    const contentRange = response.headers.get('Content-Range');
+    
+    if (contentRange) {
+      const matches = contentRange.match(CONTENT_RANGE_PATTERN);
+      if (matches) {
+        total = Number.parseInt(matches[1], 10);
+      }
+    }
+    
+    return { data, total };
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build URL with query parameters
         const url = new URL(buildUrl(resource));
         
-        // Add pagination params
+        // Add parameters
         if (pagination) {
-          const { page, perPage } = pagination;
-          const start = (page - 1) * perPage;
-          const end = start + perPage - 1;
-          
-          // Supabase uses Range header for pagination
-          headers['Range'] = `${start}-${end}`;
+          addPaginationParams(pagination);
         }
+        addFilterParams(url, filter);
+        addSortParams(url, sort);
         
-        // Add filter params
-        if (filter) {
-          for (const [key, value] of Object.entries(filter as Record<string, unknown>)) {
-            if (value !== undefined && value !== null) {
-              url.searchParams.append(key, `eq.${value}`);
-            }
-          }
-        }
-        
-        // Add sort params
-        if (sort) {
-          url.searchParams.append('order', `${sort.field}.${sort.order}`);
-        }
-        
-        // Fetch data
+        // Fetch data and process response
         const response = await fetch(url.toString(), { headers });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        
-        // Get total count from Content-Range header
-        let total = data.length;
-        const contentRange = response.headers.get('Content-Range');
-        
-        if (contentRange) {
-          const matches = contentRange.match(/\d+-\d+\/(\d+)/);
-          if (matches) {
-            total = parseInt(matches[1], 10);
-          }
-        }
-        
-        return { data, total };
+        return await processResponse(response);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }

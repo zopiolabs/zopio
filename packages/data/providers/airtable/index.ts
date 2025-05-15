@@ -52,50 +52,85 @@ export function createAirtableProvider(config: AirtableProviderConfig): CrudProv
     'Content-Type': 'application/json'
   };
 
+  // Helper function to add pagination parameters to URL
+  const addPaginationParams = (
+    url: URL,
+    pagination?: { page: number; perPage: number }
+  ): void => {
+    if (pagination) {
+      const maxRecords = pagination.perPage;
+      const offset = (pagination.page - 1) * pagination.perPage;
+      
+      url.searchParams.append('maxRecords', String(maxRecords));
+      
+      if (offset > 0) {
+        // Airtable uses offset token instead of page number
+        url.searchParams.append('offset', String(offset));
+      }
+    }
+  };
+
+  // Helper function to add sort parameters to URL
+  const addSortParams = (
+    url: URL,
+    sort?: { field: string; order: string }
+  ): void => {
+    if (sort) {
+      const sortParam = JSON.stringify([{
+        field: sort.field,
+        direction: sort.order === 'asc' ? 'asc' : 'desc'
+      }]);
+      
+      url.searchParams.append('sort', sortParam);
+    }
+  };
+
+  // Helper function to build filter formula for Airtable
+  const buildFilterFormula = (filter?: Record<string, unknown>): string | null => {
+    if (!filter || Object.keys(filter).length === 0) {
+      return null;
+    }
+    
+    // Airtable uses formula for filtering
+    const filterFormulas = Object.entries(filter).map(([field, value]) => {
+      if (typeof value === 'string') {
+        return `FIND("${value}", {${field}})`;
+      }
+      return `{${field}} = "${value}"`;
+    });
+    
+    return filterFormulas.join(' AND ');
+  };
+
+  // Helper function to transform Airtable records to data objects
+  const transformRecords = (data: { records: Array<{ id: string; fields: Record<string, unknown> }>; offset?: string }): {
+    data: Record<string, unknown>[];
+    total: number;
+  } => {
+    const records = data.records.map((record) => ({
+      id: record.id,
+      ...record.fields
+    }));
+    
+    return { 
+      data: records,
+      total: data.offset ? records.length + Number.parseInt(data.offset, 10) : records.length
+    };
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build URL with query parameters
         const url = new URL(buildUrl(resource));
         
-        // Add pagination params
-        if (pagination) {
-          const maxRecords = pagination.perPage;
-          const offset = (pagination.page - 1) * pagination.perPage;
-          
-          url.searchParams.append('maxRecords', String(maxRecords));
-          
-          if (offset > 0) {
-            // Airtable uses offset token instead of page number
-            // This is a simplified approach - in a real implementation,
-            // you would need to handle offset tokens from previous responses
-            url.searchParams.append('offset', String(offset));
-          }
-        }
-        
-        // Add sort params
-        if (sort) {
-          const sortParam = JSON.stringify([{
-            field: sort.field,
-            direction: sort.order === 'asc' ? 'asc' : 'desc'
-          }]);
-          
-          url.searchParams.append('sort', sortParam);
-        }
+        // Add parameters
+        addPaginationParams(url, pagination);
+        addSortParams(url, sort);
         
         // Add filter params
-        if (filter && Object.keys(filter).length > 0) {
-          // Airtable uses formula for filtering
-          // This is a simplified approach - in a real implementation,
-          // you would need to build more complex formulas
-          const filterFormulas = Object.entries(filter).map(([field, value]) => {
-            if (typeof value === 'string') {
-              return `FIND("${value}", {${field}})`;
-            }
-            return `{${field}} = "${value}"`;
-          });
-          
-          const filterFormula = filterFormulas.join(' AND ');
+        const filterFormula = buildFilterFormula(filter);
+        if (filterFormula) {
           url.searchParams.append('filterByFormula', filterFormula);
         }
         
@@ -108,16 +143,8 @@ export function createAirtableProvider(config: AirtableProviderConfig): CrudProv
         
         const data = await response.json();
         
-        // Airtable returns data in a specific format
-        const records = data.records.map((record: { id: string; fields: Record<string, unknown> }) => ({
-          id: record.id,
-          ...record.fields
-        }));
-        
-        return { 
-          data: records,
-          total: data.offset ? records.length + Number.parseInt(data.offset, 10) : records.length
-        };
+        // Transform and return data
+        return transformRecords(data);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }

@@ -182,7 +182,6 @@ export function useForm<T extends Record<string, unknown>>({
       const fieldErrors = {} as Record<keyof T, string>;
       
       for (const err of error.errors) {
-        // Add proper type annotation to fix 'error is of type unknown' error
         const field = (err.path[0] as string) as keyof T;
         fieldErrors[field] = err.message;
       }

@@ -78,47 +78,88 @@ export function createDrizzleProvider(config: DrizzleClientConfig): CrudProvider
     count: () => ({ type: 'count' }) as SQL<unknown>
   };
 
+  // Helper function to get the table from the schema
+  const getTableFromSchema = (resource: string): Record<string, unknown> => {
+    const table = schema[resource];
+    if (!table) {
+      throw new Error(`Resource ${resource} not found in schema`);
+    }
+    return table as Record<string, unknown>;
+  };
+
+  // Helper function to apply filters to a query
+  const applyFilters = <T extends Record<string, unknown>>(
+    query: SQL<T>,
+    table: Record<string, unknown>,
+    filter?: Record<string, unknown>
+  ): SQL<T> => {
+    if (!filter || Object.keys(filter).length === 0) {
+      return query;
+    }
+
+    let filteredQuery = query;
+    for (const [key, value] of Object.entries(filter)) {
+      if (value !== undefined && value !== null) {
+        filteredQuery = filteredQuery.where(eq((table as Record<string, unknown>)[key], value));
+      }
+    }
+    return filteredQuery;
+  };
+
+  // Helper function to apply sorting to a query
+  const applySorting = <T extends Record<string, unknown>>(
+    query: SQL<T>,
+    table: Record<string, unknown>,
+    sort?: { field: string; order: string }
+  ): SQL<T> => {
+    if (!sort) {
+      return query;
+    }
+
+    return query.orderBy(
+      sort.order === 'asc' 
+        ? asc(table[sort.field]) 
+        : desc(table[sort.field])
+    );
+  };
+
+  // Helper function to apply pagination to a query
+  const applyPagination = <T extends Record<string, unknown>>(
+    query: SQL<T>,
+    pagination?: { page: number; perPage: number }
+  ): SQL<T> => {
+    if (!pagination) {
+      return query;
+    }
+
+    const { page, perPage } = pagination;
+    const offset = (page - 1) * perPage;
+    return query.limit(perPage).offset(offset);
+  };
+
+  // Helper function to get the total count
+  const getTotalCount = async (table: Record<string, unknown>): Promise<number> => {
+    const countQuery = db.select({ count: count() }).from(table);
+    const countResult = await countQuery;
+    return countResult[0] ? (countResult[0] as Record<string, number>).count : 0;
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Get the table from the schema
-        const table = schema[resource];
-        if (!table) {
-          throw new Error(`Resource ${resource} not found in schema`);
-        }
+        const table = getTableFromSchema(resource);
 
-        // Build query
+        // Build query with filters and sorting
         let query = db.select().from(table);
-
-        // Apply filters
-        if (filter && Object.keys(filter).length > 0) {
-          for (const [key, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              query = query.where(eq((table as Record<string, unknown>)[key], value));
-            }
-          }
-        }
-
-        // Apply sorting
-        if (sort) {
-          query = query.orderBy(
-            sort.order === 'asc' 
-              ? asc(table[sort.field]) 
-              : desc(table[sort.field])
-          );
-        }
+        query = applyFilters(query, table, filter);
+        query = applySorting(query, table, sort);
 
         // Get total count
-        const countQuery = db.select({ count: count() }).from(table);
-        const countResult = await countQuery;
-        const total = countResult[0] ? (countResult[0] as Record<string, number>).count : 0;
+        const total = await getTotalCount(table);
 
         // Apply pagination
-        if (pagination) {
-          const { page, perPage } = pagination;
-          const offset = (page - 1) * perPage;
-          query = query.limit(perPage).offset(offset);
-        }
+        query = applyPagination(query, pagination);
 
         // Execute query
         const data = await query;

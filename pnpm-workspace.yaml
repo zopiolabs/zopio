@@ -2,6 +2,7 @@ packages:
   - packages/*
   - packages/core/*
   - packages/data/*
+  - packages/data/adapters/*
   - packages/data/base/*
   - packages/data/providers/*
   - packages/data/ui/*

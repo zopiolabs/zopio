@@ -16,6 +16,9 @@ import type {
   DeleteResult
 } from '@repo/data-base';
 
+// Pre-defined regex patterns for better performance
+const trailingS = /s$/;
+
 export interface MedusaProviderConfig {
   apiUrl: string;
   apiKey?: string;
@@ -62,14 +65,14 @@ export function createMedusaProvider(config: MedusaProviderConfig): CrudProvider
     };
     
     if (apiKey) {
-      headers['Authorization'] = `Bearer ${apiKey}`;
+      headers.Authorization = `Bearer ${apiKey}`;
     }
     
     return headers;
   };
 
   return {
-    async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
+    async getList({ resource, pagination, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build URL with query parameters
         const url = new URL(buildUrl(resource));
@@ -127,7 +130,7 @@ export function createMedusaProvider(config: MedusaProviderConfig): CrudProvider
         
         // Medusa API typically returns data in a specific format
         // e.g. { product: {...} }
-        const resourceKey = getMedusaResource(resource).replace(/s$/, ''); // Remove trailing 's'
+        const resourceKey = getMedusaResource(resource).replace(trailingS, ''); // Remove trailing 's'
         const data = result[resourceKey] || result;
         
         return { data };
@@ -153,7 +156,7 @@ export function createMedusaProvider(config: MedusaProviderConfig): CrudProvider
         
         // Medusa API typically returns data in a specific format
         // e.g. { product: {...} }
-        const resourceKey = getMedusaResource(resource).replace(/s$/, ''); // Remove trailing 's'
+        const resourceKey = getMedusaResource(resource).replace(trailingS, ''); // Remove trailing 's'
         const data = result[resourceKey] || result.data || result;
         
         return { data };
@@ -179,7 +182,7 @@ export function createMedusaProvider(config: MedusaProviderConfig): CrudProvider
         
         // Medusa API typically returns data in a specific format
         // e.g. { product: {...} }
-        const resourceKey = getMedusaResource(resource).replace(/s$/, ''); // Remove trailing 's'
+        const resourceKey = getMedusaResource(resource).replace(trailingS, ''); // Remove trailing 's'
         const data = result[resourceKey] || result.data || result;
         
         return { data };

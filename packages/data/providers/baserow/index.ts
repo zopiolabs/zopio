@@ -51,46 +51,71 @@ export function createBaserowProvider(config: BaserowProviderConfig): CrudProvid
     'Content-Type': 'application/json'
   };
 
+  // Helper function to add pagination parameters to URL
+  const addPaginationParams = (
+    url: URL,
+    pagination?: { page: number; perPage: number }
+  ): void => {
+    if (pagination) {
+      url.searchParams.append('page', String(pagination.page));
+      url.searchParams.append('size', String(pagination.perPage));
+    }
+  };
+
+  // Helper function to add sort parameters to URL
+  const addSortParams = (
+    url: URL,
+    sort?: { field: string; order: string }
+  ): void => {
+    if (sort) {
+      const sortParam = sort.order === 'asc' ? sort.field : `-${sort.field}`;
+      url.searchParams.append('order_by', sortParam);
+    }
+  };
+
+  // Helper function to add filter parameters to URL
+  const addFilterParams = (
+    url: URL,
+    filter?: Record<string, unknown>
+  ): void => {
+    if (filter) {
+      for (const [key, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(`filter__${key}__contains`, String(value));
+        }
+      }
+    }
+  };
+
+  // Helper function to fetch and process response
+  const fetchAndProcessData = async (url: URL, resource: string): Promise<GetListResult> => {
+    const response = await fetch(url.toString(), { headers });
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
+    }
+    
+    const result = await response.json();
+    
+    return { 
+      data: result.results, 
+      total: result.count 
+    };
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build URL with query parameters
         const url = new URL(buildUrl(resource));
         
-        // Add pagination params
-        if (pagination) {
-          url.searchParams.append('page', String(pagination.page));
-          url.searchParams.append('size', String(pagination.perPage));
-        }
+        // Add parameters
+        addPaginationParams(url, pagination);
+        addSortParams(url, sort);
+        addFilterParams(url, filter);
         
-        // Add sort params
-        if (sort) {
-          const sortParam = sort.order === 'asc' ? sort.field : `-${sort.field}`;
-          url.searchParams.append('order_by', sortParam);
-        }
-        
-        // Add filter params
-        if (filter) {
-          for (const [key, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              url.searchParams.append(`filter__${key}__contains`, String(value));
-            }
-          }
-        }
-        
-        // Fetch data
-        const response = await fetch(url.toString(), { headers });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
-        }
-        
-        const result = await response.json();
-        
-        return { 
-          data: result.results, 
-          total: result.count 
-        };
+        // Fetch and process data
+        return await fetchAndProcessData(url, resource);
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }

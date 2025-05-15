@@ -43,14 +43,9 @@ interface FirestoreDocRef {
   delete: () => Promise<void>;
 }
 
-interface FirestoreCollectionRef {
+interface FirestoreCollectionRef extends FirestoreQuery {
   doc: (id: string) => FirestoreDocRef;
   add: (data: Record<string, unknown>) => Promise<FirestoreDocRef>;
-  where: (field: string, operator: string, value: unknown) => FirestoreQuery;
-  orderBy: (field: string, direction?: 'asc' | 'desc') => FirestoreQuery;
-  limit: (limit: number) => FirestoreQuery;
-  startAfter: (doc: FirestoreDocument) => FirestoreQuery;
-  get: () => Promise<FirestoreSnapshot>;
 }
 
 interface FirestoreSnapshot {
@@ -82,63 +77,99 @@ export function createFirebaseProvider(config: FirebaseProviderConfig): CrudProv
     return collections[resource] || resource;
   };
 
+  // Helper function to apply filters to a Firestore query
+  const applyFilters = (
+    query: FirestoreQuery,
+    filter?: Record<string, unknown>
+  ): FirestoreQuery => {
+    let filteredQuery = query;
+    
+    if (filter) {
+      for (const [field, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          filteredQuery = filteredQuery.where(field, '==', value);
+        }
+      }
+    }
+    
+    return filteredQuery;
+  };
+
+  // Helper function to apply sorting to a Firestore query
+  const applySorting = (
+    query: FirestoreQuery,
+    sort?: { field: string; order: string }
+  ): FirestoreQuery => {
+    if (sort) {
+      return query.orderBy(sort.field, sort.order === 'asc' ? 'asc' : 'desc');
+    }
+    return query;
+  };
+
+  // Helper function to apply pagination to a Firestore query
+  const applyPagination = async (
+    query: FirestoreQuery,
+    collectionPath: string,
+    pagination?: { page: number; perPage: number },
+    sort?: { field: string; order: string }
+  ): Promise<FirestoreQuery> => {
+    if (!pagination) {
+      return query;
+    }
+    
+    const { page, perPage } = pagination;
+    const offset = (page - 1) * perPage;
+    let paginatedQuery = query.limit(perPage);
+    
+    if (offset > 0) {
+      // Firestore doesn't support direct offset, we need to use startAfter
+      const paginationSnapshot = await firestore
+        .collection(collectionPath)
+        .orderBy(sort?.field || 'id')
+        .limit(offset)
+        .get();
+      
+      if (!paginationSnapshot.empty) {
+        const lastDoc = paginationSnapshot.docs.at(-1);
+        if (lastDoc) {
+          paginatedQuery = paginatedQuery.startAfter(lastDoc);
+        }
+      }
+    }
+    
+    return paginatedQuery;
+  };
+
+  // Helper function to transform Firestore documents to data objects
+  const transformDocsToData = (docs: FirestoreDocument[]): Record<string, unknown>[] => {
+    return docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         const collectionPath = getCollectionPath(resource);
         let query = firestore.collection(collectionPath);
         
-        // Apply filters
-        if (filter) {
-          for (const [field, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              query = query.where(field, '==', value);
-            }
-          }
-        }
-        
-        // Apply sorting
-        if (sort) {
-          query = query.orderBy(sort.field, sort.order === 'asc' ? 'asc' : 'desc');
-        }
+        // Apply filters and sorting
+        query = applyFilters(query, filter);
+        query = applySorting(query, sort);
         
         // Get total count (this requires a separate query in Firestore)
         const countSnapshot = await query.get();
         const total = countSnapshot.size;
         
         // Apply pagination
-        if (pagination) {
-          const { page, perPage } = pagination;
-          const offset = (page - 1) * perPage;
-          query = query.limit(perPage);
-          
-          if (offset > 0) {
-            // Firestore doesn't support direct offset, we need to use startAfter
-            // This is a simplified approach - in a real implementation,
-            // you would need to handle pagination tokens
-            const paginationSnapshot = await firestore
-              .collection(collectionPath)
-              .orderBy(sort?.field || 'id')
-              .limit(offset)
-              .get();
-            
-            if (!paginationSnapshot.empty) {
-              const lastDoc = paginationSnapshot.docs.at(-1);
-              if (lastDoc) {
-                query = query.startAfter(lastDoc);
-              }
-            }
-          }
-        }
+        query = await applyPagination(query, collectionPath, pagination, sort);
         
         // Execute query
         const snapshot = await query.get();
         
         // Transform data
-        const data = snapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const data = transformDocsToData(snapshot.docs);
         
         return { data, total };
       } catch (error) {

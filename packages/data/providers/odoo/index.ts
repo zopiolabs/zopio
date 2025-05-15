@@ -21,7 +21,7 @@ export interface OdooProviderConfig {
   db: string;
   username: string;
   password: string;
-  modelMapping?: Record<string, string>; // Maps resource names to Odoo models
+  modelMapping?: Record<string, string>;
 }
 
 /**
@@ -30,8 +30,8 @@ export interface OdooProviderConfig {
 export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
   const { 
     url, 
-    db,
-    username,
+    db, 
+    username, 
     password,
     modelMapping = {}
   } = config;
@@ -42,7 +42,7 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
   };
 
   // Helper to build JSON-RPC request
-  const jsonRpcRequest = async (method: string, params: any): Promise<any> => {
+  const jsonRpcRequest = async <T>(method: string, params: Record<string, unknown>): Promise<T> => {
     const response = await fetch(`${url}/jsonrpc`, {
       method: 'POST',
       headers: {
@@ -56,28 +56,24 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
       })
     });
     
-    if (!response.ok) {
-      throw new Error(`Odoo request failed: ${response.statusText}`);
-    }
-    
     const result = await response.json();
     
     if (result.error) {
       throw new Error(result.error.message || 'Unknown Odoo error');
     }
     
-    return result.result;
+    return result.result as T;
   };
 
   // Authentication helper
-  let uid: number | null = null;
+  let uid = 0; // Default to 0 instead of null
   
   const authenticate = async (): Promise<number> => {
-    if (uid !== null) {
+    if (uid !== 0) {
       return uid;
     }
     
-    const result = await jsonRpcRequest('call', {
+    const result = await jsonRpcRequest<number>('call', {
       service: 'common',
       method: 'authenticate',
       args: [db, username, password, {}]
@@ -92,78 +88,59 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
   };
 
   // Helper to call Odoo model methods
-  const callModel = async (model: string, method: string, args: any[] = [], kwargs: any = {}): Promise<any> => {
+  const callModel = async <T>(model: string, method: string, args: unknown[] = [], kwargs: Record<string, unknown> = {}): Promise<T> => {
     const userId = await authenticate();
     
-    return jsonRpcRequest('call', {
+    return jsonRpcRequest<T>('call', {
       service: 'object',
       method: 'execute_kw',
       args: [db, userId, password, model, method, args, kwargs]
     });
   };
 
-  // Helper to build domain (Odoo's filter format)
-  const buildDomain = (filter: any): [string, string, any][] => {
-    const domain: [string, string, any][] = [];
-    
-    if (filter) {
-      for (const [field, value] of Object.entries(filter)) {
-        if (value !== undefined && value !== null) {
-          domain.push([field, '=', value]);
-        }
-      }
-    }
-    
-    return domain;
-  };
-
   // Helper to build kwargs for search_read
-  const buildKwargs = (pagination: any, sort: any): Record<string, any> => {
-    const kwargs: Record<string, any> = {};
+  const buildKwargs = (
+    pagination?: { page: number; perPage: number },
+    sort?: { field: string; order: string }
+  ): Record<string, unknown> => {
+    const kwargs: Record<string, unknown> = {};
     
-    // Add pagination
     if (pagination) {
       kwargs.limit = pagination.perPage;
       kwargs.offset = (pagination.page - 1) * pagination.perPage;
     }
     
-    // Add sort
     if (sort) {
-      kwargs.order = `${sort.field} ${sort.order === 'asc' ? 'asc' : 'desc'}`;
+      kwargs.order = `${sort.field} ${sort.order === 'asc' ? 'ASC' : 'DESC'}`;
     }
     
     return kwargs;
   };
 
   return {
-    async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
+    async getList({ resource, pagination, filter }: GetListParams): Promise<GetListResult> {
       try {
         const model = getOdooModel(resource);
         
-        const domain = buildDomain(filter);
-        const kwargs = buildKwargs(pagination, sort);
+        // Build domain from filter
+        const domain: [string, string, unknown][] = [];
+        
+        if (filter) {
+          for (const [key, value] of Object.entries(filter)) {
+            if (value !== undefined && value !== null) {
+              domain.push([key, '=', value]);
+            }
           }
         }
         
         // Build kwargs for search_read
-        const kwargs: Record<string, any> = {};
-        
-        // Add pagination
-        if (pagination) {
-          kwargs.limit = pagination.perPage;
-          kwargs.offset = (pagination.page - 1) * pagination.perPage;
-        }
-        
-        // Add sort
-        if (sort) {
-          kwargs.order = `${sort.field} ${sort.order === 'asc' ? 'asc' : 'desc'}`;
-        }
+        const kwargs = buildKwargs(pagination);
         
         // Get total count
-        const count = await callModel(model, 'search_count', [domain]);
+        const count = await callModel<number>(model, 'search_count', [domain]);
         
         // Get data
-        const data = await callModel(model, 'search_read', [domain], kwargs);
+        const data = await callModel<Record<string, unknown>[]>(model, 'search_read', [domain], kwargs);
         
         return { data, total: count };
       } catch (error) {
@@ -176,16 +153,16 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
         const model = getOdooModel(resource);
         
         // Build domain to find by ID
-        const domain = [['id', '=', id]];
+        const domain: [string, string, unknown][] = [['id', '=', id]];
         
         // Get data
-        const results = await callModel(model, 'search_read', [domain], { limit: 1 });
+        const results = await callModel<Record<string, unknown>[]>(model, 'search_read', [domain], { limit: 1 });
         
         if (!results || results.length === 0) {
           throw new Error(`Record with id ${id} not found in ${resource}`);
         }
         
-        return { data: results[0] };
+        return { data: results[0] || {} as Record<string, unknown> };
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }
@@ -196,12 +173,12 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
         const model = getOdooModel(resource);
         
         // Create record
-        const id = await callModel(model, 'create', [variables]);
+        const recordId = await callModel<number>(model, 'create', [variables]);
         
-        // Get created record
-        const data = await callModel(model, 'read', [[id]]);
+        // Get the created record
+        const data = await callModel<Record<string, unknown>[]>(model, 'read', [[recordId]]);
         
-        return { data: data[0] };
+        return { data: data[0] || {} as Record<string, unknown> };
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }
@@ -212,12 +189,12 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
         const model = getOdooModel(resource);
         
         // Update record
-        await callModel(model, 'write', [[id], variables]);
+        await callModel<boolean>(model, 'write', [[id], variables]);
         
-        // Get updated record
-        const data = await callModel(model, 'read', [[id]]);
+        // Get the updated record
+        const data = await callModel<Record<string, unknown>[]>(model, 'read', [[id]]);
         
-        return { data: data[0] };
+        return { data: data[0] || {} as Record<string, unknown> };
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }
@@ -228,12 +205,18 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
         const model = getOdooModel(resource);
         
         // Get the record before deleting
-        const { data } = await this.getOne({ resource, id });
+        const results = await callModel<Record<string, unknown>[]>(model, 'read', [[id]]);
+        
+        if (!results || results.length === 0) {
+          throw new Error(`Record with id ${id} not found in ${resource}`);
+        }
+        
+        const recordData = results[0];
         
         // Delete record
-        await callModel(model, 'unlink', [[id]]);
+        await callModel<boolean>(model, 'unlink', [[id]]);
         
-        return { data };
+        return { data: recordData };
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }
