@@ -32,6 +32,9 @@ importers:
       commander:
         specifier: ^13.1.0
         version: 13.1.0
+      require-in-the-middle:
+        specifier: ^7.5.2
+        version: 7.5.2
     devDependencies:
       '@auto-it/first-time-contributor':
         specifier: ^11.3.0
@@ -104,7 +107,7 @@ importers:
         version: link:../../packages/core/database
       '@repo/design-system':
         specifier: workspace:*
-        version: link:../../packages/core/design-system
+        version: workspace:*
       '@repo/next-config':
         specifier: workspace:*
         version: link:../../packages/next-config
@@ -198,7 +201,7 @@ importers:
         version: link:../../packages/core/database
       '@repo/design-system':
         specifier: workspace:*
-        version: link:../../packages/core/design-system
+        version: workspace:*
       '@repo/feature-flags':
         specifier: workspace:*
         version: link:../../packages/addons/feature-flags
@@ -363,7 +366,7 @@ importers:
     dependencies:
       '@repo/design-system':
         specifier: workspace:*
-        version: link:../../packages/core/design-system
+        version: workspace:*
       '@storybook/addon-actions':
         specifier: ^8.6.12
         version: 8.6.12(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3))
@@ -487,7 +490,7 @@ importers:
         version: link:../../packages/core/cms
       '@repo/design-system':
         specifier: workspace:*
-        version: link:../../packages/core/design-system
+        version: workspace:*
       '@repo/email':
         specifier: workspace:*
         version: link:../../packages/core/email
@@ -602,7 +605,7 @@ importers:
         version: 1.28.0
       '@repo/design-system':
         specifier: workspace:*
-        version: link:../../packages/core/design-system
+        version: workspace:*
       '@repo/observability':
         specifier: workspace:*
         version: link:../../packages/addons/observability
@@ -795,7 +798,7 @@ importers:
         version: link:../../core/auth
       '@repo/design-system':
         specifier: workspace:*
-        version: link:../../core/design-system
+        version: workspace:*
       '@t3-oss/env-nextjs':
         specifier: ^0.12.0
         version: 0.12.0(typescript@5.8.3)(zod@3.24.4)
