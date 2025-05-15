@@ -76,9 +76,9 @@ export function createTemporalProvider(config: TemporalProviderConfig): CrudProv
         // Add filter params
         if (filter) {
           // Temporal uses a specific query format
-          const query: Record<string, any> = {};
+          const query: Record<string, unknown> = {};
           
-          for (const [key, value] of Object.entries(filter)) {
+          for (const [key, value] of Object.entries(filter as Record<string, unknown>)) {
             if (value !== undefined && value !== null) {
               query[key] = value;
             }

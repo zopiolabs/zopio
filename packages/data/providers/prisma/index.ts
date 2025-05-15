@@ -56,14 +56,24 @@ export function createPrismaProvider(config: PrismaProviderConfig): CrudProvider
         const where = filter || {};
         
         // Build orderBy from sort
-        const orderBy: Record<string, string> = {};
-        if (sort) {
-          orderBy[sort.field] = sort.order;
-        }
+        const buildOrderBy = (sort: any): Record<string, string> => {
+          const orderBy: Record<string, string> = {};
+          if (sort) {
+            orderBy[sort.field] = sort.order;
+          }
+          return orderBy;
+        };
+        
+        const orderBy = buildOrderBy(sort);
         
         // Build pagination
-        const skip = pagination ? (pagination.page - 1) * pagination.perPage : undefined;
-        const take = pagination ? pagination.perPage : undefined;
+        const buildPagination = (pagination: any): { skip: number | undefined; take: number | undefined } => {
+          const skip = pagination ? (pagination.page - 1) * pagination.perPage : undefined;
+          const take = pagination ? pagination.perPage : undefined;
+          return { skip, take };
+        };
+        
+        const { skip, take } = buildPagination(pagination);
         
         // Get total count
         const total = await modelClient.count({

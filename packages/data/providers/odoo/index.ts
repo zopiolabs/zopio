@@ -102,19 +102,46 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
     });
   };
 
+  // Helper to build domain (Odoo's filter format)
+  const buildDomain = (filter: any): [string, string, any][] => {
+    const domain: [string, string, any][] = [];
+    
+    if (filter) {
+      for (const [field, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          domain.push([field, '=', value]);
+        }
+      }
+    }
+    
+    return domain;
+  };
+
+  // Helper to build kwargs for search_read
+  const buildKwargs = (pagination: any, sort: any): Record<string, any> => {
+    const kwargs: Record<string, any> = {};
+    
+    // Add pagination
+    if (pagination) {
+      kwargs.limit = pagination.perPage;
+      kwargs.offset = (pagination.page - 1) * pagination.perPage;
+    }
+    
+    // Add sort
+    if (sort) {
+      kwargs.order = `${sort.field} ${sort.order === 'asc' ? 'asc' : 'desc'}`;
+    }
+    
+    return kwargs;
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         const model = getOdooModel(resource);
         
-        // Build domain (Odoo's filter format)
-        const domain: any[] = [];
-        
-        if (filter) {
-          for (const [field, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              domain.push([field, '=', value]);
-            }
+        const domain = buildDomain(filter);
+        const kwargs = buildKwargs(pagination, sort);
           }
         }
         

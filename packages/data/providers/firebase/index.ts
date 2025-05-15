@@ -173,7 +173,7 @@ export function createFirebaseProvider(config: FirebaseProviderConfig): CrudProv
         const collectionRef = firestore.collection(collectionPath);
         
         // If id is provided in variables, use it as document id
-        let docRef;
+        let docRef: FirestoreDocRef;
         const typedVariables = variables as Record<string, unknown>;
         if (typedVariables.id) {
           docRef = collectionRef.doc(String(typedVariables.id));

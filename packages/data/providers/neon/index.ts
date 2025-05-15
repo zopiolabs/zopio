@@ -46,7 +46,7 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
   };
 
   // Helper to execute SQL queries
-  const executeQuery = async (sql: string, params: any[] = []): Promise<any> => {
+  const executeQuery = async (sql: string, params: unknown[] = []): Promise<unknown[]> => {
     // Use provided pool or create a new connection
     const client = pool || { query: async () => { throw new Error('Database pool not provided'); } };
     
@@ -59,9 +59,9 @@ export function createNeonProvider(config: NeonProviderConfig): CrudProvider {
   };
 
   // Helper to build WHERE clause from filter
-  const buildWhereClause = (filter: Record<string, any> = {}): { clause: string, params: any[] } => {
+  type FilterType = Record<string, unknown>;
+  const buildWhereClause = (filter: FilterType = {}): { clause: string, params: unknown[] } => {
     const conditions: string[] = [];
-    const params: any[] = [];
     let paramIndex = 1;
     
     for (const [key, value] of Object.entries(filter)) {

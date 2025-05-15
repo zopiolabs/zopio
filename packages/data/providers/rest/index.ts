@@ -25,7 +25,7 @@ export interface RestProviderOptions {
 /**
  * Create a REST data provider
  */
-export function createRestProvider(options: RestProviderOptions | string = {}): CrudProvider {
+export function createRestProvider(options: RestProviderOptions | string = '' as string): CrudProvider {
   // Allow passing just the apiUrl as a string
   const config = typeof options === 'string' 
     ? { apiUrl: options } 
@@ -39,44 +39,67 @@ export function createRestProvider(options: RestProviderOptions | string = {}): 
     }
   } = config;
 
+  // Helper function to add pagination parameters to URL
+  const addPaginationParams = (url: URL, pagination?: { page: number; perPage: number }): void => {
+    if (pagination) {
+      url.searchParams.append('_page', String(pagination.page));
+      url.searchParams.append('_limit', String(pagination.perPage));
+    }
+  };
+
+  // Helper function to add sort parameters to URL
+  const addSortParams = (url: URL, sort?: { field: string; order: string }): void => {
+    if (sort) {
+      url.searchParams.append('_sort', sort.field);
+      url.searchParams.append('_order', sort.order);
+    }
+  };
+
+  // Helper function to add filter parameters to URL
+  const addFilterParams = (url: URL, filter?: Record<string, unknown>): void => {
+    if (filter) {
+      for (const [key, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, String(value));
+        }
+      }
+    }
+  };
+
+  // Helper function to extract total count from response
+  const extractTotalCount = (response: Response, data: unknown): number => {
+    const totalHeader = response.headers.get('X-Total-Count');
+    if (totalHeader) {
+      return Number.parseInt(totalHeader, 10);
+    }
+    return Array.isArray(data) ? data.length : 0;
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
+      // Build URL with query parameters
       const url = new URL(`${apiUrl}/${resource}`, window.location.origin);
       
-      // Add pagination params
-      if (pagination) {
-        url.searchParams.append('page', String(pagination.page));
-        url.searchParams.append('per_page', String(pagination.perPage));
-      }
-      
-      // Add sort params
-      if (sort) {
-        url.searchParams.append('sort', sort.field);
-        url.searchParams.append('order', sort.order);
-      }
-      
-      // Add filter params
-      if (filter) {
-        Object.entries(filter).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            url.searchParams.append(key, String(value));
-          }
-        });
-      }
+      // Add parameters
+      addPaginationParams(url, pagination);
+      addSortParams(url, sort);
+      addFilterParams(url, filter);
       
       const response = await httpClient(url.toString(), {
-        headers
+        method: 'GET',
+        headers,
       });
       
       if (!response.ok) {
-        throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
+        throw new Error(`Error fetching ${resource}: ${response.statusText}`);
       }
       
       const data = await response.json();
+      const total = extractTotalCount(response, data);
       
-      return {
-        data: data.data || [],
-        total: data.total || data.data?.length || 0
+      return { 
+        data: Array.isArray(data) ? data : [], 
+        total 
       };
     },
     

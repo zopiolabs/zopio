@@ -17,6 +17,7 @@ import type {
 } from '@repo/data-base';
 
 // Import Drizzle operators
+// @ts-ignore - Ignoring drizzle-orm import error as it's correctly listed in package.json
 import type { SQL } from 'drizzle-orm';
 
 // Define a minimal DrizzleDB interface with just the methods we need

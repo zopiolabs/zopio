@@ -57,13 +57,13 @@ export function createXataProvider(config: XataProviderConfig): CrudProvider {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
         // Build request body
-        const body: Record<string, any> = {};
+        const body: Record<string, unknown> = {};
         
         // Add filter
         if (filter && Object.keys(filter).length > 0) {
-          const filterObj: Record<string, any> = {};
+          const filterObj: Record<string, unknown> = {};
           
-          for (const [key, value] of Object.entries(filter)) {
+          for (const [key, value] of Object.entries(filter as Record<string, unknown>)) {
             if (value !== undefined && value !== null) {
               filterObj[key] = { $eq: value };
             }

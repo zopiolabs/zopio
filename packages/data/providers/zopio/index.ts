@@ -30,43 +30,54 @@ export function createZopioProvider(config: ZopioClientConfig): CrudProvider {
   const buildUrl = (resource: string, id?: string | number) =>
     `${baseUrl}/${resource}${id ? `/${id}` : ""}`;
 
+  // Helper function to add pagination parameters to URL
+  const addPaginationParams = (url: URL, pagination?: { page: number; perPage: number }): void => {
+    if (pagination) {
+      url.searchParams.append('page', String(pagination.page));
+      url.searchParams.append('per_page', String(pagination.perPage));
+    }
+  };
+
+  // Helper function to add sort parameters to URL
+  const addSortParams = (url: URL, sort?: { field: string; order: string }): void => {
+    if (sort) {
+      url.searchParams.append('sort', sort.field);
+      url.searchParams.append('order', sort.order);
+    }
+  };
+
+  // Helper function to add filter parameters to URL
+  const addFilterParams = (url: URL, filter?: Record<string, unknown>): void => {
+    if (filter) {
+      for (const [key, value] of Object.entries(filter)) {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, String(value));
+        }
+      }
+    }
+  };
+
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       // Build URL with query parameters
       const url = new URL(buildUrl(resource), window.location.origin);
       
-      // Add pagination params
-      if (pagination) {
-        url.searchParams.append('page', String(pagination.page));
-        url.searchParams.append('per_page', String(pagination.perPage));
-      }
-      
-      // Add sort params
-      if (sort) {
-        url.searchParams.append('sort', sort.field);
-        url.searchParams.append('order', sort.order);
-      }
-      
-      // Add filter params
-      if (filter) {
-        Object.entries(filter).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            url.searchParams.append(key, String(value));
-          }
-        });
-      }
+      // Add parameters
+      addPaginationParams(url, pagination);
+      addSortParams(url, sort);
+      addFilterParams(url, filter);
       
       const res = await fetch(url.toString(), { headers });
       
       if (!res.ok) {
-        throw new Error(`Failed to fetch ${resource}: ${res.statusText}`);
+        throw new Error(`Error fetching ${resource}: ${res.statusText}`);
       }
       
       const data = await res.json();
       
-      return { 
-        data: Array.isArray(data) ? data : data.data || [], 
-        total: data.total || (Array.isArray(data) ? data.length : 0) 
+      return {
+        data: data.data || [],
+        total: data.total || data.data?.length || 0
       };
     },
 

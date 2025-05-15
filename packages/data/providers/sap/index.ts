@@ -43,8 +43,14 @@ export function createSAPProvider(config: SAPProviderConfig): CrudProvider {
     return entityMapping[resource] || resource;
   };
 
+  // Define a type for the URL parameters
+  type UrlParams = {
+    resource: string;
+    id?: string | number;
+  };
+
   // Helper to build URLs
-  const buildUrl = (resource: string, id?: string | number): string => {
+  const buildUrl = ({ resource, id }: UrlParams): string => {
     const entity = getSAPEntity(resource);
     const baseODataUrl = `${baseUrl}/sap/opu/odata/sap/${entity}`;
     return id ? `${baseODataUrl}(${id})` : baseODataUrl;

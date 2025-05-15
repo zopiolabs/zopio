@@ -64,7 +64,7 @@ export function createStripeProvider(config: StripeProviderConfig): CrudProvider
   };
 
   // Helper to convert object to URL encoded form data
-  const objectToFormData = (obj: Record<string, any>): string => {
+  const objectToFormData = (obj: Record<string, unknown>): string => {
     return Object.entries(obj)
       .map(([key, value]) => {
         if (value === null || value === undefined) {
@@ -75,7 +75,7 @@ export function createStripeProvider(config: StripeProviderConfig): CrudProvider
           return `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(value))}`;
         }
         
-        return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+        return `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
       })
       .filter(Boolean)
       .join('&');
@@ -101,7 +101,7 @@ export function createStripeProvider(config: StripeProviderConfig): CrudProvider
         
         // Add filter params
         if (filter) {
-          for (const [key, value] of Object.entries(filter)) {
+          for (const [key, value] of Object.entries(filter as Record<string, unknown>)) {
             if (value !== undefined && value !== null) {
               if (typeof value === 'object') {
                 url.searchParams.append(key, JSON.stringify(value));
@@ -161,7 +161,7 @@ export function createStripeProvider(config: StripeProviderConfig): CrudProvider
         const response = await fetch(buildUrl(resource), {
           method: 'POST',
           headers: getHeaders(),
-          body: objectToFormData(variables)
+          body: objectToFormData(variables as Record<string, unknown>)
         });
         
         if (!response.ok) {
@@ -182,7 +182,7 @@ export function createStripeProvider(config: StripeProviderConfig): CrudProvider
         const response = await fetch(buildUrl(resource, id), {
           method: 'POST', // Stripe uses POST for updates
           headers: getHeaders(),
-          body: objectToFormData(variables)
+          body: objectToFormData(variables as Record<string, unknown>)
         });
         
         if (!response.ok) {

@@ -55,7 +55,11 @@ export function createShopifyProvider(config: ShopifyProviderConfig): CrudProvid
   };
 
   // Default headers
-  const headers = {
+  type HeadersType = {
+    'X-Shopify-Access-Token': string;
+    'Content-Type': string;
+  };
+  const headers: HeadersType = {
     'X-Shopify-Access-Token': accessToken,
     'Content-Type': 'application/json'
   };

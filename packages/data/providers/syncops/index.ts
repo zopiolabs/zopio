@@ -72,7 +72,7 @@ export function createSyncOpsProvider(config: SyncOpsProviderConfig): CrudProvid
         
         // Add filter params
         if (filter) {
-          for (const [key, value] of Object.entries(filter)) {
+          for (const [key, value] of Object.entries(filter as Record<string, unknown>)) {
             if (value !== undefined && value !== null) {
               url.searchParams.append(`filter[${key}]`, String(value));
             }

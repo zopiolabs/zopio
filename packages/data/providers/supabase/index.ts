@@ -69,7 +69,7 @@ export function createSupabaseProvider(config: SupabaseProviderConfig): CrudProv
         
         // Add filter params
         if (filter) {
-          for (const [key, value] of Object.entries(filter)) {
+          for (const [key, value] of Object.entries(filter as Record<string, unknown>)) {
             if (value !== undefined && value !== null) {
               url.searchParams.append(key, `eq.${value}`);
             }

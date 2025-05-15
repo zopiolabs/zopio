@@ -66,78 +66,130 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
     }
     return -1;
   };
+  
+  // Helper to create row data for update operations
+  const createRowData = (
+    headers: string[], 
+    values: unknown[][], 
+    rowIndex: number, 
+    id: string | number, 
+    variables: Record<string, unknown>
+  ): unknown[] => {
+    const rowData = [String(id)];
+    
+    for (let i = 1; i < headers.length; i++) {
+      const header = headers[i];
+      const currentValue = values[rowIndex][i];
+      const varValue = (variables as Record<string, unknown>)[header];
+      rowData.push(varValue !== undefined ? String(varValue) : (currentValue ? String(currentValue) : ''));
+    }
+    
+    return rowData;
+  };
+  
+  // Helper to fetch sheet data
+  const fetchSheetData = async (resource: string): Promise<{headers: string[], values: unknown[][]}> => {
+    // Create a proper URL for the Google Sheets API
+    const baseUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${getSheetName(resource)}`;
+    const url = new URL(baseUrl);
+    url.searchParams.append('key', apiKey);
+    
+    const response = await fetch(url.toString());
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
+    }
+    
+    const result = await response.json();
+    const values = result.values || [];
+    
+    if (values.length === 0) {
+      throw new Error('Sheet is empty');
+    }
+    
+    // First row contains headers
+    const headers = values[0];
+    
+    return { headers, values };
+  };
+
+  // Helper to apply filtering to rows
+  const applyFiltering = (rows: unknown[][], headers: string[], filter: Record<string, unknown>): unknown[][] => {
+    if (!filter || Object.keys(filter).length === 0) {
+      return rows;
+    }
+    
+    return rows.filter((row: unknown[]) => {
+      for (const [key, value] of Object.entries(filter)) {
+        const columnIndex = headers.indexOf(key);
+        if (columnIndex === -1) {
+          continue;
+        }
+        
+        if (String(row[columnIndex]) !== String(value)) {
+          return false;
+        }
+      }
+      return true;
+    });
+  };
+  
+  // Helper to apply sorting to rows
+  const applySorting = (rows: unknown[][], headers: string[], sort?: { field: string; order: string }): unknown[][] => {
+    if (!sort) {
+      return rows;
+    }
+    
+    const columnIndex = headers.indexOf(sort.field);
+    if (columnIndex === -1) {
+      return rows;
+    }
+    
+    return [...rows].sort((a: unknown[], b: unknown[]) => {
+      const aValue = String(a[columnIndex]);
+      const bValue = String(b[columnIndex]);
+      
+      return sort.order === 'asc' ? 
+        aValue.localeCompare(bValue) : 
+        bValue.localeCompare(aValue);
+    });
+  };
+  
+  // Helper to apply pagination to rows
+  const applyPagination = (rows: unknown[][], pagination?: { page: number; perPage: number }): unknown[][] => {
+    if (!pagination) {
+      return rows;
+    }
+    
+    const { page, perPage } = pagination;
+    const start = (page - 1) * perPage;
+    const end = start + perPage;
+    return rows.slice(start, end);
+  };
 
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       try {
-        // Fetch all data from the sheet
-        const url = new URL(`${buildUrl(resource)}`);
-        url.searchParams.append('key', apiKey);
+        // Fetch sheet data
+        const { headers, values } = await fetchSheetData(resource);
         
-        const response = await fetch(url.toString());
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
-        }
-        
-        const result = await response.json();
-        const values = result.values || [];
-        
-        if (values.length === 0) {
-          return { data: [], total: 0 };
-        }
-        
-        // First row contains headers
-        const headers = values[0];
+        // Extract rows (skip header row)
         let rows = values.slice(1);
         
-        // Apply filtering
-        if (filter && Object.keys(filter).length > 0) {
-          rows = rows.filter(row => {
-            for (const [key, value] of Object.entries(filter)) {
-              const columnIndex = headers.indexOf(key);
-              if (columnIndex === -1) continue;
-              
-              if (row[columnIndex] !== String(value)) {
-                return false;
-              }
-            }
-            return true;
-          });
-        }
-        
-        // Apply sorting
-        if (sort) {
-          const columnIndex = headers.indexOf(sort.field);
-          if (columnIndex !== -1) {
-            rows.sort((a: unknown[], b: unknown[]) => {
-              const aValue = String(a[columnIndex]);
-              const bValue = String(b[columnIndex]);
-              
-              if (sort.order === 'asc') {
-                return aValue > bValue ? 1 : -1;
-              }
-              return aValue < bValue ? 1 : -1;
-            });
-          }
-        }
-        
-        // Get total count
+        // Apply operations
+        rows = applyFiltering(rows, headers, filter as Record<string, unknown>);
         const total = rows.length;
-        
-        // Apply pagination
-        if (pagination) {
-          const { page, perPage } = pagination;
-          const start = (page - 1) * perPage;
-          const end = start + perPage;
-          rows = rows.slice(start, end);
-        }
+        rows = applySorting(rows, headers, sort);
+        rows = applyPagination(rows, pagination);
         
         // Convert rows to objects
-        const data = rows.map(row => rowToObject(headers, row));
+        const data = rows.map((row: unknown[]) => rowToObject(headers, row));
         
         return { data, total };
       } catch (error) {
+        if (error instanceof Error && error.message === 'Sheet is empty') {
+          return { data: [], total: 0 };
+        }
         throw error instanceof Error ? error : new Error(String(error));
       }
     },
@@ -158,7 +210,7 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
         const values = result.values || [];
         
         if (values.length === 0) {
-          throw new Error(`Sheet is empty`);
+          throw new Error('Sheet is empty');
         }
         
         // First row contains headers
@@ -196,18 +248,19 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
         const headers = headersResult.values?.[0] || [];
         
         if (headers.length === 0) {
-          throw new Error(`Sheet has no headers`);
+          throw new Error('Sheet has no headers');
         }
         
         // Generate ID if not provided
-        const id = variables.id || Date.now().toString();
+        const id = (variables as Record<string, unknown>).id?.toString() || Date.now().toString();
         
         // Create row data in the correct order
         const rowData = [id];
         
         for (let i = 1; i < headers.length; i++) {
           const header = headers[i];
-          rowData.push(variables[header] !== undefined ? variables[header] : '');
+          const varValue = (variables as Record<string, unknown>)[header];
+          rowData.push(varValue !== undefined ? String(varValue) : '');
         }
         
         // Append row to sheet
@@ -227,7 +280,7 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
         });
         
         if (!appendResponse.ok) {
-          throw new Error(`Failed to create record: ${appendResponse.statusText}`);
+          throw new Error('Failed to create record');
         }
         
         // Return created data
@@ -239,27 +292,10 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
       }
     },
 
-    async update({ resource, id, variables }: UpdateParams): Promise<UpdateResult> {
+    async update({ resource, id, variables }: UpdateParams<Record<string, unknown>>): Promise<UpdateResult<Record<string, unknown>>> {
       try {
-        // Fetch all data from the sheet
-        const url = new URL(`${buildUrl(resource)}`);
-        url.searchParams.append('key', apiKey);
-        
-        const response = await fetch(url.toString());
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${resource}: ${response.statusText}`);
-        }
-        
-        const result = await response.json();
-        const values = result.values || [];
-        
-        if (values.length === 0) {
-          throw new Error(`Sheet is empty`);
-        }
-        
-        // First row contains headers
-        const headers = values[0];
+        // Fetch sheet data using helper function
+        const { headers, values } = await fetchSheetData(resource);
         
         // Find the row with the matching ID
         const rowIndex = findRowIndexById(values, id);
@@ -268,18 +304,12 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
           throw new Error(`Record with id ${id} not found in ${resource}`);
         }
         
-        // Create updated row data in the correct order
-        const rowData = [String(id)];
-        
-        for (let i = 1; i < headers.length; i++) {
-          const header = headers[i];
-          const currentValue = values[rowIndex][i];
-          rowData.push(variables[header] !== undefined ? variables[header] : currentValue || '');
-        }
+        // Create updated row data using helper function
+        const rowData = createRowData(headers, values, rowIndex, id, variables as Record<string, unknown>);
         
         // Update row in sheet
-        const updateRange = `${rowIndex + 1}:${rowIndex + 1}`;
-        const updateUrl = new URL(`${buildUrl(resource, updateRange)}`);
+        const rangeUrl = `${buildUrl(resource)}!A${rowIndex + 1}:${String.fromCharCode(65 + headers.length - 1)}${rowIndex + 1}`;
+        const updateUrl = new URL(rangeUrl);
         updateUrl.searchParams.append('key', apiKey);
         updateUrl.searchParams.append('valueInputOption', 'USER_ENTERED');
         
@@ -294,7 +324,7 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
         });
         
         if (!updateResponse.ok) {
-          throw new Error(`Failed to update record: ${updateResponse.statusText}`);
+          throw new Error('Failed to update record');
         }
         
         // Return updated data
@@ -322,7 +352,7 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
         const values = result.values || [];
         
         if (values.length === 0) {
-          throw new Error(`Sheet is empty`);
+          throw new Error('Sheet is empty');
         }
         
         // First row contains headers
@@ -365,7 +395,7 @@ export function createGoogleSheetsProvider(config: GoogleSheetsProviderConfig): 
         });
         
         if (!batchUpdateResponse.ok) {
-          throw new Error(`Failed to delete record: ${batchUpdateResponse.statusText}`);
+          throw new Error('Failed to delete record');
         }
         
         return { data };

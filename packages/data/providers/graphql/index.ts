@@ -45,8 +45,14 @@ export function createGraphQLProvider(config: GraphQLProviderConfig): CrudProvid
     return resourceMapping[resource] || resource;
   };
 
+  // Define a type for the response data
+  type ResponseData = {
+    data: any;
+    errors?: any[];
+  };
+
   // Helper to execute GraphQL queries
-  const executeQuery = async (query: string, variables: Record<string, any> = {}) => {
+  const executeQuery = async (query: string, variables: Record<string, any> = {}): Promise<ResponseData> => {
     const response = await fetch(url, {
       method: 'POST',
       headers: {

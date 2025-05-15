@@ -47,7 +47,13 @@ export function createNotionProvider(config: NotionProviderConfig): CrudProvider
   };
 
   // Default headers
-  const headers = {
+  type HeadersType = {
+    'Authorization': string;
+    'Content-Type': string;
+    'Notion-Version': string;
+  };
+
+  const headers: HeadersType = {
     'Authorization': `Bearer ${apiKey}`,
     'Content-Type': 'application/json',
     'Notion-Version': '2022-06-28'
