@@ -1,6 +1,6 @@
 {
-  "name": "@addons/data-provider",
-  "version": "0.5.0",
+  "name": "@repo/kysely-client",
+  "version": "0.1.0",
   "main": "./index.ts",
   "license": "UNLICENSED",
   "dependencies": {

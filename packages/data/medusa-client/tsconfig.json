@@ -13,8 +13,7 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@repo/*": ["../../packages/*"],
-      "@addons/*": ["../*"]
+      "@repo/*": ["../../packages/*"]
     }
   },
   "include": ["**/*.ts"]
