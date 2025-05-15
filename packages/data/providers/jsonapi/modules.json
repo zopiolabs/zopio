@@ -1,0 +1,10 @@
+{
+  "modules": [
+    {
+      "category": "Data Providers",
+      "name": "JSON:API",
+      "definition": "Data provider for integrating with JSON:API compliant endpoints",
+      "importCode": "import { createJsonApiProvider } from '@repo/data-providers-jsonapi';"
+    }
+  ]
+}

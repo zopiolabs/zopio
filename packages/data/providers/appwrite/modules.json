@@ -1,0 +1,10 @@
+{
+  "modules": [
+    {
+      "category": "Data Providers",
+      "name": "Appwrite",
+      "definition": "Data provider for integrating with Appwrite database API",
+      "importCode": "import { createAppwriteProvider } from '@repo/data-providers-appwrite';"
+    }
+  ]
+}

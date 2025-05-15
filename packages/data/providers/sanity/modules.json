@@ -1,0 +1,10 @@
+{
+  "modules": [
+    {
+      "category": "Data Providers",
+      "name": "Sanity",
+      "definition": "Data provider for integrating with Sanity.io content API",
+      "importCode": "import { createSanityProvider } from '@repo/data-providers-sanity';"
+    }
+  ]
+}

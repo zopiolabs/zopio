@@ -1,0 +1,10 @@
+{
+  "modules": [
+    {
+      "category": "Data Providers",
+      "name": "PostgREST",
+      "definition": "Data provider for integrating with PostgREST API",
+      "importCode": "import { createPostgRESTProvider } from '@repo/data-providers-postgrest';"
+    }
+  ]
+}

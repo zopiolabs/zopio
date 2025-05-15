@@ -1,0 +1,10 @@
+{
+  "modules": [
+    {
+      "category": "Data Providers",
+      "name": "FastAPI",
+      "definition": "Data provider for integrating with FastAPI REST endpoints",
+      "importCode": "import { createFastAPIProvider } from '@repo/data-providers-fastapi';"
+    }
+  ]
+}

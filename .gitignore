@@ -45,4 +45,6 @@ yarn-error.log*
 
 # AI Rules
 .cursorrules
+.windsurfrules
 .github/copilot-instructions.md
+aiprompts
