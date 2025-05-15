@@ -2,62 +2,102 @@
 
 Data management and UI components for the Zopio framework.
 
+## Consolidated Structure
+
+The data packages have been reorganized into a more streamlined, developer-friendly structure:
+
+```
+@repo/data
+├── base/           # Core types, utilities, base interfaces
+├── providers/      # All data providers in one package with submodules
+└── ui/             # UI components and hooks
+```
+
+### Base Package
+
+The `@repo/data-base` package provides the foundation for all data operations:
+
+```typescript
+// Import core types
+import type { CrudProvider, GetListParams } from '@repo/data-base';
+
+// Import utility functions
+import { normalizePagination, applyFilters } from '@repo/data-base';
+
+// Import schema utilities
+import { createSchema, CommonSchemas } from '@repo/data-base';
+```
+
+### Providers Package
+
+The `@repo/data-providers` package consolidates all data provider implementations:
+
+```typescript
+// Import the factory function
+import { createDataProvider } from '@repo/data-providers';
+
+// Create a provider for any backend
+const dataProvider = createDataProvider({
+  type: 'rest',
+  config: { apiUrl: '/api' }
+});
+
+// Or import specific providers directly
+import { createRestProvider, createMockProvider } from '@repo/data-providers';
+```
+
+### UI Package
+
+The `@repo/data-ui` package provides React components and hooks for data operations:
+
+```typescript
+// Import table hooks
+import { useTable, useTableFilters, useTableSelection } from '@repo/data-ui';
+
+// Import form hooks
+import { useForm, useFormValidation } from '@repo/data-ui';
+```
+
 ## Module Categories
 
 ### Core
-- **crud** - CRUD operations and utilities for data management
-- **data-core** - Core data utilities for Zopio framework
-```typescript
-import { CRUD } from '@repo/crud';
-import { DataCore } from '@repo/data-core';
-```
+- **data-base** - Core data types, utilities, and base interfaces
 
-### Forms & Validation
-- **data-form** - Form handling and validation utilities
-```typescript
-import { useDataForm } from '@repo/data-form';
-```
+### Data Providers
+- **data-providers** - Unified data providers for Zopio framework
 
-### React Hooks
-- **data-hooks** - React hooks for data management
-```typescript
-import { useData } from '@repo/data-hooks';
-```
-
-### Data Operations
-- **data-mutation** - Data mutation utilities and hooks
-- **data-query** - Data query utilities and hooks
-```typescript
-import { useMutation } from '@repo/data-mutation';
-import { useQuery } from '@repo/data-query';
-```
-
-### Data Access
-- **data-provider** - Base data provider interface and utilities
-- **data-provider-prisma** - Prisma data provider implementation
-- **data-provider-prisma-advanced** - Advanced Prisma data provider with additional features
-```typescript
-import { DataProvider } from '@repo/data-provider';
-import { PrismaProvider } from '@repo/data-provider-prisma';
-import { AdvancedPrismaProvider } from '@repo/data-provider-prisma-advanced';
-```
+Available providers:
+- Airtable
+- Baserow
+- Drizzle
+- Firebase
+- Formbricks
+- GitHub
+- Google Sheets
+- GraphQL
+- KillBill
+- Kysely
+- Local
+- Medusa
+- Mock
+- N8n
+- Neon
+- NocoDB
+- Notion
+- Odoo
+- Prisma
+- REST
+- SAP
+- Shopify
+- Stripe
+- Supabase
+- SyncOps
+- Temporal
+- Xata
+- Zopio
 
 ### UI Components
-- **data-table** - Basic data table with sorting, filtering and pagination
-- **data-table-advanced** - Advanced data table with additional features
-- **data-table-bulk** - Data table with bulk actions support
-- **data-table-combined** - Combined data table with all features
-- **data-table-filters** - Enhanced filtering capabilities for data tables
-- **data-table-inline** - Data table with inline editing support
-- **data-table-layout** - Layout components for data tables
-- **data-table-live** - Real-time data table with live updates
-- **data-table-provider** - Data provider integration for tables
-- **data-table-url-sync** - URL state synchronization for data tables
-```typescript
-import { useTable } from '@repo/data-table';
-import { useAdvancedTable } from '@repo/data-table-advanced';
-import { useBulkTable } from '@repo/data-table-bulk';
-```
+- **data-ui** - UI components and hooks for data management
 
 ## Installation
 
@@ -69,23 +109,31 @@ pnpm add @repo/<package-name>
 
 ## Usage Guidelines
 
-1. **Core Data Operations**
-   - Use `crud` for basic CRUD operations
-   - Use `data-core` for shared utilities
+1. **Core Data Types and Utilities**
+   - Use `@repo/data-base` for core types, interfaces, and utilities
+   - Import schemas and validation helpers from the base package
 
-2. **Forms and Validation**
-   - Use `data-form` for form handling
-   - Integrates with validation libraries
+2. **Data Providers**
+   - Use the factory function to create providers:
+     ```typescript
+     import { createDataProvider } from '@repo/data-providers';
+     
+     const dataProvider = createDataProvider({
+       type: 'rest',
+       config: { apiUrl: '/api' }
+     });
+     ```
+   - Or import specific providers directly:
+     ```typescript
+     import { createRestProvider } from '@repo/data-providers/rest';
+     import { createPrismaProvider } from '@repo/data-providers/prisma';
+     ```
 
-3. **Data Access**
-   - Use `data-provider` as base interface
-   - Choose appropriate provider implementation
-   - Use advanced providers for complex scenarios
-
-4. **Data Tables**
-   - Start with basic `data-table`
-   - Add features through specialized packages
-   - Use combined tables for full functionality
+3. **UI Components**
+   - Use the UI package for data-related components and hooks:
+     ```typescript
+     import { useDataTable, useDataForm } from '@repo/data-ui';
+     ```
 
 ## Development
 
@@ -105,17 +153,37 @@ pnpm add @repo/<package-name>
 ## Integration Examples
 
 ```typescript
-// Basic data table
-import { useTable } from '@repo/data-table';
-import { DataProvider } from '@repo/data-provider';
+// Import core types and utilities
+import type { CrudProvider, GetListParams } from '@repo/data-base';
+import { normalizePagination } from '@repo/data-base';
 
-// Advanced setup with forms
-import { useDataForm } from '@repo/data-form';
-import { useMutation } from '@repo/data-mutation';
+// Create a data provider
+import { createDataProvider } from '@repo/data-providers';
 
-// Full featured table
-import { useCombinedTable } from '@repo/data-table-combined';
-import { TableProvider } from '@repo/data-table-provider';
+const dataProvider = createDataProvider({
+  type: 'rest',
+  config: { baseUrl: '/api' }
+});
+
+// Use specific provider directly
+import { createSupabaseProvider } from '@repo/data-providers/supabase';
+
+const supabaseProvider = createSupabaseProvider({
+  url: 'https://your-project.supabase.co',
+  apiKey: 'your-api-key'
+});
+
+// Use UI components and hooks
+import { useDataTable, useDataForm } from '@repo/data-ui';
+
+function ProductList() {
+  const { data, loading, error } = useDataTable({
+    provider: dataProvider,
+    resource: 'products'
+  });
+  
+  // Render your UI
+}
 ```
 
 ## Documentation

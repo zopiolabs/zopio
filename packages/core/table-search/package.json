@@ -7,8 +7,8 @@
     "build": "tsup index.tsx --dts"
   },
   "dependencies": {
-    "@core/search-utils": "*",
-    "@core/filter-utils": "*",
+    "@core/search-utils": "workspace:*",
+    "@core/filter-utils": "workspace:*",
     "use-debounce": "^9.0.2"
   },
   "devDependencies": {

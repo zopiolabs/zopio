@@ -7,7 +7,7 @@
     "build": "tsup index.ts --dts"
   },
   "dependencies": {
-    "@core/filter-utils": "*"
+    "@core/filter-utils": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.4.0",

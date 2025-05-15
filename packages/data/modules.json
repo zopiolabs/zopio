@@ -2,125 +2,194 @@
   "modules": [
     {
       "category": "Core",
-      "name": "crud",
-      "definition": "CRUD operations and utilities for data management",
-      "importCode": "import { CRUD } from '@repo/crud';"
+      "name": "data-base",
+      "definition": "Core data types, utilities, and base interfaces for Zopio framework",
+      "importCode": "import { CrudProvider, GetListParams } from '@repo/data-base';"
     },
     {
-      "category": "Core",
-      "name": "data-core",
-      "definition": "Core data utilities for Zopio framework",
-      "importCode": "import { DataCore } from '@repo/data-core';"
+      "category": "Data Providers",
+      "name": "data-providers",
+      "definition": "Unified data providers for Zopio framework that implement the CRUD interface",
+      "importCode": "import { createDataProvider } from '@repo/data-providers';"
     },
     {
-      "category": "Forms & Validation",
-      "name": "data-form",
-      "definition": "Form handling and validation utilities",
-      "importCode": "import { useDataForm } from '@repo/data-form';"
+      "category": "Data Providers",
+      "name": "data-providers-airtable",
+      "definition": "Airtable data provider for Zopio framework",
+      "importCode": "import { createAirtableProvider } from '@repo/data-providers/airtable';"
     },
     {
-      "category": "React Hooks",
-      "name": "data-hooks",
-      "definition": "React hooks for data management",
-      "importCode": "import { useData } from '@repo/data-hooks';"
+      "category": "Data Providers",
+      "name": "data-providers-baserow",
+      "definition": "Baserow data provider for Zopio framework",
+      "importCode": "import { createBaserowProvider } from '@repo/data-providers/baserow';"
     },
     {
-      "category": "Data Operations",
-      "name": "data-mutation",
-      "definition": "Data mutation utilities and hooks",
-      "importCode": "import { useMutation } from '@repo/data-mutation';"
+      "category": "Data Providers",
+      "name": "data-providers-drizzle",
+      "definition": "Drizzle ORM data provider for Zopio framework",
+      "importCode": "import { createDrizzleProvider } from '@repo/data-providers/drizzle';"
     },
     {
-      "category": "Data Access",
-      "name": "data-provider",
-      "definition": "Base data provider interface and utilities",
-      "importCode": "import { DataProvider } from '@repo/data-provider';"
+      "category": "Data Providers",
+      "name": "data-providers-firebase",
+      "definition": "Firebase data provider for Zopio framework",
+      "importCode": "import { createFirebaseProvider } from '@repo/data-providers/firebase';"
     },
     {
-      "category": "Data Access",
-      "name": "data-provider-prisma",
-      "definition": "Prisma data provider implementation",
-      "importCode": "import { PrismaProvider } from '@repo/data-provider-prisma';"
+      "category": "Data Providers",
+      "name": "data-providers-formbricks",
+      "definition": "Formbricks data provider for Zopio framework",
+      "importCode": "import { createFormbricksProvider } from '@repo/data-providers/formbricks';"
     },
     {
-      "category": "Data Access",
-      "name": "data-provider-prisma-advanced",
-      "definition": "Advanced Prisma data provider with additional features",
-      "importCode": "import { AdvancedPrismaProvider } from '@repo/data-provider-prisma-advanced';"
+      "category": "Data Providers",
+      "name": "data-providers-github",
+      "definition": "GitHub API data provider for Zopio framework",
+      "importCode": "import { createGithubProvider } from '@repo/data-providers/github';"
     },
     {
-      "category": "Data Operations",
-      "name": "data-query",
-      "definition": "Data query utilities and hooks",
-      "importCode": "import { useQuery } from '@repo/data-query';"
+      "category": "Data Providers",
+      "name": "data-providers-google-sheets",
+      "definition": "Google Sheets data provider for Zopio framework",
+      "importCode": "import { createGoogleSheetsProvider } from '@repo/data-providers/google-sheets';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-graphql",
+      "definition": "GraphQL data provider for Zopio framework",
+      "importCode": "import { createGraphQLProvider } from '@repo/data-providers/graphql';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-killbill",
+      "definition": "KillBill data provider for Zopio framework",
+      "importCode": "import { createKillbillProvider } from '@repo/data-providers/killbill';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-kysely",
+      "definition": "Kysely SQL query builder data provider for Zopio framework",
+      "importCode": "import { createKyselyProvider } from '@repo/data-providers/kysely';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-local",
+      "definition": "Local storage data provider for Zopio framework",
+      "importCode": "import { createLocalProvider } from '@repo/data-providers/local';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-medusa",
+      "definition": "Medusa commerce data provider for Zopio framework",
+      "importCode": "import { createMedusaProvider } from '@repo/data-providers/medusa';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-mock",
+      "definition": "Mock data provider for testing in Zopio framework",
+      "importCode": "import { createMockProvider } from '@repo/data-providers/mock';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-n8n",
+      "definition": "n8n workflow automation data provider for Zopio framework",
+      "importCode": "import { createN8nProvider } from '@repo/data-providers/n8n';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-neon",
+      "definition": "Neon serverless Postgres data provider for Zopio framework",
+      "importCode": "import { createNeonProvider } from '@repo/data-providers/neon';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-nocodb",
+      "definition": "NocoDB data provider for Zopio framework",
+      "importCode": "import { createNocodbProvider } from '@repo/data-providers/nocodb';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-notion",
+      "definition": "Notion data provider for Zopio framework",
+      "importCode": "import { createNotionProvider } from '@repo/data-providers/notion';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-odoo",
+      "definition": "Odoo ERP data provider for Zopio framework",
+      "importCode": "import { createOdooProvider } from '@repo/data-providers/odoo';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-prisma",
+      "definition": "Prisma ORM data provider for Zopio framework",
+      "importCode": "import { createPrismaProvider } from '@repo/data-providers/prisma';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-rest",
+      "definition": "REST API data provider for Zopio framework",
+      "importCode": "import { createRestProvider } from '@repo/data-providers/rest';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-sap",
+      "definition": "SAP data provider for Zopio framework",
+      "importCode": "import { createSAPProvider } from '@repo/data-providers/sap';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-shopify",
+      "definition": "Shopify data provider for Zopio framework",
+      "importCode": "import { createShopifyProvider } from '@repo/data-providers/shopify';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-stripe",
+      "definition": "Stripe payment data provider for Zopio framework",
+      "importCode": "import { createStripeProvider } from '@repo/data-providers/stripe';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-supabase",
+      "definition": "Supabase data provider for Zopio framework",
+      "importCode": "import { createSupabaseProvider } from '@repo/data-providers/supabase';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-syncops",
+      "definition": "SyncOps data provider for Zopio framework",
+      "importCode": "import { createSyncOpsProvider } from '@repo/data-providers/syncops';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-temporal",
+      "definition": "Temporal workflow data provider for Zopio framework",
+      "importCode": "import { createTemporalProvider } from '@repo/data-providers/temporal';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-xata",
+      "definition": "Xata serverless database data provider for Zopio framework",
+      "importCode": "import { createXataProvider } from '@repo/data-providers/xata';"
+    },
+    {
+      "category": "Data Providers",
+      "name": "data-providers-zopio",
+      "definition": "Zopio client data provider for Zopio framework",
+      "importCode": "import { createZopioProvider } from '@repo/data-providers/zopio';"
     },
     {
       "category": "UI Components",
-      "name": "data-table",
-      "definition": "Basic data table with sorting, filtering and pagination",
-      "importCode": "import { useTable } from '@repo/data-table';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-advanced",
-      "definition": "Advanced data table with additional features",
-      "importCode": "import { useAdvancedTable } from '@repo/data-table-advanced';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-bulk",
-      "definition": "Data table with bulk actions support",
-      "importCode": "import { useBulkTable } from '@repo/data-table-bulk';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-combined",
-      "definition": "Combined data table with all features",
-      "importCode": "import { useCombinedTable } from '@repo/data-table-combined';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-filters",
-      "definition": "Enhanced filtering capabilities for data tables",
-      "importCode": "import { useTableFilters } from '@repo/data-table-filters';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-inline",
-      "definition": "Data table with inline editing support",
-      "importCode": "import { useInlineTable } from '@repo/data-table-inline';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-layout",
-      "definition": "Layout components for data tables",
-      "importCode": "import { TableLayout } from '@repo/data-table-layout';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-live",
-      "definition": "Real-time data table with live updates",
-      "importCode": "import { useLiveTable } from '@repo/data-table-live';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-provider",
-      "definition": "Data provider integration for tables",
-      "importCode": "import { TableProvider } from '@repo/data-table-provider';"
-    },
-    {
-      "category": "UI Components",
-      "name": "data-table-url-sync",
-      "definition": "URL state synchronization for data tables",
-      "importCode": "import { useUrlSyncTable } from '@repo/data-table-url-sync';"
+      "name": "data-ui",
+      "definition": "UI components and hooks for data management in Zopio framework",
+      "importCode": "import { useDataTable, useDataForm } from '@repo/data-ui';"
     }
   ],
   "categories": [
     "Core",
-    "Forms & Validation",
-    "React Hooks",
-    "Data Operations",
-    "Data Access",
+    "Data Providers",
     "UI Components"
   ]
 }

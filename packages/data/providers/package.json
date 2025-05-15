@@ -1,0 +1,20 @@
+{
+  "name": "@repo/data-providers",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "type": "module",
+  "sideEffects": false,
+  "license": "UNLICENSED",
+  "description": "Unified data providers for Zopio framework",
+  "keywords": ["zopio", "data", "providers", "crud"],
+  "dependencies": {
+    "@repo/data-base": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "react": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
