@@ -15,6 +15,7 @@ import type {
   DeleteParams,
   DeleteResult
 } from '@repo/data-base';
+import { odoo } from '../../adapters/index.js';
 
 export interface OdooProviderConfig {
   url: string;
@@ -122,16 +123,8 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
       try {
         const model = getOdooModel(resource);
         
-        // Build domain from filter
-        const domain: [string, string, unknown][] = [];
-        
-        if (filter) {
-          for (const [key, value] of Object.entries(filter)) {
-            if (value !== undefined && value !== null) {
-              domain.push([key, '=', value]);
-            }
-          }
-        }
+        // Build domain from filter using the adapter
+        const domain = filter ? odoo.buildOdooDomain(filter) : [];
         
         // Build kwargs for search_read
         const kwargs = buildKwargs(pagination);
@@ -140,7 +133,10 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
         const count = await callModel<number>(model, 'search_count', [domain]);
         
         // Get data
-        const data = await callModel<Record<string, unknown>[]>(model, 'search_read', [domain], kwargs);
+        const rawData = await callModel<Record<string, unknown>[]>(model, 'search_read', [domain], kwargs);
+        
+        // Normalize data using the adapter
+        const data = rawData.map(record => odoo.normalizeOdooRecord(record));
         
         return { data, total: count };
       } catch (error) {
@@ -162,7 +158,10 @@ export function createOdooProvider(config: OdooProviderConfig): CrudProvider {
           throw new Error(`Record with id ${id} not found in ${resource}`);
         }
         
-        return { data: results[0] || {} as Record<string, unknown> };
+        // Normalize data using the adapter
+        const normalizedRecord = odoo.normalizeOdooRecord(results[0]);
+        
+        return { data: normalizedRecord };
       } catch (error) {
         throw error instanceof Error ? error : new Error(String(error));
       }

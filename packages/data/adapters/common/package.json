@@ -1,0 +1,9 @@
+{
+  "name": "@repo/adapters-common",
+  "version": "0.1.0",
+  "description": "Common utilities for data adapters in Zopio framework",
+  "main": "index.ts",
+  "license": "UNLICENSED",
+  "type": "module",
+  "sideEffects": false
+}

@@ -1,4 +1,8 @@
 {
+  "category": "data-layer",
+  "name": "Data",
+  "definition": "Comprehensive data management solution for the Zopio framework with standardized interfaces across different data sources",
+  "importCode": "import { base, providers, ui } from '@repo/data';",
   "modules": [
     {
       "category": "Core",

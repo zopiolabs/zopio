@@ -7,7 +7,7 @@
   "description": "JSON:API data provider for Zopio framework",
 
   "dependencies": {
-    "@repo/jsonapi-adapter": "*"
+    "@repo/adapters": "workspace:*"
   },
 
   "peerDependencies": {

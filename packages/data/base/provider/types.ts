@@ -2,41 +2,9 @@
  * Provider types for the Zopio framework
  */
 
-import type { CrudProvider } from '../types/index.js';
+import type { CrudProvider, ProviderType } from '../types/index.js';
 
-/**
- * Available provider types in the system
- */
-export type ProviderType =
-  | 'rest'
-  | 'graphql'
-  | 'firebase'
-  | 'supabase'
-  | 'mock'
-  | 'local'
-  | 'airtable'
-  | 'medusa'
-  | 'drizzle'
-  | 'kysely'
-  | 'xata'
-  | 'neon'
-  | 'odoo'
-  | 'sap'
-  | 'zopio'
-  | 'prisma'
-  | 'syncops'
-  | 'github'
-  | 'notion'
-  | 'baserow'
-  | 'nocodb'
-  | 'google-sheets'
-  | 'n8n'
-  | 'temporal'
-  | 'killbill'
-  | 'stripe'
-  | 'formbricks'
-  | 'shopify'
-  | 'custom';
+// ProviderType is imported from '../types/index.js'
 
 /**
  * Configuration options for creating a data provider

@@ -1,0 +1,12 @@
+{
+  "name": "@repo/adapters-jsonapi",
+  "version": "0.1.0",
+  "description": "JSON:API adapter for Zopio framework",
+  "main": "index.ts",
+  "license": "UNLICENSED",
+  "type": "module",
+  "sideEffects": false,
+  "dependencies": {
+    "@repo/adapters-common": "workspace:*"
+  }
+}

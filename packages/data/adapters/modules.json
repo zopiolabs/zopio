@@ -1,0 +1,22 @@
+{
+  "modules": [
+    {
+      "category": "Data Transformation",
+      "name": "JSON:API Adapter",
+      "definition": "Transforms JSON:API compliant responses to usable objects",
+      "importCode": "import { jsonapi } from '@repo/adapters';"
+    },
+    {
+      "category": "Data Transformation",
+      "name": "Odoo Adapter",
+      "definition": "Handles Odoo's unique data structures and formats",
+      "importCode": "import { odoo } from '@repo/adapters';"
+    },
+    {
+      "category": "Utilities",
+      "name": "Common Utilities",
+      "definition": "Shared utility functions and types for data adapters",
+      "importCode": "import { getNestedProperty, removeUndefined } from '@repo/adapters';"
+    }
+  ]
+}

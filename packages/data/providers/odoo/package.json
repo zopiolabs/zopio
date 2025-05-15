@@ -6,7 +6,9 @@
   "main": "./index.ts",
   "description": "Odoo data provider for Zopio framework",
   "keywords": ["zopio", "data", "providers", "crud", "odoo", "erp"],
-  "dependencies": {},
+  "dependencies": {
+    "@repo/adapters": "workspace:*"
+  },
   "peerDependencies": {
     "@repo/data-base": "workspace:*"
   },

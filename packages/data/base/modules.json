@@ -1,0 +1,50 @@
+{
+  "category": "data-layer",
+  "name": "Data Base",
+  "definition": "Core data utilities and interfaces for Zopio framework that provides a standardized foundation for data operations across all providers and UI components",
+  "importCode": "import { CrudProvider, createDataProvider } from '@repo/data-base';",
+  "modules": [
+    {
+      "category": "core-types",
+      "name": "CRUD Provider",
+      "definition": "Standard interface for data providers that implement CRUD operations",
+      "importCode": "import type { CrudProvider } from '@repo/data-base';"
+    },
+    {
+      "category": "core-types",
+      "name": "Operation Parameters",
+      "definition": "Parameter types for CRUD operations",
+      "importCode": "import type { GetListParams, GetOneParams, CreateParams, UpdateParams, DeleteParams } from '@repo/data-base';"
+    },
+    {
+      "category": "core-types",
+      "name": "Operation Results",
+      "definition": "Result types for CRUD operations",
+      "importCode": "import type { GetListResult, GetOneResult, CreateResult, UpdateResult, DeleteResult } from '@repo/data-base';"
+    },
+    {
+      "category": "provider-utilities",
+      "name": "Provider Creation",
+      "definition": "Utilities for creating and registering data providers",
+      "importCode": "import { createDataProvider, registerProvider } from '@repo/data-base';"
+    },
+    {
+      "category": "provider-utilities",
+      "name": "Mock Provider",
+      "definition": "Simple mock provider for testing",
+      "importCode": "import { createMockProvider } from '@repo/data-base';"
+    },
+    {
+      "category": "advanced-features",
+      "name": "Extended Provider",
+      "definition": "Extended provider interface with batch operations and transactions",
+      "importCode": "import type { ExtendedCrudProvider } from '@repo/data-base';"
+    },
+    {
+      "category": "advanced-features",
+      "name": "Advanced Queries",
+      "definition": "Advanced query parameters for complex data operations",
+      "importCode": "import type { AdvancedQueryParams } from '@repo/data-base';"
+    }
+  ]
+}

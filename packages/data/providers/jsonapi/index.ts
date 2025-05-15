@@ -18,7 +18,7 @@ import type {
   DeleteParams,
   DeleteResult
 } from '@repo/data-base';
-import { normalizeJsonApi } from "@repo/jsonapi-adapter";
+import { jsonapi } from "../../adapters/index.js";
 
 export interface JsonApiProviderConfig {
   /**
@@ -66,10 +66,10 @@ export function createJsonApiProvider(config: JsonApiProviderConfig): CrudProvid
     const requestHeaders: Record<string, string> = { ...headers };
     
     if (includeContentType) {
-      requestHeaders['Content-Type'] = 'application/vnd.api+json';
+      requestHeaders["Content-Type"] = 'application/vnd.api+json';
     }
     
-    requestHeaders['Accept'] = 'application/vnd.api+json';
+    requestHeaders.Accept = 'application/vnd.api+json';
     
     return requestHeaders;
   };
@@ -91,7 +91,7 @@ export function createJsonApiProvider(config: JsonApiProviderConfig): CrudProvid
     }
     
     const raw = await response.json();
-    return normalizeJsonApi(raw);
+    return jsonapi.normalizeJsonApi(raw);
   };
   
   return {

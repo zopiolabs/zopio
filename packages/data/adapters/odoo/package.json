@@ -1,0 +1,12 @@
+{
+  "name": "@repo/adapters-odoo",
+  "version": "0.1.0",
+  "description": "Odoo adapter for Zopio framework",
+  "main": "index.ts",
+  "license": "UNLICENSED",
+  "type": "module",
+  "sideEffects": false,
+  "dependencies": {
+    "@repo/adapters-common": "workspace:*"
+  }
+}
