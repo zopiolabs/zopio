@@ -124,11 +124,11 @@
         {
           "group": "Design System",
           "pages": [
-            "packages/design-system/colors",
-            "packages/design-system/components",
-            "packages/design-system/dark-mode",
-            "packages/design-system/provider",
-            "packages/design-system/typography"
+            "packages/core/design-system/colors",
+            "packages/core/design-system/components",
+            "packages/core/design-system/dark-mode",
+            "packages/core/design-system/provider",
+            "packages/core/design-system/typography"
           ]
         },
         "packages/email",
@@ -345,7 +345,7 @@
     },
     {
       "source": "/design-system/:slug*",
-      "destination": "/packages/design-system/:slug*"
+      "destination": "/packages/core/design-system/:slug*"
     },
     {
       "source": "/documentation",

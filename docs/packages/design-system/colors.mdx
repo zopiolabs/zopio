@@ -3,7 +3,7 @@ title: Colors
 description: CSS variables and how they work
 ---
 
-Zopio makes use of the CSS variables offered by [shadcn/ui](https://ui.shadcn.com/). They're a brilliant way of abstracting the scaling and maintenance difficulties associated with [Dark Mode](/packages/design-system/dark-mode) and whitelabelling.
+Zopio makes use of the CSS variables offered by [shadcn/ui](https://ui.shadcn.com/). They're a brilliant way of abstracting the scaling and maintenance difficulties associated with [Dark Mode](/packages/core/design-system/dark-mode) and whitelabelling.
 
 These colors have also been applied to other tools, such as the `AuthProvider`, to ensure that third-party components align with the application design as closely as possible.
 
@@ -38,7 +38,7 @@ export const MyComponent = () => (
 
 Currently, it's not possible to change the Clerk theme to match the exact theme of the app. This is because Clerk's Theme doesn't accept custom CSS variables. We'd like to be able to add the following in the future:
 
-```jsx packages/design-system/providers/clerk.tsx {4-15}
+```jsx packages/core/design-system/providers/clerk.tsx {4-15}
 const variables: Theme['variables'] = {
   // ...
 
