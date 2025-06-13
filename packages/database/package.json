@@ -24,7 +24,7 @@
     "@types/node": "22.15.21",
     "@types/ws": "^8.18.1",
     "bufferutil": "^4.0.9",
-    "prisma": "6.4.1",
+    "prisma": "6.9.0",
     "typescript": "^5.8.3"
   }
 }
