@@ -23,7 +23,7 @@
     "@repo/payments": "workspace:*",
     "@repo/testing": "workspace:*",
     "@repo/trigger": "workspace:*",
-    "@trigger.dev/sdk": "^2.2.0",
+    "@trigger.dev/sdk": "^3.3.17",
     "@sentry/nextjs": "^9.22.0",
     "@t3-oss/env-nextjs": "^0.13.4",
     "next": "15.3.2",
