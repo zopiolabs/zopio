@@ -20,4 +20,14 @@ Clone the repo using:
 npx zopio@latest init
 ```
 
+<<<<<<< HEAD
 Then read the [docs](https://docs.zopio.dev) for more information.
+=======
+Then read the [docs](https://docs.zopio.dev) for more information
+
+Testing
+
+## Lorem Ipsum
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+>>>>>>> 55dec48ae63506d4035fd8511d5f96106cb3bcf4
