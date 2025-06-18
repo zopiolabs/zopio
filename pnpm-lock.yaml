@@ -44,7 +44,7 @@ importers:
         version: 5.8.3
       ultracite:
         specifier: ^4.2.5
-        version: 4.2.12
+        version: 4.2.13
       vitest:
         specifier: ^3.1.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.21)(jiti@2.4.2)(jsdom@26.1.0(bufferutil@4.0.9))(lightningcss@1.30.1)(terser@5.43.0)(yaml@2.8.0)
@@ -249,8 +249,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0
       react-email:
-        specifier: 4.0.15
-        version: 4.0.15(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 4.0.16
+        version: 4.0.16(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -1182,7 +1182,7 @@ importers:
     dependencies:
       '@knocklabs/node':
         specifier: ^1.3.0
-        version: 1.10.0
+        version: 1.10.1
       '@knocklabs/react':
         specifier: ^0.7.11
         version: 0.7.15(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(immer@9.0.21)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -3047,8 +3047,8 @@ packages:
   '@knocklabs/client@0.14.9':
     resolution: {integrity: sha512-ZVTa3H1lCBJ/+/iHPuREE2jVg3JZG03g2IqAEZGjiuRKms75vr/tdpxvLutkGpg/QRP2MZnhDf30pU4cEfPjCw==}
 
-  '@knocklabs/node@1.10.0':
-    resolution: {integrity: sha512-tMEGaXMsst60K9UEGH5bkgAbvNK96048MLcwxp857NovMYaOtukwVkaapEl8sWmrFn8UAOjMrLDOLBcU9R19nA==}
+  '@knocklabs/node@1.10.1':
+    resolution: {integrity: sha512-2cEF5+lMv1oHdrDo6hSPaC9G7eYjooMAKpjJe5L1ihJH6z4qsOni9+tJSOa/pmuYxkgIh+hrl3oC/H3kdu7BAw==}
     peerDependencies:
       jose: ^6.0.11
     peerDependenciesMeta:
@@ -10361,8 +10361,8 @@ packages:
     peerDependencies:
       react: ^19.1.0
 
-  react-email@4.0.15:
-    resolution: {integrity: sha512-UQR18Toi3TAasqcZal69rYZ9RiIKRvHRW69tN6k7hONJpEPeiC4uBtDwH5VxpllW591D+NOdpBF/V1pTansaKg==}
+  react-email@4.0.16:
+    resolution: {integrity: sha512-auhFU+nQxAkKkP6lQhPyGsa9exwfUEzp2BwZnjHokCwphZlg30tu4t1LgdKRwGPYsi7XNGy6asbVLAUhOVpzzg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -11696,8 +11696,8 @@ packages:
     resolution: {integrity: sha512-xY7c8LPyzvhvew0Fn+Ek3wBC9STZAuDI/Y5andCKi9AX6/jvfaX45PhsDX8oxgPL0YFp0Jhr8qWMbS/p9375Xg==}
     engines: {node: '>=16'}
 
-  ultracite@4.2.12:
-    resolution: {integrity: sha512-1lfs6i+pcRln8g1vPhWhtZCNuSN9P5GI5E90CuImSR3x9ZKHs6++lB+kYpYs5Zw+VTZaNBjbk7Q4XxnU2XyE8g==}
+  ultracite@4.2.13:
+    resolution: {integrity: sha512-j49R1z3xXIPhdvU19x0z0Z4hNewJYn4F1h42ULeaCOylBuxwGVE401piPxe3aVapwue7+Ec3J6wnL/+mW4zwww==}
     hasBin: true
 
   unbox-primitive@1.1.0:
@@ -14119,7 +14119,7 @@ snapshots:
       - immer
       - react
 
-  '@knocklabs/node@1.10.0': {}
+  '@knocklabs/node@1.10.1': {}
 
   '@knocklabs/react-core@0.6.13(@types/react@19.1.5)(immer@9.0.21)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -23230,7 +23230,7 @@ snapshots:
       react: 19.1.0
       scheduler: 0.26.0
 
-  react-email@4.0.15(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  react-email@4.0.16(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@babel/parser': 7.27.5
       '@babel/traverse': 7.27.4
@@ -24941,7 +24941,7 @@ snapshots:
     dependencies:
       layerr: 3.0.0
 
-  ultracite@4.2.12:
+  ultracite@4.2.13:
     dependencies:
       commander: 14.0.0
 
