@@ -13,6 +13,7 @@
 		"lint": "ultracite lint",
 		"format": "ultracite format",
 		"test": "turbo test",
+		"test:watch": "turbo test --watch",
 		"typecheck": "tsc --noEmit",
 		"analyze": "turbo analyze",
 		"translate": "turbo translate",
