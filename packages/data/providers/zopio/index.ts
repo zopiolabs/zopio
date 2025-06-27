@@ -60,7 +60,8 @@ export function createZopioProvider(config: ZopioClientConfig): CrudProvider {
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       // Build URL with query parameters
-      const url = new URL(buildUrl(resource), window.location.origin);
+      const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+      const url = new URL(buildUrl(resource), origin);
       
       // Add parameters
       addPaginationParams(url, pagination);

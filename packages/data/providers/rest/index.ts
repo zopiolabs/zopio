@@ -78,7 +78,8 @@ export function createRestProvider(options: RestProviderOptions | string = '' as
   return {
     async getList({ resource, pagination, sort, filter }: GetListParams): Promise<GetListResult> {
       // Build URL with query parameters
-      const url = new URL(`${apiUrl}/${resource}`, window.location.origin);
+      const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+      const url = new URL(`${apiUrl}/${resource}`, origin);
       
       // Add parameters
       addPaginationParams(url, pagination);

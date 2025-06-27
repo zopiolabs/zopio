@@ -20,7 +20,8 @@ import type {
  * Helper function to build URL with pagination parameters
  */
 function buildUrlWithParams(apiUrl: string, resource: string, pagination?: { page: number; perPage: number }, sort?: { field: string; order: 'asc' | 'desc' }, filter?: Record<string, unknown>): URL {
-  const url = new URL(`${apiUrl}/${resource}`, window.location.origin);
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+  const url = new URL(`${apiUrl}/${resource}`, origin);
   
   // Add pagination params if provided
   if (pagination) {
