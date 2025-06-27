@@ -84,19 +84,19 @@ jobs:
               **Allowed patterns:**
               - \`main\`, \`develop\`, \`staging\` (protected branches)
               - \`feat/*\` or \`feature/*\` - New features
-              - \`fix/*\` - Bug fixes (Example: `fix/login-bug`)
+              - \`fix/*\` - Bug fixes
               - \`hotfix/*\` - Emergency fixes
-              - \`release/v*.*.*\` - Release branches (Example: `release/v1.2.3`)
+              - \`release/v*.*.*\` - Release branches
               - \`docs/*\` - Documentation
               - \`chore/*\` - Maintenance
               - \`test/*\` - Tests
               - \`refactor/*\` - Refactoring
               - \`ci/*\` - CI/CD changes
               - \`build/*\` - Build changes
-              - \`perf/*\` - Performance  improvements
+              - \`perf/*\` - Performance
               - \`style/*\` - Code style
               - \`revert/*\` - Reverts
-              - \`v*.*\` - Version branches (Example: `v1.0`)`;
+              - \`v*.*\` - Version branches`;
 
               if (context.payload.pull_request) {
                 await github.rest.issues.createComment({
