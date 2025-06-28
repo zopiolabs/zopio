@@ -1,13 +1,11 @@
 {
-  "name": "zopio-test1",
+  "name": "zopio",
   "version": "0.9.16",
   "private": true,
   "bin": {
     "zopio": "dist/index.js"
   },
-  "files": [
-    "dist/index.js"
-  ],
+  "files": ["dist/index.js"],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
