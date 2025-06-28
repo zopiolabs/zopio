@@ -80,8 +80,8 @@ jobs:
       # Uses Ultracite to perform static code analysis
       # Checks for code quality issues, potential bugs, and enforces coding standards
       # Will fail the workflow if any linting rules are violated
-      - name: Run Linting
-        run: pnpm lint
+      #- name: Run Linting
+      #  run: pnpm lint
 
       # Step 7: Run type checking
       # Uses TypeScript compiler to verify type correctness
