@@ -73,15 +73,15 @@ jobs:
       # Step 5: Install project dependencies
       # First try with frozen lockfile, but fall back to regular install if that fails
       # This ensures the workflow doesn't fail just because of lockfile issues
-      - name: Install dependencies
+      - name: Install Dependencies
         run: pnpm install --no-frozen-lockfile
 
       # Step 6: Run linting
-      # Uses Biome to perform static code analysis
+      # Uses Ultracite to perform static code analysis
       # Checks for code quality issues, potential bugs, and enforces coding standards
       # Will fail the workflow if any linting rules are violated
-      - name: Run Biome Lint with Diagnostic Limit
-        run: npx biome check . --max-diagnostics 5000
+      - name: Run Linting
+        run: pnpm lint
 
       # Step 7: Run type checking
       # Uses TypeScript compiler to verify type correctness
@@ -94,12 +94,12 @@ jobs:
       # Ultracite is used to ensure consistent code style across the codebase
       # The format command checks formatting without modifying files
       # This step will fail if any files don't match the project's formatting standards
-      - name: Run Format Check
+      - name: Run Format Checking
         run: pnpm format
 
       # Step 9: Run tests
       # Executes the test suite using Vitest through Turbo
       # Verifies that all components and functions work as expected
       # Ensures code changes don't break existing functionality
-      - name: Run Tests
+      - name: Run Unit Testing
         run: pnpm test
