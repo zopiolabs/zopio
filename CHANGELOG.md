@@ -1,3 +1,15 @@
+# v0.9.19 (Sat Jun 28 2025)
+
+#### 🐛 Bug Fix
+
+- chore: bump version to 0.9.20 [#62](https://github.com/zopiolabs/zopio/pull/62) ([@mkzopio](https://github.com/mkzopio))
+
+#### Authors: 1
+
+- MK ([@mkzopio](https://github.com/mkzopio))
+
+---
+
 # v0.9.16 (Sat Jun 28 2025)
 
 #### ⚠️ Pushed to `main`
