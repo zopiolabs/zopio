@@ -2,23 +2,16 @@
  * Field Component Map
  * Maps entity field types to UI components for form and table rendering
  */
-import React, { useState, useMemo, forwardRef, useCallback } from 'react';
-import type { ComponentType, ChangeEvent, ForwardedRef } from 'react';
+import { forwardRef, useState } from 'react';
+import type {} from 'react';
 
 // Import UI components from design-system package
-import { Input } from "@repo/design-system/components/ui/input";
-import { Switch } from "@repo/design-system/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/design-system/components/ui/select";
-import { Textarea } from "@repo/design-system/components/ui/textarea";
-import { Checkbox } from "@repo/design-system/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@repo/design-system/components/ui/radio-group";
-import { Label } from "@repo/design-system/components/ui/label";
-import { Slider } from "@repo/design-system/components/ui/slider";
-import { Button } from "@repo/design-system/components/ui/button";
-import { Calendar } from "@repo/design-system/components/ui/calendar";
+import type { Input } from '@repo/design-system/components/ui/input';
+import {} from '@repo/design-system/components/ui/radio-group';
+import {} from '@repo/design-system/components/ui/select';
 
 // Import field component props type
-import { FieldComponentProps, FieldOption } from './types';
+import { type FieldComponentProps } from './types';
 
 // Translation hook - replace with actual implementation if available
 interface TranslationHook {
@@ -32,10 +25,10 @@ const useCrudTranslation = (): TranslationHook => {
         'fields.generic.dropFiles': 'Drop files here',
         'fields.generic.orClickToUpload': 'or click to upload',
         'fields.generic.remove': 'Remove',
-        'fields.generic.search': 'Search'
+        'fields.generic.search': 'Search',
       };
       return translations[key] || key;
-    }
+    },
   };
 };
 
@@ -45,7 +38,7 @@ const useCrudTranslation = (): TranslationHook => {
 const PasswordInput = forwardRef<HTMLInputElement, FieldComponentProps>(
   ({ className, onChange, value, disabled, placeholder, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
-    
+
     return (
       <div className="relative">
         <Input
@@ -80,12 +73,12 @@ PasswordInput.displayName = "PasswordInput";
 const EmailInput = forwardRef<HTMLInputElement, FieldComponentProps>(
   ({ className, onChange, value, disabled, placeholder, error, ...props }, ref) => {
     const [isValid, setIsValid] = useState(true);
-    
+
     const validateEmail = (email: string): boolean => {
       const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return re.test(String(email).toLowerCase());
     };
-    
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
       setIsValid(newValue === "" || validateEmail(newValue));
@@ -93,7 +86,7 @@ const EmailInput = forwardRef<HTMLInputElement, FieldComponentProps>(
         onChange(newValue);
       }
     };
-    
+
     return (
       <div className="space-y-2">
         <Input
@@ -120,7 +113,7 @@ EmailInput.displayName = "EmailInput";
 const UrlInput = forwardRef<HTMLInputElement, FieldComponentProps>(
   ({ className, onChange, value, disabled, placeholder, error, ...props }, ref) => {
     const [isValid, setIsValid] = useState(true);
-    
+
     const validateUrl = (url: string): boolean => {
       try {
         new URL(url);
@@ -129,7 +122,7 @@ const UrlInput = forwardRef<HTMLInputElement, FieldComponentProps>(
         return false;
       }
     };
-    
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
       setIsValid(newValue === "" || validateUrl(newValue));
@@ -137,7 +130,7 @@ const UrlInput = forwardRef<HTMLInputElement, FieldComponentProps>(
         onChange(newValue);
       }
     };
-    
+
     return (
       <div className="space-y-2">
         <Input
@@ -164,7 +157,7 @@ UrlInput.displayName = "UrlInput";
 const NumberWithSlider = forwardRef<HTMLInputElement, FieldComponentProps>(
   ({ className, onChange, value, disabled, min = 0, max = 100, step = 1, ...props }, ref) => {
     const [numberValue, setNumberValue] = useState<number>(Number(value) || 0);
-    
+
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
       const newValue = Number(e.target.value);
       setNumberValue(newValue);
@@ -172,18 +165,18 @@ const NumberWithSlider = forwardRef<HTMLInputElement, FieldComponentProps>(
         onChange(newValue);
       }
     };
-    
+
     const handleSliderChange = (newValue: number[]) => {
       setNumberValue(newValue[0]);
       if (onChange) {
         onChange(newValue[0]);
       }
     };
-    
+
     return (
       <div className="space-y-4">
-        <Input 
-          type="number" 
+        <Input
+          type="number"
           ref={ref}
           className={className}
           value={numberValue}
@@ -216,28 +209,28 @@ const PhoneInput = forwardRef<HTMLInputElement, FieldComponentProps>(
     const formatPhoneNumber = (value: string): string => {
       // Remove all non-numeric characters
       const cleaned = value.replace(/\D/g, '');
-      
+
       // Format as (XXX) XXX-XXXX
       if (cleaned.length >= 10) {
-        return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+        return `(${cleaned.slice(0, 3)}) $cleaned.slice(3, 6)-$cleaned.slice(6, 10)`;
       } else if (cleaned.length >= 6) {
-        return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+        return `(${cleaned.slice(0, 3)}) $cleaned.slice(3, 6)-$cleaned.slice(6)`;
       } else if (cleaned.length >= 3) {
-        return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+        return `(${cleaned.slice(0, 3)}) $cleaned.slice(3)`;
       }
       return cleaned;
     };
-    
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const formattedValue = formatPhoneNumber(e.target.value);
       if (onChange) {
         onChange(formattedValue);
       }
     };
-    
+
     return (
-      <Input 
-        type="tel" 
+      <Input
+        type="tel"
         ref={ref}
         className={className}
         value={value || ""}
@@ -261,7 +254,7 @@ const RadioGroupComponent = forwardRef<HTMLDivElement, FieldComponentProps>(
         onChange(newValue);
       }
     };
-    
+
     return (
       <RadioGroup
         value={String(value || "")}
@@ -273,12 +266,12 @@ const RadioGroupComponent = forwardRef<HTMLDivElement, FieldComponentProps>(
         <div className="space-y-2" ref={ref}>
           {options.map((option) => (
             <div key={String(option.value)} className="flex items-center space-x-2">
-              <RadioGroupItem 
-                id={`${props.id || 'radio'}-${option.value}`} 
-                value={String(option.value)} 
+              <RadioGroupItem
+                id={`$props.id || 'radio'-$option.value`}
+                value={String(option.value)}
                 disabled={option.disabled || disabled}
               />
-              <Label htmlFor={`${props.id || 'radio'}-${option.value}`}>{option.label}</Label>
+              <Label htmlFor={`$props.id || 'radio'-$option.value`}>{option.label}</Label>
             </div>
           ))}
         </div>
@@ -296,17 +289,17 @@ const CheckboxGroup = forwardRef<HTMLDivElement, FieldComponentProps>(
     const [selectedValues, setSelectedValues] = useState<string[]>(
       Array.isArray(value) ? value.map(String) : []
     );
-    
+
     const handleChange = (option: FieldOption) => {
       const optionValue = String(option.value);
       let newValues: string[];
-      
+
       if (selectedValues.includes(optionValue)) {
         newValues = selectedValues.filter(val => val !== optionValue);
       } else {
         newValues = [...selectedValues, optionValue];
       }
-      
+
       setSelectedValues(newValues);
       if (onChange) {
         onChange(newValues);
@@ -318,12 +311,12 @@ const CheckboxGroup = forwardRef<HTMLDivElement, FieldComponentProps>(
         {options.map((option) => (
           <div key={String(option.value)} className="flex items-center space-x-2">
             <Checkbox
-              id={`${props.id || 'checkbox'}-${option.value}`}
+              id={`$props.id || 'checkbox'-$option.value`}
               checked={selectedValues.includes(String(option.value))}
               onCheckedChange={() => handleChange(option)}
               disabled={option.disabled || disabled}
             />
-            <Label htmlFor={`${props.id || 'checkbox'}-${option.value}`}>{option.label}</Label>
+            <Label htmlFor={`$props.id || 'checkbox'-$option.value`}>{option.label}</Label>
           </div>
         ))}
       </div>
@@ -339,7 +332,7 @@ const FileUpload = forwardRef<HTMLInputElement, FieldComponentProps>(
   ({ className, onChange, value, disabled, multiple, accept, ...props }, ref) => {
     const { t } = useCrudTranslation();
     const [files, setFiles] = useState<File[]>(value instanceof FileList ? Array.from(value) : []);
-    
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
         const newFiles = Array.from(e.target.files);
@@ -349,7 +342,7 @@ const FileUpload = forwardRef<HTMLInputElement, FieldComponentProps>(
         }
       }
     };
-    
+
     const removeFile = (index: number) => {
       const newFiles = [...files];
       newFiles.splice(index, 1);
@@ -358,7 +351,7 @@ const FileUpload = forwardRef<HTMLInputElement, FieldComponentProps>(
         onChange(multiple ? newFiles : newFiles[0] || null);
       }
     };
-    
+
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-center w-full">
@@ -370,11 +363,11 @@ const FileUpload = forwardRef<HTMLInputElement, FieldComponentProps>(
               <p className="mb-2 text-sm text-gray-500">{t('fields.generic.dropFiles')}</p>
               <p className="text-xs text-gray-500">{t('fields.generic.orClickToUpload')}</p>
             </div>
-            <input 
-              id={props.id || 'file-upload'} 
-              type="file" 
-              className="hidden" 
-              onChange={handleFileChange} 
+            <input
+              id={props.id || 'file-upload'}
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
               disabled={disabled}
               multiple={multiple}
               accept={accept}
@@ -383,18 +376,18 @@ const FileUpload = forwardRef<HTMLInputElement, FieldComponentProps>(
             />
           </label>
         </div>
-        
+
         {files.length > 0 && (
           <div className="mt-4">
             <h4 className="text-sm font-medium mb-2">Uploaded Files:</h4>
             <ul className="space-y-2">
               {files.map((file, index) => (
-                <li key={`${file.name}-${index}`} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                <li key={`$file.name-$index`} className="flex items-center justify-between bg-gray-100 p-2 rounded">
                   <span className="text-sm truncate max-w-xs">{file.name} ({(file.size / 1024).toFixed(2)} KB)</span>
-                  <Button 
-                    type="button" 
-                    variant="destructive" 
-                    size="sm" 
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
                     onClick={() => removeFile(index)}
                     disabled={disabled}
                   >
@@ -421,7 +414,7 @@ const RichTextEditor = forwardRef<HTMLTextAreaElement, FieldComponentProps>(
         onChange(e.target.value);
       }
     };
-    
+
     return (
       <div className="space-y-2">
         <div className="flex space-x-1 mb-2 bg-gray-100 p-1 rounded">
@@ -455,27 +448,27 @@ const MultiSelect = forwardRef<HTMLDivElement, FieldComponentProps>(
       Array.isArray(value) ? value.map(String) : []
     );
     const [searchTerm, setSearchTerm] = useState("");
-    
-    const filteredOptions = options.filter(option => 
+
+    const filteredOptions = options.filter(option =>
       option.label.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    
+
     const handleChange = (option: FieldOption) => {
       const optionValue = String(option.value);
       let newValues: string[];
-      
+
       if (selectedValues.includes(optionValue)) {
         newValues = selectedValues.filter(val => val !== optionValue);
       } else {
         newValues = [...selectedValues, optionValue];
       }
-      
+
       setSelectedValues(newValues);
       if (onChange) {
         onChange(newValues);
       }
     };
-    
+
     const removeValue = (value: string) => {
       const newValues = selectedValues.filter(val => val !== value);
       setSelectedValues(newValues);
@@ -483,7 +476,7 @@ const MultiSelect = forwardRef<HTMLDivElement, FieldComponentProps>(
         onChange(newValues);
       }
     };
-    
+
     return (
       <div className="space-y-2" ref={ref}>
         <div className="flex flex-wrap gap-2 mb-2">
@@ -492,11 +485,11 @@ const MultiSelect = forwardRef<HTMLDivElement, FieldComponentProps>(
             return (
               <span key={value} className="bg-gray-200 px-2 py-1 rounded-full text-sm flex items-center" role="button">
                 {option?.label}
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-4 w-4 ml-1 p-0" 
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-4 w-4 ml-1 p-0"
                   onClick={() => removeValue(value)}
                   disabled={disabled}
                 >
@@ -506,7 +499,7 @@ const MultiSelect = forwardRef<HTMLDivElement, FieldComponentProps>(
             );
           })}
         </div>
-        
+
         <Input
           type="text"
           placeholder={t('fields.generic.search')}
@@ -515,17 +508,17 @@ const MultiSelect = forwardRef<HTMLDivElement, FieldComponentProps>(
           disabled={disabled}
           className="mb-2"
         />
-        
+
         <div className="border rounded max-h-60 overflow-y-auto">
           {filteredOptions.map(option => (
             <div key={String(option.value)} className="flex items-center p-2 hover:bg-gray-100">
-              <Checkbox 
-                id={`${props.id || 'multiselect'}-${option.value}`}
+              <Checkbox
+                id={`$props.id || 'multiselect'-$option.value`}
                 checked={selectedValues.includes(String(option.value))}
                 onCheckedChange={() => handleChange(option)}
                 disabled={option.disabled || disabled}
               />
-              <Label htmlFor={`${props.id || 'multiselect'}-${option.value}`} className="ml-2">{option.label}</Label>
+              <Label htmlFor={`$props.id || 'multiselect'-$option.value`} className="ml-2">{option.label}</Label>
             </div>
           ))}
           {filteredOptions.length === 0 && (
@@ -544,7 +537,7 @@ MultiSelect.displayName = "MultiSelect";
 const JsonEditor = forwardRef<HTMLTextAreaElement, FieldComponentProps>(
   ({ className, onChange, value, disabled, error, ...props }, ref) => {
     const [jsonError, setJsonError] = useState<string | null>(null);
-    
+
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = e.target.value;
       try {
@@ -557,12 +550,12 @@ const JsonEditor = forwardRef<HTMLTextAreaElement, FieldComponentProps>(
       } catch (e) {
         setJsonError("Invalid JSON format");
       }
-      
+
       if (onChange) {
         onChange(newValue);
       }
     };
-    
+
     const jsonString = useMemo(() => {
       try {
         return JSON.stringify(value || {}, null, 2);
@@ -570,12 +563,12 @@ const JsonEditor = forwardRef<HTMLTextAreaElement, FieldComponentProps>(
         return '';
       }
     }, [value]);
-    
+
     return (
       <div className="space-y-2">
         <Textarea
           ref={ref}
-          className={`font-mono ${className || ''}`}
+          className={`font-mono $className || ''`}
           value={jsonString}
           onChange={handleChange}
           disabled={disabled}
@@ -600,13 +593,13 @@ const ColorPicker = forwardRef<HTMLInputElement, FieldComponentProps>(
         onChange(e.target.value);
       }
     };
-    
+
     return (
       <div className="flex items-center space-x-2">
         <Input
           type="color"
           ref={ref}
-          className={`w-12 h-12 p-1 ${className || ''}`}
+          className={`w-12 h-12 p-1 $className || ''`}
           value={value || "#000000"}
           onChange={handleChange}
           disabled={disabled}
@@ -634,14 +627,14 @@ const DatePicker = forwardRef<HTMLDivElement, FieldComponentProps>(
     const [date, setDate] = useState<Date | undefined>(
       value instanceof Date ? value : value ? new Date(value) : undefined
     );
-    
+
     const handleSelect = (newDate: Date | undefined) => {
       setDate(newDate);
       if (onChange) {
         onChange(newDate);
       }
     };
-    
+
     return (
       <div ref={ref} className={className}>
         <Calendar
