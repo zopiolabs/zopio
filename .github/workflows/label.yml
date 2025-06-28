@@ -35,6 +35,6 @@ jobs:
     steps:
     # Apply labels based on the rules in .github/labeler.yml
     # This action analyzes the files changed in the PR and applies matching labels
-    - uses: actions/labeler@v4
+    - uses: actions/labeler@v5
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"  # Token for GitHub API access
