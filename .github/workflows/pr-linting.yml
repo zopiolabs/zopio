@@ -75,14 +75,28 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      # Step 6: Run comprehensive code quality checks
-      # Ultracite is a unified tool that runs linting, type checking, and tests
-      # The --ci flag optimizes output for continuous integration environments
-      # This step will fail if any lint rules are violated, types don't match, or tests fail
-      - name: Run Ultracite Checks (Lint + Typecheck + Test)
-        run: pnpm ultracite check --ci
+      # Step 6: Run linting
+      # Uses Ultracite to perform static code analysis
+      # Checks for code quality issues, potential bugs, and enforces coding standards
+      # Will fail the workflow if any linting rules are violated
+      - name: Run Linting
+        run: pnpm lint
 
-      # Step 7: Verify code formatting
+      # Step 7: Run type checking
+      # Uses TypeScript compiler to verify type correctness
+      # Ensures all type annotations are valid without generating output files
+      # Catches type errors that might cause runtime issues
+      - name: Run Type Checking
+        run: pnpm typecheck
+        
+      # Step 8: Run tests
+      # Executes the test suite using Vitest through Turbo
+      # Verifies that all components and functions work as expected
+      # Ensures code changes don't break existing functionality
+      - name: Run Tests
+        run: pnpm test
+
+      # Step 9: Verify code formatting
       # Biome is used to ensure consistent code style across the codebase
       # The ci command checks formatting without modifying files
       # This step will fail if any files don't match the project's formatting standards
