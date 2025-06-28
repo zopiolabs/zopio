@@ -90,7 +90,6 @@ jobs:
       # - name: Run Type Checking
       #   run: pnpm typecheck
 
-
       # Step 8: Verify code formatting
       # Ultracite is used to ensure consistent code style across the codebase
       # The format command checks formatting without modifying files
