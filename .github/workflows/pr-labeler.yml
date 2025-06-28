@@ -32,7 +32,6 @@ jobs:
       contents: read      # To read repository files
       pull-requests: write # To modify PR labels
       issues: write       # To modify issues
-      administration: write # To create and manage labels
 
     steps:
     # Apply labels based on the rules in .github/labeler.yml

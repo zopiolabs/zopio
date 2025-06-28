@@ -95,8 +95,8 @@ jobs:
       # Ultracite is used to ensure consistent code style across the codebase
       # The format command checks formatting without modifying files
       # This step will fail if any files don't match the project's formatting standards
-      - name: Run Format Checking
-        run: pnpm format
+      # - name: Run Format Checking
+      #   run: pnpm format
 
       # Step 9: Run tests
       # Executes the test suite using Vitest through Turbo

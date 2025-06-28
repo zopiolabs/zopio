@@ -49,7 +49,7 @@ concurrency:
 jobs:
   # Main validation job that performs all checks in sequence
   # Using a single job for all validations improves performance and provides a unified status check
-  PR Validations:
+  PR-Validations:
     runs-on: ubuntu-latest
     # Required permissions to comment on PRs and add/remove labels
     permissions:
