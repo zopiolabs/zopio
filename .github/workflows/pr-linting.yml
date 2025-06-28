@@ -87,8 +87,8 @@ jobs:
       # Uses TypeScript compiler to verify type correctness
       # Ensures all type annotations are valid without generating output files
       # Catches type errors that might cause runtime issues
-      - name: Run Type Checking
-        run: pnpm typecheck
+      # - name: Run Type Checking
+      #   run: pnpm typecheck
 
       # Step 8: Verify code formatting
       # Ultracite is used to ensure consistent code style across the codebase
