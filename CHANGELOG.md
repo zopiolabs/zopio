@@ -1,3 +1,15 @@
+# v0.9.18 (Sat Jun 28 2025)
+
+#### 🐛 Bug Fix
+
+- fix: cicd workflows [#61](https://github.com/zopiolabs/zopio/pull/61) ([@mkzopio](https://github.com/mkzopio))
+
+#### Authors: 1
+
+- MK ([@mkzopio](https://github.com/mkzopio))
+
+---
+
 # v0.9.16 (Sat Jun 28 2025)
 
 #### ⚠️ Pushed to `main`
