@@ -77,11 +77,11 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       # Step 6: Run linting
-      # Uses Ultracite to perform static code analysis
+      # Uses Biome to perform static code analysis
       # Checks for code quality issues, potential bugs, and enforces coding standards
       # Will fail the workflow if any linting rules are violated
-      - name: Run Linting
-        run: pnpm lint
+      - name: Run Biome Lint with Diagnostic Limit
+        run: npx biome check . --max-diagnostics 5000
 
       # Step 7: Run type checking
       # Uses TypeScript compiler to verify type correctness
