@@ -88,17 +88,17 @@ jobs:
       # Catches type errors that might cause runtime issues
       - name: Run Type Checking
         run: pnpm typecheck
-        
-      # Step 8: Run tests
+
+      # Step 8: Verify code formatting
+      # Ultracite is used to ensure consistent code style across the codebase
+      # The format command checks formatting without modifying files
+      # This step will fail if any files don't match the project's formatting standards
+      - name: Run Format Check
+        run: pnpm format
+
+      # Step 9: Run tests
       # Executes the test suite using Vitest through Turbo
       # Verifies that all components and functions work as expected
       # Ensures code changes don't break existing functionality
       - name: Run Tests
         run: pnpm test
-
-      # Step 9: Verify code formatting
-      # Biome is used to ensure consistent code style across the codebase
-      # The ci command checks formatting without modifying files
-      # This step will fail if any files don't match the project's formatting standards
-      - name: Run Biome Format Check
-        run: pnpm biome ci
