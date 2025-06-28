@@ -1,3 +1,23 @@
+# v0.9.22 (Sat Jun 28 2025)
+
+#### 🐛 Bug Fix
+
+- Merge: branch 'main' into develop [#65](https://github.com/zopiolabs/zopio/pull/65) ([@mkzopio](https://github.com/mkzopio) [@adminzopio](https://github.com/adminzopio))
+- fix: cicd workflows [#64](https://github.com/zopiolabs/zopio/pull/64) ([@mkzopio](https://github.com/mkzopio) [@adminzopio](https://github.com/adminzopio))
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/zopiolabs/zopio ([@mkzopio](https://github.com/mkzopio))
+- chore: bump version to 0.9.21 ([@mkzopio](https://github.com/mkzopio))
+- ci: add GitHub workflow for PR static checks with Node.js and pnpm setup ([@mkzopio](https://github.com/mkzopio))
+
+#### Authors: 2
+
+- adminbot ([@adminzopio](https://github.com/adminzopio))
+- MK ([@mkzopio](https://github.com/mkzopio))
+
+---
+
 # v0.9.16 (Sat Jun 28 2025)
 
 #### ⚠️ Pushed to `main`
