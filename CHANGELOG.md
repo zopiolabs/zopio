@@ -1,3 +1,15 @@
+# v0.9.11 (Sat Jun 28 2025)
+
+#### ⚠️ Pushed to `main`
+
+- feat: create field component map with specialized input components for CRUD UI ([@mkzopio](https://github.com/mkzopio))
+
+#### Authors: 1
+
+- MK ([@mkzopio](https://github.com/mkzopio))
+
+---
+
 # v0.9.10 (Sat Jun 28 2025)
 
 #### ⚠️ Pushed to `main`
