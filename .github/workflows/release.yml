@@ -20,7 +20,7 @@
 # - Reduces human error in the release process
 # - Provides immediate availability of new versions
 
-name: Release
+name: Release Workflow
 
 # The event that will trigger the action
 on:

@@ -86,7 +86,7 @@ permissions:
 jobs:
   # Job 1: CodeQL Analysis - Advanced static code analysis for security vulnerabilities
   codeql-analysis:
-    name: CodeQL Security Analysis
+    name: Code Security Scan
     runs-on: ubuntu-latest
 
     # Required permissions for CodeQL to function properly
@@ -136,7 +136,7 @@ jobs:
 
   # Job 2: Dependency Vulnerability Scanning - Identifies security issues in third-party packages
   dependency-scan:
-    name: Dependency Vulnerability Scan
+    name: Dependency Security Scan
     runs-on: ubuntu-latest
     steps:
       # Step 1: Check out the repository code for scanning
@@ -167,14 +167,14 @@ jobs:
 
   # Job 3: Secret Scanning - Detects accidentally committed credentials and secrets
   secret-scan:
-    name: Secret Scanning
+    name: Secret Protection Scan
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
       # Step 1: Check out the repository code with full history
       # Complete git history is required to detect secrets that may have been
       # committed in the past and still pose a security risk
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Full history needed for accurate secret detection across all commits
@@ -203,7 +203,7 @@ jobs:
     if: contains(github.event.head_commit.message, 'docker') || contains(github.event.pull_request.title, 'docker')
     steps:
       # Step 1: Check out the repository code
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       # Step 2: Build the Docker image for scanning if a Dockerfile exists

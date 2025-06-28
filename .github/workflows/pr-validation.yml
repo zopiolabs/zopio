@@ -1,4 +1,4 @@
-# Zopio Pull Request Validation Workflow
+# PR Validation Workflow
 #
 # Purpose: Enforces quality standards and conventions for all pull requests
 #          to maintain code quality, consistency, and proper documentation.
@@ -24,7 +24,7 @@
 #   - Simplifies release notes and changelog generation
 #   - Enforces documentation of breaking changes
 
-name: PR Validation
+name: PR Validations
 
 on:
   pull_request:
@@ -49,7 +49,7 @@ concurrency:
 jobs:
   # Main validation job that performs all checks in sequence
   # Using a single job for all validations improves performance and provides a unified status check
-  validate-all:
+  PR Validations:
     runs-on: ubuntu-latest
     # Required permissions to comment on PRs and add/remove labels
     permissions:

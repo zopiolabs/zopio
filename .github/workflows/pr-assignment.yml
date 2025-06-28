@@ -1,4 +1,4 @@
-# Automated Pull Request Assignment
+# Automated PR Assignment
 #
 # Purpose: Automatically assigns PRs to their authors and leverages CODEOWNERS
 #          for reviewer assignment. This workflow streamlines the PR review process
@@ -24,7 +24,7 @@
 #   - Maintains consistent review standards across the codebase
 #   - Accelerates the review process through automatic assignments
 
-name: Auto Assign PR
+name: PR Auto Assign
 
 on:
   pull_request:
@@ -198,7 +198,7 @@ jobs:
                 try {
                   const teamReviewersList = Array.from(teamReviewers);
                   console.log(`Attempting to assign team reviewers: ${teamReviewersList.join(', ')}`);
-                  
+
                   // Check if teams exist in the organization
                   for (const team of teamReviewersList) {
                     try {
@@ -213,7 +213,7 @@ jobs:
                       teamReviewers.delete(team);
                     }
                   }
-                  
+
                   // Only proceed if we have valid teams
                   const validTeamsList = Array.from(teamReviewers);
                   if (validTeamsList.length > 0) {
@@ -237,10 +237,10 @@ jobs:
                 try {
                   const individualReviewersList = Array.from(individualReviewers);
                   console.log(`Attempting to assign individual reviewers: ${individualReviewersList.join(', ')}`);
-                  
+
                   // Filter out the PR author from reviewers list to avoid self-review
                   const filteredReviewers = individualReviewersList.filter(reviewer => reviewer !== pr.user.login);
-                  
+
                   if (filteredReviewers.length > 0) {
                     // Verify each reviewer exists before attempting to assign
                     const validReviewers = [];
@@ -255,7 +255,7 @@ jobs:
                         console.warn(`User ${reviewer} not found: ${userError.message}`);
                       }
                     }
-                    
+
                     if (validReviewers.length > 0) {
                       await github.rest.pulls.requestReviewers({
                         owner: context.repo.owner,

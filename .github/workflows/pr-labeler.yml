@@ -19,7 +19,7 @@
 # - Provides consistent categorization across all PRs
 # - Helps with project metrics and reporting
 
-name: Labeler
+name: PR Auto Label
 on: [pull_request_target]
 
 jobs:

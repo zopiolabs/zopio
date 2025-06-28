@@ -19,7 +19,7 @@
 # - Consistent test environment across all PRs
 # - Artifact preservation for debugging build issues
 
-name: Build
+name: Build Workflow
 
 on:
   pull_request:

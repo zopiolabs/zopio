@@ -19,7 +19,7 @@
 # - Reduces review cycles by catching issues automatically
 # - Ensures all tests pass before code reaches review
 
-name: PR Checks - Lint, Typecheck, Test, Format
+name: PR Code Quality
 
 on:
   pull_request:
@@ -30,7 +30,7 @@ jobs:
   # This consolidates linting, type checking, testing, and formatting
   # to provide comprehensive feedback on code quality issues
   code-quality:
-    name: Lint + Typecheck + Test + Format
+    name: PR Code Quality
     runs-on: ubuntu-latest
 
     steps:
