@@ -1,3 +1,15 @@
+# v0.9.12 (Sat Jun 28 2025)
+
+#### 🐛 Bug Fix
+
+- fix: cicd [#56](https://github.com/zopiolabs/zopio/pull/56) ([@mkzopio](https://github.com/mkzopio))
+
+#### Authors: 1
+
+- MK ([@mkzopio](https://github.com/mkzopio))
+
+---
+
 # v0.9.11 (Sat Jun 28 2025)
 
 #### ⚠️ Pushed to `main`
