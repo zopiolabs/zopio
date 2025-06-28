@@ -1,4 +1,4 @@
-# PR Code Quality Workflow
+# PR Static Checks Workflow
 #
 # Purpose: Enforces code quality standards by running linting, type checking, testing,
 #          and formatting checks on all pull requests to the main branch.
@@ -19,7 +19,7 @@
 # - Reduces review cycles by catching issues automatically
 # - Ensures all tests pass before code reaches review
 
-name: PR Code Quality
+name: PR Static Checks
 
 on:
   pull_request:
@@ -29,8 +29,8 @@ jobs:
   # Main job that runs all code quality checks in a single workflow
   # This consolidates linting, type checking, testing, and formatting
   # to provide comprehensive feedback on code quality issues
-  code-quality:
-    name: PR Code Quality
+  PR-Static-Checks:
+    name: PR Static Checks
     runs-on: ubuntu-latest
 
     steps:
