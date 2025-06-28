@@ -38,7 +38,7 @@ jobs:
 
     steps:
     # Use the official GitHub stale action to identify and mark stale items
-    - uses: actions/stale@v5
+    - uses: actions/stale@v9
       with:
         # Authentication token to access repository
         repo-token: ${{ secrets.GITHUB_TOKEN }}
