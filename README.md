@@ -2,12 +2,10 @@
 
 ## From idea to enterprise: Full-Stack business framework designed to build scalable apps
 
-<div>
-  [![npm downloads](https://img.shields.io/npm/dy/zopio)](https://www.npmjs.com/package/zopio)
-  [![npm version](https://img.shields.io/npm/v/zopio)](https://www.npmjs.com/package/zopio)
-  [![GitHub license](https://img.shields.io/github/license/zopiolabs/zopio)](https://github.com/zopiolabs/zopio/blob/main/LICENSE)
-  [![Tech Stack](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/zopiolabs/zopio)
-</div>
+[![npm downloads](https://img.shields.io/npm/dy/zopio)](https://www.npmjs.com/package/zopio)
+[![npm version](https://img.shields.io/npm/v/zopio)](https://www.npmjs.com/package/zopio)
+[![GitHub license](https://img.shields.io/github/license/zopiolabs/zopio)](https://github.com/zopiolabs/zopio/blob/main/LICENSE)
+[![Tech Stack](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/zopiolabs/zopio)
 
 ## Overview
 
