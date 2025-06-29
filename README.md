@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/npm/dy/zopio" alt="" />
   <img src="https://img.shields.io/npm/v/zopio" alt="" />
   <img src="https://img.shields.io/github/license/zopiolabs/zopio" alt="" />
+  <img src="https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat" alt="" />
 </div>
 
 ## Overview
