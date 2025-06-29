@@ -6,6 +6,9 @@
 [![npm version](https://img.shields.io/npm/v/zopio)](https://www.npmjs.com/package/zopio)
 [![GitHub license](https://img.shields.io/github/license/zopiolabs/zopio)](https://github.com/zopiolabs/zopio/blob/main/LICENSE)
 [![Tech Stack](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/zopiolabs/zopio)
+[![Security](https://github.com/zopiolabs/zopio/actions/workflows/security.yml/badge.svg)](https://github.com/zopiolabs/zopio/actions/workflows/security.yml)
+[![Build](https://github.com/zopiolabs/zopio/actions/workflows/build.yml/badge.svg)](https://github.com/zopiolabs/zopio/actions/workflows/build.yml)
+[![Release](https://github.com/zopiolabs/zopio/actions/workflows/release.yml/badge.svg)](https://github.com/zopiolabs/zopio/actions/workflows/release.yml)
 
 ## Overview
 
