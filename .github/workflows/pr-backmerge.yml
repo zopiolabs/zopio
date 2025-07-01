@@ -61,7 +61,7 @@ jobs:
 
       # Step 4: Create an automated pull request for the backmerge
       - name: Create Backmerge PR
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         if: steps.check_diff.outputs.has_diff == 'true'
         with:
           token: ${{ secrets.GH_PAT }}
