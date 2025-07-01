@@ -49,7 +49,7 @@ jobs:
       # Step 3: Install pnpm
       # This installs pnpm globally before we try to use it
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
           version: 8
           run_install: false
