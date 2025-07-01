@@ -147,7 +147,7 @@ jobs:
       # Trivy is a comprehensive vulnerability scanner that can detect issues in
       # npm packages, Docker images, and other dependency types
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.31.0
         with:
           scan-type: 'fs'                         # Filesystem scan (analyzes package.json, package-lock.json, etc.)
           scan-ref: '.'                           # Scan entire repository
@@ -222,7 +222,7 @@ jobs:
       # to identify security issues in the container image
       - name: Run Trivy container scan
         if: success()  # Only run if the Docker build succeeded
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.31.0
         with:
           image-ref: 'zopio:scan'          # Reference to the locally built image
           format: 'sarif'                  # GitHub-compatible format for security dashboard
