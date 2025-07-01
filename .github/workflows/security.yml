@@ -184,7 +184,7 @@ jobs:
       # TruffleHog uses pattern matching, entropy analysis, and regex rules to find
       # API keys, credentials, tokens, and other sensitive information
       - name: TruffleHog Secret Scan
-        uses: trufflesecurity/trufflehog@v3.63.7
+        uses: trufflesecurity/trufflehog@v3.89.2
         if: github.event_name == 'pull_request'
         with:
           path: ./                                             # Scan the entire repository content
