@@ -44,7 +44,7 @@
     "@commitlint/config-conventional": "^19.0.3",
     "@repo/typescript-config": "workspace:*",
     "@turbo/gen": "^2.5.3",
-    "@types/node": "^22.15.21",
+    "@types/node": "^24.0.10",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "mintlify": "^4.0.589",
