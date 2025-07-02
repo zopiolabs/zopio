@@ -315,4 +315,6 @@ The View Builder is fully integrated with the design system to ensure a consiste
 
 ## License
 
-MIT
+BUSL-1.1 - See the [LICENSE](../../LICENSE) file for details.
+
+This package is part of the core Zopio framework, which uses the Business Source License 1.1.

@@ -355,4 +355,6 @@ The view module is organized into the following components:
 
 ## License
 
-MIT
+BUSL-1.1 - See the [LICENSE](../../LICENSE) file for details.
+
+This package is part of the core Zopio framework, which uses the Business Source License 1.1.

@@ -1,20 +1,25 @@
 {
-  "name": "@repo/data-providers",
-  "version": "0.1.0",
-  "main": "./index.ts",
-  "type": "module",
-  "sideEffects": false,
-  "license": "MIT",
-  "description": "Unified data providers for Zopio framework",
-  "keywords": ["zopio", "data", "providers", "crud"],
-  "dependencies": {},
-  "peerDependencies": {
-    "@repo/data-base": "workspace:*",
-    "react": "^18.0.0"
-  },
-  "devDependencies": {
-    "@repo/data-base": "workspace:*",
-    "react": "^18.0.0",
-    "typescript": "^5.0.0"
-  }
+	"name": "@repo/data-providers",
+	"version": "0.1.0",
+	"main": "./index.ts",
+	"type": "module",
+	"sideEffects": false,
+	"license": "BUSL-1.1",
+	"description": "Unified data providers for Zopio framework",
+	"keywords": [
+		"zopio",
+		"data",
+		"providers",
+		"crud"
+	],
+	"dependencies": {},
+	"peerDependencies": {
+		"@repo/data-base": "workspace:*",
+		"react": "^18.0.0"
+	},
+	"devDependencies": {
+		"@repo/data-base": "workspace:*",
+		"react": "^18.0.0",
+		"typescript": "^5.0.0"
+	}
 }

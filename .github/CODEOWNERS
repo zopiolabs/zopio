@@ -44,7 +44,10 @@
 /README.md                       @zopiolabs/docs-team @zopiolabs/core-team
 /CHANGELOG.md                    @zopiolabs/docs-team @zopiolabs/core-team
 /CONTRIBUTING.md                 @zopiolabs/docs-team @zopiolabs/core-team
-/LICENSE.md                      @zopiolabs/docs-team @zopiolabs/core-team
+/LICENSE                         @zopiolabs/docs-team @zopiolabs/core-team
+/CLA.md                          @zopiolabs/docs-team @zopiolabs/core-team
+/COPYRIGHT                       @zopiolabs/docs-team @zopiolabs/core-team
+/NOTICE                          @zopiolabs/docs-team @zopiolabs/core-team
 
 # ──────────────────────────────────────────────────────────
 # 🧩 Product Team (App, Analytics, Payments, Business Flows)
@@ -81,7 +84,7 @@
 /biome.json                      @zopiolabs/infra-team @zopiolabs/core-team
 /CHANGELOG.md                    @zopiolabs/infra-team @zopiolabs/core-team
 /commitlint.config.js            @zopiolabs/infra-team @zopiolabs/core-team
-/LICENSE.md                      @zopiolabs/infra-team @zopiolabs/core-team
+/LICENSE                         @zopiolabs/infra-team @zopiolabs/core-team
 /package.json                    @zopiolabs/infra-team @zopiolabs/core-team
 /pnpm-lock.yaml                  @zopiolabs/infra-team @zopiolabs/core-team
 /pnpm-workspace.yaml             @zopiolabs/infra-team @zopiolabs/core-team

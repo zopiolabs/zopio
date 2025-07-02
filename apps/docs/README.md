@@ -121,4 +121,6 @@ We welcome contributions to improve the documentation. Please follow these steps
 
 ## License
 
-MIT
+BUSL-1.1 - See the [LICENSE](../../LICENSE) file for details.
+
+This documentation is part of the Zopio framework core, which uses the Business Source License 1.1.

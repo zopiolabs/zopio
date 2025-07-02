@@ -88,4 +88,6 @@ This project uses the Zopio coding standards and linting rules. Please ensure yo
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+The Zopio Marketplace application is part of the core Zopio framework and is licensed under the Business Source License 1.1 (BUSL-1.1) - see the [LICENSE](../../LICENSE) file for details.
+
+However, **marketplace plugins** are individually licensed under the MIT License - see the [marketplace LICENSE](../../marketplace/LICENSE) file for plugin licensing details.

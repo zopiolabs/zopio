@@ -40,4 +40,13 @@ We’re building Zopio together with developers like you.
 - ⭐️ Star us on GitHub to show your support
 - 💬 [Join the discussion](https://github.com/zopiolabs/zopio/discussions)
 
-Let’s shape the future of business frameworks, together!
+## 📄 License
+
+Zopio uses a dual licensing structure:
+
+- **Core Framework**: [Business Source License 1.1 (BSL)](./LICENSE) - Source available with production use restrictions for 3 years, then automatically converts to Apache 2.0
+- **Marketplace Plugins**: [MIT License](./marketplace/LICENSE) - Open source for community contributions
+
+For more details about contributing, please see our [Contributor License Agreement](./CLA.md).
+
+Let's shape the future of business frameworks, together!

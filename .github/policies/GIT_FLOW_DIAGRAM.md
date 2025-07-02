@@ -1181,7 +1181,7 @@ External links provided:
 ### 2️⃣ Private Email
 
 ```text
-Email: security@zopio.dev
+Email: security@zopio.com
 PGP: Available for encryption
 Response: Within 48 hours
 ```

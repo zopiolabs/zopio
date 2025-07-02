@@ -1,0 +1,39 @@
+Business Source License 1.1
+
+License: Business Source License 1.1
+Licensor: Zopio Inc.
+Licensed Work: Zopio software framework and associated source code (excluding modules separately licensed under MIT in the `marketplace` directory). The Licensed Work is © 2025 Zopio Inc.
+Additional Use Grant: None. (No additional use grants beyond the license terms.)
+Change Date: Three (3) years from the date of first public release of this version of the Licensed Work (the third anniversary of the version's release).
+Change License: Apache License, Version 2.0.
+
+Effective on the Change Date, the Licensor hereby grants you rights under the terms of the Change License (Apache 2.0), and the rights granted under this Business Source License for the Licensed Work terminate. Before that date, all use of the Licensed Work is governed by the terms herein.
+
+Terms:
+The Licensor grants you the right to copy, modify, create derivative works, redistribute, and make non-production use of the Licensed Work. Any production use (which includes, but is not limited to, deploying the Licensed Work in a commercial offering or SaaS, or distributing it as part of any product or service for monetary gain) requires a commercial license from the Licensor (Zopio) or an authorized reseller. If your use of the Licensed Work does not comply with this requirement, you must purchase a commercial license or else refrain from such use.
+
+Except for the above limitation on production use, you may use the Licensed Work freely for development, testing, trials, proofs of concept, and other non-revenue-generating purposes. You may also modify the source code and distribute non-production modifications under this same license. All copies of original or modified versions of the Licensed Work, and any derivative works, must include a copy of this License and retain the same licensing restrictions. You must conspicuously display this License notice on each copy of the Licensed Work. If you receive the Licensed Work from someone else, the terms of this License apply to your use.
+
+Any use of the Licensed Work in violation of these terms will automatically terminate your rights under this License (for this and all other versions of the Licensed Work).
+
+This License does not grant you any rights to any trademark or logo of the Licensor (Zopio Inc.) or its affiliates, except as necessary to comply with the requirement to display this license.
+
+Disclaimer of Warranty: THE LICENSED WORK IS PROVIDED "AS IS", AND TO THE EXTENT PERMITTED BY APPLICABLE LAW, NO WARRANTIES OF ANY KIND (EXPRESS OR IMPLIED) ARE PROVIDED, INCLUDING ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR TITLE. You assume all risks associated with the use of the Licensed Work.
+
+Limitation of Liability: To the extent permitted by law, in no event will the Licensor or any contributors be liable for any indirect, special, incidental, or consequential damages arising out of or related to the use of the Licensed Work, even if advised of the possibility of such damage. The total cumulative liability of the Licensor for any claims under or relating to this License or the Licensed Work will not exceed the fees (if any) paid by you to the Licensor for the Licensed Work or for this License.
+
+Governing Law and Jurisdiction: This License shall be governed by the laws of the State of Florida in the United States, and by any applicable laws of the jurisdictions in which Zopio Inc. operates. Exclusive jurisdiction for any dispute arising out of or in connection with this License shall lie with the competent courts designated by Zopio Inc. (including, without limitation, the state and federal courts of Florida, USA), unless otherwise required by applicable law. You agree to submit to such jurisdiction for the purpose of resolving any such disputes.
+
+Note: This software may be available under a separate commercial license from Zopio Inc. for users who wish to engage in production use, SaaS offerings, or other activities not permitted under this BSL. Please contact Zopio Inc. (at the address below or via our official website) if you need to obtain a commercial license or have any questions about acceptable use.
+
+Change License Details: On the Change Date, the Licensed Work will become available under the terms of the Apache License, Version 2.0 (the "Change License"). A copy of the Apache 2.0 license will be provided in the repository for reference once the change occurs. After the Change Date, anyone may use, modify, and distribute the version of the Licensed Work released under BSL (as of that Change Date) under Apache 2.0 terms, without needing further permission or paying fees to the Licensor. (Note: Versions of the software released after the Change Date may still be subject to BSL until their own Change Date is reached, if they are released under BSL as well.)
+
+Termination: If you violate the terms of this License before the Change Date (for example, by using the software in unauthorized production), your rights under this License terminate immediately. However, your obligations (and the protections for the Licensor) survive termination. Provisions such as the disclaimer of warranty, limitation of liability, and governing law/jurisdiction remain in effect.
+
+Miscellaneous: This License is not an Open Source license (as it imposes limited use restrictions before the Change Date), but the intent is to contribute the Licensed Work to the open-source community under Apache 2.0 in the future. Where the Licensor's grant of rights under the Change License is incompatible with any portion of this License, that portion of this License shall be considered waived or adjusted only to the limited extent necessary to allow the Change License grant to take effect on the Change Date.
+
+Copyright 2025 Zopio Inc. All rights reserved.
+For more information, contact:
+Zopio Inc.
+7901 4th St N #214643,
+St. Petersburg, FL 33702, United States.

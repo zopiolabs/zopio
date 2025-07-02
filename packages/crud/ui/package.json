@@ -1,11 +1,11 @@
 {
-  "name": "@repo/crud-ui",
-  "version": "0.1.0",
-  "main": "index.ts",
-  "type": "module",
-  "license": "MIT",
-  "private": true,
-  "peerDependencies": {
-    "@repo/crud-engine": "workspace:*"
-  }
+	"name": "@repo/crud-ui",
+	"version": "0.1.0",
+	"main": "index.ts",
+	"type": "module",
+	"license": "BUSL-1.1",
+	"private": true,
+	"peerDependencies": {
+		"@repo/crud-engine": "workspace:*"
+	}
 }

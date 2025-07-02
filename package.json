@@ -1,66 +1,72 @@
 {
-  "name": "zopio",
-  "version": "0.9.39",
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "marketplace/*",
-    "marketplace/developer-plugins/*",
-    "marketplace/business-plugins/*",
-    "marketplace/fintech-plugins/*",
-    "marketplace/insurtech-plugins/*",
-    "marketplace/embedded-apps/*",
-    "marketplace/integrations/*"
-  ],
-  "bin": {
-    "zopio": "dist/index.js"
-  },
-  "files": [
-    "dist/index.js"
-  ],
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "ultracite lint",
-    "format": "ultracite format",
-    "test": "turbo test",
-    "test:watch": "turbo test --watch",
-    "typecheck": "tsc --noEmit",
-    "analyze": "turbo analyze",
-    "translate": "turbo translate",
-    "boundaries": "turbo boundaries",
-    "bump-deps": "npx npm-check-updates --deep -u -x react-day-picker",
-    "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
-    "migrate": "cd packages/database && npx prisma format && npx prisma generate && npx prisma db push",
-    "clean": "git clean -xdf node_modules",
-    "prepare": "husky",
-    "lint-staged": "lint-staged"
-  },
-  "devDependencies": {
-    "@auto-it/first-time-contributor": "^11.3.0",
-    "@biomejs/biome": "1.9.4",
-    "@commitlint/cli": "^19.0.3",
-    "@commitlint/config-conventional": "^19.0.3",
-    "@repo/typescript-config": "workspace:*",
-    "@turbo/gen": "^2.5.3",
-    "@types/node": "^22.15.21",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "mintlify": "^4.0.589",
-    "tsup": "^8.5.0",
-    "turbo": "^2.5.3",
-    "typescript": "^5.8.3",
-    "ultracite": "^4.2.5",
-    "vitest": "^3.1.4"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "pnpm@10.11.0",
-  "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "commander": "^14.0.0"
-  },
-  "type": "module"
+	"name": "zopio",
+	"version": "0.9.39",
+	"private": true,
+	"license": "BUSL-1.1",
+	"homepage": "https://zopio.dev",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zopiolabs/zopio.git"
+	},
+	"workspaces": [
+		"apps/*",
+		"packages/*",
+		"marketplace/*",
+		"marketplace/developer-plugins/*",
+		"marketplace/business-plugins/*",
+		"marketplace/fintech-plugins/*",
+		"marketplace/insurtech-plugins/*",
+		"marketplace/embedded-apps/*",
+		"marketplace/integrations/*"
+	],
+	"bin": {
+		"zopio": "dist/index.js"
+	},
+	"files": [
+		"dist/index.js"
+	],
+	"scripts": {
+		"build": "turbo build",
+		"dev": "turbo dev",
+		"lint": "ultracite lint",
+		"format": "ultracite format",
+		"test": "turbo test",
+		"test:watch": "turbo test --watch",
+		"typecheck": "tsc --noEmit",
+		"analyze": "turbo analyze",
+		"translate": "turbo translate",
+		"boundaries": "turbo boundaries",
+		"bump-deps": "npx npm-check-updates --deep -u -x react-day-picker",
+		"bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
+		"migrate": "cd packages/database && npx prisma format && npx prisma generate && npx prisma db push",
+		"clean": "git clean -xdf node_modules",
+		"prepare": "husky",
+		"lint-staged": "lint-staged"
+	},
+	"devDependencies": {
+		"@auto-it/first-time-contributor": "^11.3.0",
+		"@biomejs/biome": "1.9.4",
+		"@commitlint/cli": "^19.0.3",
+		"@commitlint/config-conventional": "^19.0.3",
+		"@repo/typescript-config": "workspace:*",
+		"@turbo/gen": "^2.5.3",
+		"@types/node": "^22.15.21",
+		"husky": "^9.0.11",
+		"lint-staged": "^15.2.2",
+		"mintlify": "^4.0.589",
+		"tsup": "^8.5.0",
+		"turbo": "^2.5.3",
+		"typescript": "^5.8.3",
+		"ultracite": "^4.2.5",
+		"vitest": "^3.1.4"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"packageManager": "pnpm@10.11.0",
+	"dependencies": {
+		"@clack/prompts": "^0.11.0",
+		"commander": "^14.0.0"
+	},
+	"type": "module"
 }

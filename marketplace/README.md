@@ -115,4 +115,9 @@ When contributing to the marketplace:
 
 ## License Information
 
-All marketplace plugins are subject to the same license as the main Zopio repository unless otherwise specified in the plugin's package.json file.
+**Marketplace plugins use a different license than the core Zopio framework:**
+
+- **Marketplace Plugins**: [MIT License](./LICENSE) - All plugins in this marketplace are open source under MIT
+- **Core Zopio Framework**: [Business Source License 1.1 (BSL)](../LICENSE) - The main framework uses BSL
+
+This dual licensing structure allows the community to freely create, modify, and distribute plugins while the core framework maintains business source licensing. Contributors to marketplace plugins must agree to the [Contributor License Agreement](../CLA.md).
