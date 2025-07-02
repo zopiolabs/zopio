@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@repo/auth": "workspace:*",
-    "next": "^15.3.2",
+    "next": "^15.3.3",
     "swr": "^2.2.5",
     "react": "^19.1.0"
   },
