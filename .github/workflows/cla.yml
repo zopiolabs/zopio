@@ -1,0 +1,64 @@
+name: "CLA Assistant"
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  cla:
+    runs-on: ubuntu-latest
+    if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
+    steps:
+      - name: "CLA Assistant"
+        uses: contributor-assistant/github-action@v2.6.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Store signatures in a remote repository for persistence
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_ASSISTANT_PAT }}
+        with:
+          # Remote repository to store signatures (optional)
+          # remote-organization-name: 'zopiolabs'
+          # remote-repository-name: 'cla-signatures'
+          
+          # Path to the CLA document
+          path-to-signatures: '.github/contributors.json'
+          path-to-document: 'https://github.com/zopiolabs/zopio/blob/main/CLA.md'
+          
+          # Branch to store signatures
+          branch: 'cla-signatures'
+          
+          # Allowlist for bots
+          allow-list: 'dependabot[bot],renovate[bot],github-actions[bot],allcontributors[bot],*@zopio.com'
+          
+          # Custom messages
+          custom-notsigned-prcomment: |
+            Thank you for your contribution! 🎉
+            
+            Before we can merge your pull request, you need to sign our Contributor License Agreement (CLA). This is a one-time process that protects both you and the project.
+            
+            **For individual contributors:** 
+            Please read the CLA document and comment below with:
+            ```
+            I have read the CLA Document and I hereby sign the CLA
+            ```
+            
+            **For corporate contributors:** 
+            Your organization needs to sign our Corporate CLA. Please have your authorized representative email the signed agreement to legal@zopio.com.
+            
+            You can read the full CLA here: https://github.com/zopiolabs/zopio/blob/main/CLA.md
+            
+            Once you've signed, this PR will automatically update. Thank you for your understanding!
+            
+          custom-pr-sign-comment: |
+            I have read the CLA Document and I hereby sign the CLA
+            
+          custom-allsigned-prcomment: |
+            ✅ All contributors have signed the CLA. Thank you for contributing to Zopio!

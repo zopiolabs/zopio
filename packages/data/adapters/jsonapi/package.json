@@ -1,5 +1,6 @@
 {
   "name": "@repo/adapters-jsonapi",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "description": "JSON:API adapter for Zopio framework",

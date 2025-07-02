@@ -1,0 +1,13 @@
+{
+  "description": "List of contributors who have signed the CLA",
+  "updated": "2025-01-02",
+  "individuals": [],
+  "corporate": {
+    "Zopio Inc.": {
+      "signed": "2025-01-01",
+      "employees": [
+        "*@zopio.com"
+      ]
+    }
+  }
+}

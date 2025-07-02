@@ -1,11 +1,19 @@
 {
   "name": "@repo/data-providers-n8n",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "n8n data provider for Zopio framework",
-  "keywords": ["zopio", "data", "providers", "crud", "n8n", "workflow"],
+  "keywords": [
+    "zopio",
+    "data",
+    "providers",
+    "crud",
+    "n8n",
+    "workflow"
+  ],
   "dependencies": {},
   "peerDependencies": {
     "@repo/data-base": "workspace:*"

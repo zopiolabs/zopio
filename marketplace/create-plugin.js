@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 
 /**
+ * Copyright (c) 2025 Zopio Inc.
+ * 
+ * This Zopio marketplace plugin is licensed under the MIT License.
+ * See marketplace/LICENSE file for full license details.
+ */
+
+/**
  * Script to create a new plugin in the marketplace
  * Usage: node create-plugin.js <category> <plugin-name> [description]
  */

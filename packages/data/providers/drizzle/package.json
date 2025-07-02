@@ -1,14 +1,13 @@
 {
   "name": "@repo/data-providers-drizzle",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "Drizzle ORM data provider for Zopio framework",
-
   "dependencies": {},
-
   "peerDependencies": {
     "@repo/data-base": "workspace:*",
     "drizzle-orm": "^0.29.3"

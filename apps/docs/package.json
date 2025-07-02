@@ -1,6 +1,7 @@
 {
   "name": "docs",
   "private": true,
+  "license": "BUSL-1.1",
   "scripts": {
     "dev": "mintlify dev --port 3004",
     "lint": "mintlify broken-links"

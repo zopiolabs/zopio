@@ -41,7 +41,9 @@
 		"migrate": "cd packages/database && npx prisma format && npx prisma generate && npx prisma db push",
 		"clean": "git clean -xdf node_modules",
 		"prepare": "husky",
-		"lint-staged": "lint-staged"
+		"lint-staged": "lint-staged",
+		"generate:third-party-notices": "node scripts/generate-third-party-notices.js",
+		"add-license-headers": "bash scripts/add-license-headers.sh"
 	},
 	"devDependencies": {
 		"@auto-it/first-time-contributor": "^11.3.0",

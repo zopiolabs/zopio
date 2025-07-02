@@ -1,12 +1,20 @@
 {
   "name": "@repo/data-providers-formbricks",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "Formbricks data provider for Zopio framework",
-  "keywords": ["zopio", "data", "providers", "crud", "formbricks", "forms"],
+  "keywords": [
+    "zopio",
+    "data",
+    "providers",
+    "crud",
+    "formbricks",
+    "forms"
+  ],
   "dependencies": {},
   "peerDependencies": {
     "@repo/data-base": "workspace:*"

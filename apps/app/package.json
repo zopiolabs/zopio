@@ -1,6 +1,7 @@
 {
   "name": "app",
   "private": true,
+  "license": "BUSL-1.1",
   "scripts": {
     "dev": "next dev -p 3000 --turbopack",
     "build": "next build",

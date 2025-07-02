@@ -1,14 +1,13 @@
 {
   "name": "@repo/data-providers-fastapi",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "FastAPI data provider for Zopio framework",
-
   "dependencies": {},
-
   "peerDependencies": {
     "@repo/data-base": "workspace:*"
   },

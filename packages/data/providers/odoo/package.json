@@ -1,12 +1,20 @@
 {
   "name": "@repo/data-providers-odoo",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "Odoo data provider for Zopio framework",
-  "keywords": ["zopio", "data", "providers", "crud", "odoo", "erp"],
+  "keywords": [
+    "zopio",
+    "data",
+    "providers",
+    "crud",
+    "odoo",
+    "erp"
+  ],
   "dependencies": {
     "@repo/adapters": "workspace:*"
   },

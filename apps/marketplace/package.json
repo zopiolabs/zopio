@@ -1,6 +1,7 @@
 {
   "name": "marketplace",
   "private": true,
+  "license": "BUSL-1.1",
   "scripts": {
     "dev": "next dev -p 3006 --turbopack",
     "build": "next build",

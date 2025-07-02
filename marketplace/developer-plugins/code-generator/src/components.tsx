@@ -1,4 +1,10 @@
 /**
+ * Copyright (c) 2025 Zopio Inc.
+ * 
+ * This Zopio marketplace plugin is licensed under the MIT License.
+ * See marketplace/LICENSE file for full license details.
+ */
+/**
  * React components for the code generator UI
  */
 // biome-ignore lint: React is used for JSX and event types

@@ -1,12 +1,20 @@
 {
   "name": "@repo/data-providers-xata",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "Xata data provider for Zopio framework",
-  "keywords": ["zopio", "data", "providers", "crud", "xata", "database"],
+  "keywords": [
+    "zopio",
+    "data",
+    "providers",
+    "crud",
+    "xata",
+    "database"
+  ],
   "dependencies": {},
   "peerDependencies": {
     "@repo/data-base": "workspace:*",

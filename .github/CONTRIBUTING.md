@@ -8,11 +8,11 @@ Thank you for your interest in contributing to Zopio! We welcome contributions f
 
 ### For Individual Contributors
 - When you submit your first pull request, a CLA bot will prompt you to sign the Individual CLA electronically
-- You can also preview the [CLA document](../CLA.md) beforehand
+- You can also preview the [CLA document](/CLA.md) beforehand
 - Once signed, all future contributions are covered
 
 ### For Corporate Contributors
-- Your company must sign the [Corporate CLA](../CLA.md#corporate-contributor-license-agreement-ccla)
+- Your company must sign the [Corporate CLA](/CLA.md#corporate-contributor-license-agreement-ccla)
 - Email the signed agreement to [legal@zopio.com](mailto:legal@zopio.com)
 - Include a list of designated contributors from your organization
 

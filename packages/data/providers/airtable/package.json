@@ -1,12 +1,19 @@
 {
   "name": "@repo/data-providers-airtable",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "Airtable data provider for Zopio framework",
-  "keywords": ["zopio", "data", "providers", "crud", "airtable"],
+  "keywords": [
+    "zopio",
+    "data",
+    "providers",
+    "crud",
+    "airtable"
+  ],
   "dependencies": {},
   "peerDependencies": {
     "@repo/data-base": "workspace:*"

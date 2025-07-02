@@ -2,6 +2,7 @@
   "name": "@repo/typescript-config",
   "version": "0.0.0",
   "private": true,
+  "license": "BUSL-1.1",
   "exports": {
     "./base.json": "./base.json",
     "./nextjs.json": "./nextjs.json",

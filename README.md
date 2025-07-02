@@ -44,9 +44,19 @@ We’re building Zopio together with developers like you.
 
 Zopio uses a dual licensing structure:
 
-- **Core Framework**: [Business Source License 1.1 (BSL)](./LICENSE) - Source available with production use restrictions for 3 years, then automatically converts to Apache 2.0
-- **Marketplace Plugins**: [MIT License](./marketplace/LICENSE) - Open source for community contributions
+- **Core Framework**: [Business Source License 1.1 (BSL)](./LICENSE) 
+  - ✅ Free for development, testing, trials, and POCs
+  - ⚠️ Production use requires a commercial license
+  - 🔄 Automatically converts to Apache 2.0 after 3 years from each version's release
+  - 📧 For commercial licensing: legal@zopio.com
 
-For more details about contributing, please see our [Contributor License Agreement](./CLA.md).
+- **Marketplace Plugins**: [MIT License](./marketplace/LICENSE) 
+  - ✅ Fully open source from day one
+  - ✅ No restrictions on commercial use
+  - ✅ Perfect for community contributions
+
+### Contributing
+
+All contributors must sign our [Contributor License Agreement (CLA)](./CLA.md) before we can accept contributions. This is a one-time process that protects both you and the project.
 
 Let's shape the future of business frameworks, together!

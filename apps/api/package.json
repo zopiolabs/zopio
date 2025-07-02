@@ -1,6 +1,7 @@
 {
   "name": "api",
   "private": true,
+  "license": "BUSL-1.1",
   "scripts": {
     "dev": "concurrently \"npm:next\" \"npm:stripe\"",
     "next": "next dev -p 3002 --turbopack",

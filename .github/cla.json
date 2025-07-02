@@ -1,0 +1,22 @@
+{
+  "contributors": "https://api.github.com/repos/zopiolabs/zopio/contents/.github/contributors.json",
+  "cla": {
+    "version": "1.0",
+    "signees": [],
+    "urls": {
+      "individual": "https://github.com/zopiolabs/zopio/blob/main/CLA.md#individual-contributor-license-agreement-icla",
+      "corporate": "https://github.com/zopiolabs/zopio/blob/main/CLA.md#corporate-contributor-license-agreement-ccla"
+    }
+  },
+  "allowlist": [
+    "dependabot[bot]",
+    "renovate[bot]",
+    "github-actions[bot]",
+    "allcontributors[bot]"
+  ],
+  "messages": {
+    "unsigned": "Thank you for your contribution! 🎉\n\nBefore we can merge your pull request, you need to sign our Contributor License Agreement (CLA). This is a one-time process that protects both you and the project.\n\n**For individual contributors:** Please visit the link below to sign the CLA electronically.\n\n**For corporate contributors:** Your organization needs to sign our Corporate CLA. Please have your authorized representative email the signed agreement to legal@zopio.com.\n\n[Sign the CLA]({{cla-url}})\n\nOnce you've signed, this PR will automatically update. Thank you for your understanding!",
+    "signed": "✅ CLA signature verified. Thank you for contributing to Zopio!",
+    "external": "This pull request is from an external contributor and requires CLA verification."
+  }
+}

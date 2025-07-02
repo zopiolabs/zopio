@@ -1,12 +1,20 @@
 {
   "name": "@repo/data-providers-killbill",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "KillBill data provider for Zopio framework",
-  "keywords": ["zopio", "data", "providers", "crud", "killbill", "billing"],
+  "keywords": [
+    "zopio",
+    "data",
+    "providers",
+    "crud",
+    "killbill",
+    "billing"
+  ],
   "dependencies": {},
   "peerDependencies": {
     "@repo/data-base": "workspace:*"

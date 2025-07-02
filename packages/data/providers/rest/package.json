@@ -1,14 +1,13 @@
 {
   "name": "@repo/data-providers-rest",
+  "license": "BUSL-1.1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./index.ts",
   "description": "REST API data provider for Zopio framework",
-
   "dependencies": {},
-
   "peerDependencies": {
     "@repo/data-base": "workspace:*"
   },
