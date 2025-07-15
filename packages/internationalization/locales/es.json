@@ -1,0 +1,4 @@
+{
+  "greeting": "Hola",
+  "today": "Hoy es {date}"
+}

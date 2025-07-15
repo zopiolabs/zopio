@@ -1,0 +1,182 @@
+{
+  "web": {
+    "global": {
+      "primaryCta": "Görüşme Ayarla",
+      "secondaryCta": "Kaydol"
+    },
+    "header": {
+      "home": "Ana Sayfa",
+      "product": {
+        "title": "Ürün",
+        "description": "Günümüzde küçük bir işletmeyi yönetmek zaten zor.",
+        "pricing": "Fiyatlandırma"
+      },
+      "blog": "Blog",
+      "docs": "Dökümanlar",
+      "contact": "İletişim",
+      "signIn": "Giriş Yap",
+      "signUp": "Başla"
+    },
+    "home": {
+      "meta": {
+        "title": "İşletme Operasyonlarınızı Bugün Dönüştürün",
+        "description": "Günümüzün hızlı tempolu dünyasında, işletmeniz eskimiş ticaret sistemlerinden daha iyisini hak ediyor. Yenilikçi platformumuz operasyonları kolaylaştırır, karmaşıklığı azaltır ve küçük işletmelerin modern ekonomide gelişmesine yardımcı olur."
+      },
+      "hero": {
+        "announcement": "En son makalemizi okuyun"
+      },
+      "cases": {
+        "title": "Dünya Genelinde Başarı Hikayeleri"
+      },
+      "features": {
+        "title": "İşletmenizi Dönüştüren Güçlü Özellikler",
+        "description": "Modern işletmeler için tasarlanmış kapsamlı çözümler. Platformumuz, iş akışlarınızı kolaylaştırmak, verimliliği artırmak ve büyümeyi hızlandırmak için ihtiyacınız olan tüm araçları sunar.",
+        "items": [
+          {
+            "title": "Akıllı Otomasyon",
+            "description": "Manuel görevleri otomatikleştirin ve çalışanlarınızın zamanını daha stratejik girişimlere odaklanmaları için serbest bırakın."
+          },
+          {
+            "title": "Gerçek Zamanlı Analitik",
+            "description": "İşletmenizin performansını anında görün ve veri odaklı kararlar verin."
+          },
+          {
+            "title": "Güvenli İşlemler",
+            "description": "Tüm işlemlerin güvenli ve korumalı olduğundan emin olun."
+          },
+          {
+            "title": "Entegre Çözümler",
+            "description": "Mevcut iş sistemlerinizle sorunsuz entegrasyon sağlayarak veri siloları olmadan çalışın."
+          }
+        ]
+      },
+      "stats": {
+        "title": "Gerçek Sonuçlar, Gerçek Etki",
+        "description": "Platformumuzla operasyonlarını dönüştüren binlerce işletmeye katılın. Çözümlerimiz, şirketlerin idari yükünü %60 azaltmasına ve ticaret verimliliğini ortalama %45 artırmasına yardımcı oldu.",
+        "items": [
+          {
+            "title": "Aylık aktif kullanıcılar",
+            "metric": "100000",
+            "delta": "10",
+            "type": "unit"
+          },
+          {
+            "title": "Günlük aktif kullanıcılar",
+            "metric": "10000",
+            "delta": "-5",
+            "type": "unit"
+          },
+          {
+            "title": "Aylık tekrarlayan gelir",
+            "metric": "100000",
+            "delta": "20",
+            "type": "currency"
+          },
+          {
+            "title": "Müşteri edinme maliyeti",
+            "metric": "100",
+            "delta": "-10",
+            "type": "currency"
+          }
+        ]
+      },
+      "testimonials": {
+        "title": "Müşterilerimizin Söyledikleri",
+        "description": "Platformumuzun işletmelerin günlük operasyonlarını nasıl dönüştürdüğünü öğrenin.",
+        "items": [
+          {
+            "quote": "Bu platform, işletmemizin verimliliğini %30'dan fazla artırdı ve bize rekabet avantajı sağladı.",
+            "author": "Ayşe Yılmaz",
+            "role": "CEO, XYZ Şirketi"
+          },
+          {
+            "quote": "Kullanımı kolay arayüz ve güçlü özellikler, günlük operasyonlarımızı yönetmeyi çok daha kolay hale getirdi.",
+            "author": "Mehmet Kaya",
+            "role": "Operasyon Müdürü, ABC Ltd."
+          }
+        ]
+      },
+      "cta": {
+        "title": "İşletmenizi Bugün Dönüştürmeye Hazır mısınız?",
+        "description": "Platformumuzla işletmenizi nasıl büyütebileceğinizi keşfedin.",
+        "primaryCta": "Ücretsiz Demo İsteyin",
+        "secondaryCta": "Daha Fazla Bilgi Edinin"
+      },
+      "faq": {
+        "title": "Yaygın Sorular, Uzman Cevapları",
+        "description": "Platformumuz hakkındaki en acil sorularınıza hızlı cevaplar alın. İşletme operasyonlarınızı dönüştürme ve modern ticaret çözümleriyle başlama konusunda bilmeniz gereken her şeyi derledik.",
+        "cta": "Sorularınız mı var? Bize ulaşın",
+        "items": [
+          {
+            "question": "Platformunuz hangi işletme türleri için uygundur?",
+            "answer": "Platformumuz, perakende, e-ticaret, hizmet ve üretim dahil olmak üzere çeşitli sektörlerdeki küçük ve orta ölçekli işletmeler için tasarlanmıştır."
+          },
+          {
+            "question": "Platformunuzu kullanmak için teknik bilgi gerekiyor mu?",
+            "answer": "Hayır, platformumuz kullanıcı dostu bir arayüze sahiptir ve teknik bilgi gerektirmez. Ayrıca, başlamanıza yardımcı olmak için kapsamlı eğitim ve destek sağlıyoruz."
+          },
+          {
+            "question": "Platformunuzu mevcut sistemlerimizle entegre edebilir miyiz?",
+            "answer": "Evet, platformumuz çeşitli iş sistemleriyle sorunsuz entegrasyon için tasarlanmıştır. Özel entegrasyon ihtiyaçlarınız için destek ekibimizle iletişime geçebilirsiniz."
+          }
+        ]
+      }
+    },
+    "blog": {
+      "meta": {
+        "title": "Blog",
+        "description": "Düşünceler, fikirler ve görüşler."
+      },
+      "title": "Blog",
+      "description": "İş dünyası, teknoloji ve daha fazlası hakkında en son düşüncelerimiz.",
+      "readMore": "Devamını Oku",
+      "viewAll": "Tüm Yazıları Görüntüle",
+      "categories": {
+        "all": "Tümü",
+        "business": "İş",
+        "technology": "Teknoloji",
+        "design": "Tasarım",
+        "marketing": "Pazarlama"
+      },
+      "featured": "Öne Çıkan",
+      "latest": "En Son",
+      "popular": "Popüler",
+      "relatedPosts": "İlgili Yazılar",
+      "publishedOn": "{date} tarihinde yayınlandı",
+      "minuteRead": "{minutes} dakikalık okuma",
+      "author": "Yazar",
+      "share": "Paylaş",
+      "tags": "Etiketler"
+    },
+    "contact": {
+      "meta": {
+        "title": "İşletmeniz Hakkında Konuşalım",
+        "description": "Operasyonlarınızı kolaylaştırmak ve işletmenizin büyümesini sağlamak için ekibimizle bir danışma toplantısı planlayın."
+      },
+      "hero": {
+        "benefits": [
+          {
+            "title": "Kişiselleştirilmiş Danışmanlık",
+            "description": "İşletmenizin ihtiyaçlarına özel çözümler ve uzman tavsiyeleri alın."
+          },
+          {
+            "title": "Sorunsuz Entegrasyon",
+            "description": "Mevcut sistemlerinizle sorunsuz entegrasyon sağlayarak, geçişi kolaylaştırır ve kesintileri en aza indiririz."
+          },
+          {
+            "title": "Uzman Rehberliği",
+            "description": "Uzman ekibimiz, platformumuzdan en iyi şekilde yararlanmanızı sağlamak için süreç boyunca size rehberlik edecektir."
+          }
+        ],
+        "form": {
+          "title": "Toplantı ayarla",
+          "date": "Tarih",
+          "firstName": "Ad",
+          "lastName": "Soyad",
+          "resume": "Özgeçmiş yükle",
+          "cta": "Toplantıyı ayarla"
+        }
+      }
+    }
+  }
+}
