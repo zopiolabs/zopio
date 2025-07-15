@@ -1,0 +1,139 @@
+# Coding Standards for AI IDE
+
+[framework]
+react_version = "19.1.0"
+react_dom_version = "19.1.0"
+react_types_version = "19.1.8"
+react_dom_types_version = "19.1.6"
+node_types_version = "24.0.13"
+nextjs_version = "15.3.3"
+nextjs_router = "app"
+nextjs_router_version = "15.3.3"
+
+[test_framework]
+test_framework = "vitest"
+test_framework_version = "3.1.4"
+
+[state]
+state_management = "react-context"
+state_extensions = ["zustand"]
+
+[typescript]
+typescript_version = "5.8.3"
+typescript_target = "ES2022"
+typescript_module = "NodeNext"
+typescript_import_type_keyword = true
+typescript_config = "@repo/typescript-config/nextjs.json"
+strict_mode = true
+null_checks = true
+
+[design]
+components = "shadcn-ui"
+component_files = "PascalCase"
+icons = "lucide"
+design_system_ui_folder = "packages/design-system/ui"
+design_system_blocks_folder = "packages/design-system/blocks"
+storybook_stories_folder = "devapps/storybook/stories"
+
+[style]
+tailwindcss_version = "4.1.7"
+tailwindcss/postcss_version = "4.1.7"
+tailwindcss/typography_version = "0.5.16"
+alphabetize_css = true
+style = "airbnb"
+
+[data]
+data_fetching = "tanstack-query"
+database = "prisma"
+prisma_version = "6.4.1"
+prisma_client_version = "6.4.1"
+prisma_client_generator = "prisma-client"
+prisma_client_generator_version = "6.4.1"
+prisma_client_generator_output = "prisma-client"
+prisma_client_generator_output_version = "6.4.1"
+prisma_client_generator_output_path = "prisma-client"
+prisma_client_generator_output_path_version = "6.4.1"
+
+[internationalization]
+internationalization = "next-intl"
+translations = "languine"
+
+[form]
+form_handling = "react-hook-form"
+react_hook_form_version = "7.56.4"
+react_hook_form_resolvers_version = "5.0.1"
+validation = "zod"
+zod_version = "3.25.28"
+
+[observability]
+observability = "sentry"
+
+[security]
+security = "arcjet"
+rate_limiting = "upstash"
+
+[linter]
+linter = "biome"
+extends = ["ultracite"]
+autofix_on_commit = true
+
+[naming]
+component_files = "PascalCase"
+utility_files = "kebab-case"
+directory_names = "kebab-case"
+ignore_directory_names = [
+  "__tests__",
+  "(*)",             # Next.js route groups
+  "[*]",             # Dynamic segments
+  "out",             # Static output
+]
+zod_schemas = "camelCase"
+constants = "SCREAMING_SNAKE_CASE"
+
+[vscode]
+settings_path = ".vscode"
+autofix_on_save = true
+task_runner = "tasks.json"
+launch_config = "launch.json"
+extensions_required = ["biome", "typescript", "tailwind"]
+
+[githooks]
+tool = "husky"
+version = "9"
+enabled = ["pre-commit", "commit-msg"]
+
+[ci]
+ci_folder = ".github"
+automation = true
+spdx_header_check = true
+
+[SPDX]
+license_required = true
+license_format = "SPDX"
+default_license = "MIT"
+header_check_ci = true
+
+[scripts]
+folder = "scripts"
+registry_lint = "check-registry.js"
+fix_peer_deps = true
+logs_path = "registry/log"
+
+[packages]
+package_namespace = "@repo/*"
+packages_build = "devDependencies"
+
+[registry]
+structure = ["apps", "tools", "schemas", "templates", "ci", "types"]
+apps = "demos, sample apps"
+tools = "dev utilities"
+schemas = "json schema + validation"
+templates = "boilerplates"
+ci = "ci/cd scripts"
+types = "shared TS definitions"
+doc_format = "modules.json"
+readme_sections = ["Overview", "Module Categories", "Usage Guidelines"]
+versioned_templates = true
+test_registry_items = true
+registry_modular = "peerDependencies"
+peer_dep_packages = ["react", "react-dom"]
