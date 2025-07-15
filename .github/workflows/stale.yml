@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED STALE MANAGEMENT WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Automatically identifies and labels inactive issues and pull requests
+#          to help maintain a clean and actionable repository.
+#
+# Triggers:
+# - Scheduled run daily at 04:17 UTC (intentionally using non-round time to distribute GitHub Actions load)
+#
+# Key Features:
+# - Identifies issues and PRs with no activity
+# - Adds appropriate labels for visibility
+# - Configurable stale thresholds and messages
+# - Helps prioritize active work items
+#
+# DX Benefits:
+# - Reduces backlog clutter
+# - Improves focus on active issues
+# - Provides visibility into abandoned work
+# - Encourages timely follow-up on open items
+# - Maintains repository health with minimal manual effort
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: '17 4 * * *'  # Runs at 04:17 UTC every day
+
+jobs:
+  # Main job that identifies and marks stale items
+  stale:
+    # Using Ubuntu for its reliability and performance in CI environments
+    runs-on: ubuntu-latest
+
+    # Required permissions to modify issues and PRs
+    permissions:
+      issues: write      # Needed to add labels and comments to issues
+      pull-requests: write  # Needed to add labels and comments to PRs
+
+    steps:
+    # Use the official GitHub stale action to identify and mark stale items
+    - uses: actions/stale@v9
+      with:
+        # Authentication token to access repository
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+        # Customizable notification messages
+        stale-issue-message: |
+          This issue has been automatically marked as stale due to lack of recent activity.
+
+          If this issue is still relevant, please add a comment to keep it active.
+          Otherwise, it will be closed if no further activity occurs.
+
+          Thank you for your contributions to Zopio!
+
+        stale-pr-message: |
+          This pull request has been automatically marked as stale due to lack of recent activity.
+
+          If this PR is still being worked on, please add a comment or push a commit to keep it active.
+          Otherwise, it will be closed if no further activity occurs.
+
+          Thank you for your contributions to Zopio!
+
+        # Custom labels for better visibility and filtering
+        stale-issue-label: 'no-issue-activity'
+        stale-pr-label: 'no-pr-activity'
+
+        # Configuration for stale behavior
+        days-before-stale: 30       # Number of days of inactivity before marking as stale
+        days-before-close: 7        # Number of days of inactivity after being marked stale before closing
+        exempt-issue-labels: 'pinned,security,bug,enhancement,documentation'
+        exempt-pr-labels: 'pinned,security,work-in-progress,dependencies'
+        exempt-all-milestones: true # Items with milestones are exempt from being marked stale
