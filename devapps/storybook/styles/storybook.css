@@ -1,0 +1,45 @@
+/* Storybook specific styles */
+
+/* Ensure Storybook container properly applies theme */
+#storybook-root {
+  background-color: var(--background);
+  color: var(--foreground);
+  padding: 1rem;
+}
+
+/* Fix for Storybook docs page */
+.docs-story {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Ensure proper font loading */
+body {
+  font-family: var(--font-geist-sans);
+}
+
+code,
+pre {
+  font-family: var(--font-geist-mono);
+}
+
+/* Force theme variables to be applied */
+.sb-show-main {
+  background-color: var(--background) !important;
+}
+
+/* Add specific component styles for Storybook */
+.shadcn-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+/* Ensure all components get proper styling */
+[data-slot="button"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
