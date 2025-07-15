@@ -1,0 +1,109 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED RELEASE WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Automates the versioning, changelog generation, and package publishing
+#          process when changes are merged to the main branch.
+#
+# Triggers:
+# - Push events to the main branch (typically from merged PRs)
+#
+# Key Features:
+# - Semantic versioning based on conventional commits
+# - Automated changelog generation
+# - NPM package publishing
+# - GitHub release creation
+# - Skip release on [ci skip] or [skip ci] tags
+#
+# DX Benefits:
+# - Eliminates manual release process
+# - Ensures consistent versioning
+# - Maintains accurate changelog history
+# - Reduces human error in the release process
+# - Provides immediate availability of new versions
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Release Workflow
+
+# The event that will trigger the action
+on:
+  push:
+    branches: [main]
+
+# Workflow Jobs Configuration
+jobs:
+  # Main release job that handles versioning, changelog, and publishing
+  release:
+    # Using Ubuntu for its reliability and performance in CI environments
+    runs-on: ubuntu-latest
+
+    # Skip release process when commit messages contain 'ci skip' or 'skip ci'
+    # This prevents infinite loops when auto-generated commits trigger the workflow
+    # Also useful for documentation-only changes that don't need a release
+    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    # Detailed steps for the release process
+    steps:
+      # Step 1: Check out the repository code
+      # This gets the latest code from the main branch
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step 2: Fetch complete git history for accurate versioning
+      # Auto requires full history to determine the correct version bump
+      # and to generate an accurate changelog
+      - name: Prepare repository
+        run: git fetch --unshallow --tags
+
+      # Step 3: Set up Node.js environment
+      # Using the latest LTS version for compatibility and performance
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+
+      # Step 4: Set up pnpm package manager
+      # Using pnpm for faster, more efficient dependency management
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false  # We'll install dependencies after caching
+
+      # Step 5: Configure pnpm store path for caching
+      # This improves build performance by reusing the pnpm store across runs
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      # Step 6: Set up caching for pnpm dependencies
+      # This significantly speeds up builds by reusing previously downloaded packages
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Step 7: Install all project dependencies
+      # Using pnpm for efficient installation in the monorepo structure
+      - name: Install dependencies
+        run: pnpm install
+
+      # Step 8: Build the CLI package
+      # This ensures the CLI is properly compiled before publishing
+      # Using tsup for efficient TypeScript bundling
+      - name: Build CLI
+        run: npx tsup
+
+      # Step 9: Create and publish the release
+      # Uses Auto to determine version, update changelog, create GitHub release,
+      # and publish to npm based on conventional commits
+      - name: Create Release
+        env:
+          # GitHub token for creating releases and tags
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NPM token for publishing packages
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx auto shipit
+        # Continue on error to prevent workflow failures if release isn't needed
+        # This can happen if there are no conventional commits that trigger a release
+        continue-on-error: true
