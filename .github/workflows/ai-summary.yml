@@ -1,0 +1,74 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED AI SUMMARIZE WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Automatically generates concise AI-powered summaries for newly opened GitHub issues
+#          to help developers quickly understand the core problem or feature request.
+#
+# Triggers:
+# - When a new issue is opened in the repository
+#
+# Key Features:
+# - Uses GitHub's AI inference API to process issue content
+# - Creates a single-paragraph summary focusing on the key points
+# - Automatically comments the summary on the issue
+# - Ignores minor details to highlight the essential information
+#
+# DX Benefits:
+# - Reduces time needed to understand issue context
+# - Helps prioritize issues based on clear summaries
+# - Improves issue triage efficiency
+# - Provides consistent issue summary format
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Automated issue summarize with AI
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  # Main job that processes the issue and generates an AI summary
+  # This job handles the entire workflow from issue analysis to comment posting
+  summary:
+    runs-on: ubuntu-latest
+    # Required permissions for accessing issues, AI models, and repository content
+    permissions:
+      issues: write    # Needed to comment on issues
+      models: read     # Required to access GitHub's AI inference models
+      contents: read   # Needed to access repository content
+
+    steps:
+      # Step 1: Check out the repository code
+      # This is required to access repository files and configuration
+      # though for this workflow we don't directly use repository content
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Generate AI summary using GitHub's AI inference API
+      # This step processes the issue title and body to create a concise summary
+      # The ID is used to reference the output in subsequent steps
+      - name: Run AI inference
+        id: inference
+        uses: actions/ai-inference@v1
+        with:
+          # Prompt instructs the AI to focus on key points and ignore minor details
+          # This ensures the summary is brief but captures the essential information
+          prompt: |
+            Please summarize the following GitHub issue in 1 short paragraph for busy developers. Focus on the key problem or feature request. Ignore minor details.
+            Title: ${{ github.event.issue.title }}
+            Body: ${{ github.event.issue.body }}
+
+      # Step 3: Post the AI-generated summary as a comment on the issue
+      # This makes the summary immediately visible to all issue participants
+      # Uses the GitHub CLI to post the comment with the generated summary
+      - name: Comment with AI summary
+        run: |
+          gh issue comment $ISSUE_NUMBER --body "$RESPONSE"
+        env:
+          # Authentication token for GitHub API access
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The issue number to comment on
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          # The AI-generated summary response
+          RESPONSE: ${{ steps.inference.outputs.response }}
