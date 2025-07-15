@@ -1,0 +1,1 @@
+{"version":3,"file":"betterstack.d.ts","sourceRoot":"","sources":["betterstack.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,UAAU,CAAC;AAE/C,UAAU,kBAAkB;IAC1B,WAAW,EAAE,MAAM,CAAC;IACpB,QAAQ,CAAC,EAAE,MAAM,CAAC;CACnB;AAED,wBAAgB,uBAAuB,CAAC,OAAO,EAAE,kBAAkB;mBAI1C,cAAc;EA+BtC"}
