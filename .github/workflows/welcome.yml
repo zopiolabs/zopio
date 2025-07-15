@@ -1,0 +1,87 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED FIRST TIME CONTRIBUTOR WELCOME WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Automatically welcomes new contributors with helpful information
+#          and resources to encourage community participation.
+#
+# Triggers:
+#   - First issue opened by a user
+#   - First pull request opened by a user
+#
+# Features:
+#   - Personalized welcome message with @mention
+#   - Links to contributing guidelines
+#   - Points to relevant resources
+#   - Different messages for issues vs PRs
+#   - Encourages community engagement
+#
+# DX Benefits:
+# - Makes new contributors feel valued and welcomed
+# - Provides immediate guidance to project standards and resources
+# - Reduces friction for first-time contributors
+# - Maintains consistent onboarding experience
+# - Builds a positive community atmosphere
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Welcome First Time Contributors
+
+on:
+  # Triggered when a pull request is opened
+  # Using pull_request_target for security with external contributors
+  pull_request_target:  # Allows commenting on PRs from forks
+    types: [opened]
+  # Triggered when an issue is opened
+  issues:
+    types: [opened]
+
+jobs:
+  # Main job that handles welcoming first-time contributors
+  welcome:
+    # Using Ubuntu for its reliability and performance in CI environments
+    runs-on: ubuntu-latest
+    steps:
+      # Use GitHub's official first-interaction action
+      # This action automatically detects if this is the user's first contribution
+      # and only posts the welcome message for genuine first-time contributors
+      - uses: actions/first-interaction@v1
+        with:
+          # Authentication token to post comments on issues and PRs
+          # Using GITHUB_TOKEN to avoid rate limiting and permission issues
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Customized welcome message for users opening their first issue
+          issue-message: |
+            👋 Welcome to Zopio, @${{ github.actor }}!
+
+            Thank you for opening your first issue! We're excited to have you contribute to our community-driven project.
+
+            A maintainer will review your issue soon. In the meantime:
+            - 📖 Check out our [contributing guidelines](https://github.com/zopiolabs/zopio/blob/main/.github/CONTRIBUTING.md)
+            - 💬 Join the discussion in our [GitHub Discussions](https://github.com/zopiolabs/zopio/discussions)
+            - 🏷️ We'll add appropriate labels to help categorize your issue
+
+            If this is a bug report, please ensure you've included all the requested information in the template. If it's a feature request, we'd love to hear more about your use case!
+
+            Thanks for helping make Zopio better! 🚀
+
+          # Welcome message for first pull request
+          pr-message: |
+            🎉 Welcome to Zopio, @${{ github.actor }}!
+
+            Thank you for your first pull request! We're thrilled to have you contribute to our community-driven project.
+
+            **Next steps:**
+            - ✅ Ensure all CI checks pass
+            - 📝 Fill out the PR template completely
+            - 👀 A maintainer will review your PR soon
+            - 💬 Feel free to ask questions if you need help
+
+            **Helpful resources:**
+            - 📖 [Contributing Guidelines](https://github.com/zopiolabs/zopio/blob/main/.github/CONTRIBUTING.md)
+            - 🌿 [Branch Strategy](https://github.com/zopiolabs/zopio/blob/main/.github/policies/BRANCHES.md)
+            - 📋 [Conventional Commits](https://github.com/zopiolabs/zopio/blob/main/.github/policies/CONVENTIONAL_COMMITS.md)
+
+            If your PR gets merged, you'll be added to our contributors list automatically!
+
+            Thank you for helping make Zopio better! 🚀 We appreciate your contribution!
