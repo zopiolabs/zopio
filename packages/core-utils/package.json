@@ -1,0 +1,23 @@
+{
+  "name": "@repo/core-utils",
+  "version": "1.0.0",
+  "description": "Core utilities for Zopio modules",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "lint": "ultracite lint"
+  },
+  "keywords": ["zopio", "utils", "logger"],
+  "author": "Zopio Labs",
+  "license": "MIT",
+  "dependencies": {
+    "tslib": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.0.13",
+    "typescript": "^5.8.3"
+  }
+}
