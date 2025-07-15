@@ -1,0 +1,190 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Reinstall",
+      "type": "shell",
+      "command": "pnpm clean-reinstall",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Reinstall",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Hard Clean",
+      "type": "shell",
+      "command": "pnpm clean-hard",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Hard Clean",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Cache Clean",
+      "type": "shell",
+      "command": "pnpm clean-cache",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Cache Clean",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Format",
+      "type": "shell",
+      "command": "pnpm format",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Format",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint",
+      "type": "shell",
+      "command": "pnpm lint",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Lint",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Naming",
+      "type": "shell",
+      "command": "pnpm check-naming",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Naming",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Typecheck",
+      "type": "shell",
+      "command": "pnpm typecheck",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Typecheck",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Regcheck",
+      "type": "shell",
+      "command": "pnpm check-registry",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Regcheck",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Unittest",
+      "type": "shell",
+      "command": "pnpm test",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Unittest",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "SPDX",
+      "type": "shell",
+      "command": "node ${workspaceFolder}/scripts/check-spdx.js",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "SPDX",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "SPDX Fix",
+      "type": "shell",
+      "command": "node ${workspaceFolder}/scripts/check-spdx.js --fix",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "SPDX Fix",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Analyze",
+      "type": "shell",
+      "command": "pnpm analyze",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Analyze",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "pnpm build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Build",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev",
+      "type": "shell",
+      "command": "pnpm dev",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "Dev",
+        "clear": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

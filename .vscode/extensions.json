@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "mikestead.dotenv",
+    "editorconfig.editorconfig",
+    "bierner.markdown-mermaid",
+    "davidanson.vscode-markdownlint",
+    "unifiedjs.vscode-mdx",
+    "christian-kohler.npm-intellisense",
+    "vunguyentuan.vscode-postcss",
+    "csstools.postcss",
+    "prisma.prisma",
+    "bradlc.vscode-tailwindcss",
+    "actboy168.tasks",
+    "chakrounanas.turbo-console-log",
+    "redhat.vscode-yaml",
+    "github.vscode-github-actions",
+    "42crunch.vscode-openapi",
+    "vitest.explorer",
+    "VisualStudioExptTeam.vscodeintellicode"
+  ]
+}
