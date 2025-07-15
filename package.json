@@ -1,0 +1,85 @@
+{
+  "name": "zopio",
+  "version": "0.9.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "devapps/*",
+    "packages/*",
+    "registry/*",
+    "websites/*",
+    "e2e/"
+  ],
+  "bin": {
+    "zopio": "dist/index.js"
+  },
+  "files": ["dist/index.js"],
+  "scripts": {
+    "// Development": "",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "// Code Quality": "",
+    "format": "ultracite format",
+    "lint": "ultracite lint",
+    "typecheck": "tsc --noEmit",
+    "lint-staged": "lint-staged",
+    "check-naming": "node scripts/check-naming.js",
+    "// Testing": "",
+    "test": "turbo test",
+    "test:watch": "turbo run test -- --watch",
+    "// Analysis": "",
+    "analyze": "turbo run analyze --no-daemon",
+    "boundaries": "turbo boundaries",
+    "check-registry": "node scripts/check-registry.js --fix",
+    "// Internationalization": "",
+    "translate": "turbo translate",
+    "// Database": "",
+    "migrate": "cd packages/database && npx prisma format && npx prisma generate && npx prisma db push",
+    "// Dependencies": "",
+    "bump-deps": "npx npm-check-updates --deep -u -x react-day-picker",
+    "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
+    "// Maintenance": "",
+    "clean": "git clean -xdf node_modules",
+    "clean-cache": "node scripts/clean-with-deps.js clean-cache",
+    "clean-hard": "node scripts/clean-hard.js --no-install",
+    "clean-reinstall": "node scripts/clean-hard.js && node scripts/link-vercel.js",
+    "dedupe": "pnpm dedupe",
+    "prepare": "husky",
+    "// Compliance": "",
+    "check-spdx": "node scripts/check-spdx.js"
+  },
+  "devDependencies": {
+    "@auto-it/first-time-contributor": "^11.3.0",
+    "@biomejs/biome": "1.9.4",
+    "@commitlint/cli": "^19.0.3",
+    "@commitlint/config-conventional": "^19.0.3",
+    "@repo/typescript-config": "workspace:*",
+    "@turbo/gen": "^2.5.3",
+    "@types/node": "^24.0.13",
+    "cross-env": "^7.0.3",
+    "fast-glob": "^3.3.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^16.1.2",
+    "tsup": "^8.5.0",
+    "turbo": "^2.5.3",
+    "typescript": "^5.8.3",
+    "ultracite": "^4.2.5",
+    "vitest": "^3.1.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "path-to-regexp@6.2.1": "6.3.0",
+      "cookie@0.4.0": "0.7.2"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.13.1",
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "commander": "^14.0.0",
+    "d3-format": "3.1.0"
+  },
+  "type": "module"
+}

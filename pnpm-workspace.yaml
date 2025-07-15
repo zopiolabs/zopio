@@ -1,0 +1,19 @@
+packages:
+  - apps/*
+  - devapps/*
+  - packages/*
+  - registry/*
+  - websites/*
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@clerk/shared'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@sentry/cli'
+  - '@tailwindcss/oxide'
+  - bufferutil
+  - core-js
+  - core-js-pure
+  - esbuild
+  - prisma
+  - sharp
