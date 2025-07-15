@@ -1,0 +1,93 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="24" font-weight="bold" font-family="Arial">Zopio Git Flow</text>
+  
+  <!-- Branch Lines -->
+  <!-- Main branch -->
+  <line x1="100" y1="100" x2="700" y2="100" stroke="#FF6B6B" stroke-width="4" />
+  <text x="50" y="105" font-size="16" font-weight="bold" font-family="Arial">main</text>
+  
+  <!-- Staging branch -->
+  <line x1="100" y1="200" x2="700" y2="200" stroke="#FFD93D" stroke-width="4" />
+  <text x="50" y="205" font-size="16" font-weight="bold" font-family="Arial">staging</text>
+  
+  <!-- Develop branch -->
+  <line x1="100" y1="300" x2="700" y2="300" stroke="#6BCF7F" stroke-width="4" />
+  <text x="50" y="305" font-size="16" font-weight="bold" font-family="Arial">develop</text>
+  
+  <!-- Feature branches -->
+  <path d="M 200 300 Q 220 350 250 350 L 320 350 Q 350 350 370 300" stroke="#4ECDC4" fill="none" stroke-width="3" />
+  <text x="285" y="370" text-anchor="middle" font-size="14" font-family="Arial">feat/feature-1</text>
+  
+  <path d="M 400 300 Q 420 350 450 350 L 520 350 Q 550 350 570 300" stroke="#4ECDC4" fill="none" stroke-width="3" />
+  <text x="485" y="370" text-anchor="middle" font-size="14" font-family="Arial">feat/feature-2</text>
+  
+  <!-- Release branch -->
+  <path d="M 500 300 Q 520 250 550 250 L 600 250 Q 620 250 620 200" stroke="#95E1D3" fill="none" stroke-width="3" stroke-dasharray="5,3" />
+  <path d="M 620 200 Q 620 150 620 100" stroke="#95E1D3" fill="none" stroke-width="3" stroke-dasharray="5,3" />
+  <text x="560" y="235" text-anchor="middle" font-size="14" font-family="Arial">release/v1.0</text>
+  
+  <!-- Hotfix branch -->
+  <path d="M 650 100 Q 670 130 690 130 L 720 130 Q 740 130 740 100" stroke="#F38181" fill="none" stroke-width="3" />
+  <path d="M 740 100 Q 740 200 740 300" stroke="#F38181" fill="none" stroke-width="3" stroke-dasharray="5,3" />
+  <text x="705" y="150" text-anchor="middle" font-size="14" font-family="Arial">hotfix/fix</text>
+  
+  <!-- Merge arrows -->
+  <!-- Feature to develop -->
+  <path d="M 365 305 L 375 300 L 365 295" stroke="#4ECDC4" fill="none" stroke-width="2" />
+  <path d="M 565 305 L 575 300 L 565 295" stroke="#4ECDC4" fill="none" stroke-width="2" />
+  
+  <!-- Develop to staging -->
+  <path d="M 450 300 L 450 200" stroke="#6BCF7F" fill="none" stroke-width="2" stroke-dasharray="3,2" />
+  <path d="M 445 205 L 450 195 L 455 205" stroke="#6BCF7F" fill="none" stroke-width="2" />
+  
+  <!-- Release to main -->
+  <path d="M 615 105 L 620 95 L 625 105" stroke="#95E1D3" fill="none" stroke-width="2" />
+  
+  <!-- Hotfix to main -->
+  <path d="M 735 105 L 740 95 L 745 105" stroke="#F38181" fill="none" stroke-width="2" />
+  
+  <!-- Commits -->
+  <circle cx="150" cy="100" r="6" fill="#FF6B6B" />
+  <circle cx="300" cy="100" r="6" fill="#FF6B6B" />
+  <circle cx="620" cy="100" r="6" fill="#FF6B6B" />
+  <circle cx="740" cy="100" r="6" fill="#FF6B6B" />
+  
+  <circle cx="150" cy="200" r="6" fill="#FFD93D" />
+  <circle cx="450" cy="200" r="6" fill="#FFD93D" />
+  <circle cx="620" cy="200" r="6" fill="#FFD93D" />
+  
+  <circle cx="150" cy="300" r="6" fill="#6BCF7F" />
+  <circle cx="200" cy="300" r="6" fill="#6BCF7F" />
+  <circle cx="370" cy="300" r="6" fill="#6BCF7F" />
+  <circle cx="400" cy="300" r="6" fill="#6BCF7F" />
+  <circle cx="500" cy="300" r="6" fill="#6BCF7F" />
+  <circle cx="570" cy="300" r="6" fill="#6BCF7F" />
+  
+  <!-- Legend -->
+  <text x="100" y="450" font-size="18" font-weight="bold" font-family="Arial">Legend:</text>
+  
+  <rect x="100" y="470" width="30" height="4" fill="#FF6B6B" />
+  <text x="140" y="475" font-size="14" font-family="Arial">main (production)</text>
+  
+  <rect x="100" y="490" width="30" height="4" fill="#FFD93D" />
+  <text x="140" y="495" font-size="14" font-family="Arial">staging (pre-production)</text>
+  
+  <rect x="100" y="510" width="30" height="4" fill="#6BCF7F" />
+  <text x="140" y="515" font-size="14" font-family="Arial">develop (integration)</text>
+  
+  <rect x="350" y="470" width="30" height="4" fill="#4ECDC4" />
+  <text x="390" y="475" font-size="14" font-family="Arial">feature branches</text>
+  
+  <rect x="350" y="490" width="30" height="4" fill="#95E1D3" />
+  <text x="390" y="495" font-size="14" font-family="Arial">release branches</text>
+  
+  <rect x="350" y="510" width="30" height="4" fill="#F38181" />
+  <text x="390" y="515" font-size="14" font-family="Arial">hotfix branches</text>
+  
+  <!-- Protection indicators -->
+  <text x="600" y="470" font-size="14" font-weight="bold" font-family="Arial">Protection:</text>
+  <text x="600" y="490" font-size="12" font-family="Arial">main: 2 reviews (@core)</text>
+  <text x="600" y="505" font-size="12" font-family="Arial">staging: 1 review</text>
+  <text x="600" y="520" font-size="12" font-family="Arial">develop: 1 review</text>
+</svg>
