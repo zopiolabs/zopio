@@ -1,0 +1,47 @@
+{
+  "name": "api",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm:next\" \"npm:stripe-check\"",
+    "next": "next dev -p 3002 --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "analyze": "cross-env ANALYZE=true npm run build",
+    "test": "vitest run",
+    "stripe-check": "node -e \"try { require('child_process').execSync('stripe --version', {stdio: 'ignore'}); require('child_process').spawn('stripe', ['listen', '--forward-to', 'localhost:3002/webhooks/payments'], {stdio: 'inherit'}); } catch(e) { console.log('\u001b[33mStripe CLI not found. Webhooks will not be forwarded. Install Stripe CLI from https://stripe.com/docs/stripe-cli if needed.\u001b[0m'); }\"",
+    "stripe": "stripe listen --forward-to localhost:3002/webhooks/payments",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.20.0",
+    "@repo/analytics": "workspace:*",
+    "@repo/auth": "workspace:*",
+    "@repo/database": "workspace:*",
+    "@repo/design-system": "workspace:*",
+    "@repo/next-config": "workspace:*",
+    "@repo/observability": "workspace:*",
+    "@repo/payments": "workspace:*",
+    "@repo/testing": "workspace:*",
+    "@repo/trigger": "workspace:*",
+    "@sentry/nextjs": "^9.22.0",
+    "@t3-oss/env-nextjs": "^0.13.4",
+    "@trigger.dev/sdk": "^2.2.0",
+    "next": "15.3.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "svix": "^1.66.0",
+    "vitest": "^3.1.4",
+    "zod": "^3.25.28"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "24.0.13",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.8.3"
+  }
+}
