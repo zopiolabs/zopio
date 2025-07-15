@@ -1,0 +1,110 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED PR STATIC CHECKS WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Enforces code quality standards by running linting, type checking, testing,
+#          and formatting checks on all pull requests to the main branch.
+#
+# Triggers:
+# - Pull requests targeting the main branch
+#
+# Key Features:
+# - Runs Ultracite for comprehensive code quality checks
+# - Verifies code formatting with Biome
+# - Ensures tests pass before merging
+# - Provides fast feedback on code quality issues
+#
+# DX Benefits:
+# - Catches issues early in the development process
+# - Maintains consistent code style across the codebase
+# - Prevents type errors and common bugs
+# - Reduces review cycles by catching issues automatically
+# - Ensures all tests pass before code reaches review
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: PR Static Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Main job that runs all code quality checks in a single workflow
+  # This consolidates linting, type checking, testing, and formatting
+  # to provide comprehensive feedback on code quality issues
+  PR-Static-Checks:
+    name: PR Static Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      # This gets the latest code from the pull request for analysis
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      # Using Node.js 20 for compatibility with modern JavaScript features
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Step 3: Install pnpm
+      # This installs pnpm globally before we try to use it
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          run_install: false
+
+      # Step 4: Setup pnpm cache
+      # Configures pnpm caching to speed up dependency installation
+      - name: Get pnpm store directory
+        id: pnpm-store
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Step 5: Install project dependencies
+      # First try with frozen lockfile, but fall back to regular install if that fails
+      # This ensures the workflow doesn't fail just because of lockfile issues
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+
+      # Step 6: Verify code formatting
+      # Ultracite is used to ensure consistent code style across the codebase
+      # The format command checks formatting without modifying files
+      # This step will fail if any files don't match the project's formatting standards
+      - name: Run Format Checking
+        run: pnpm format
+
+
+      # Step 7: Run linting
+      # Uses Ultracite to perform static code analysis
+      # Checks for code quality issues, potential bugs, and enforces coding standards
+      # Will fail the workflow if any linting rules are violated
+      - name: Run Linting
+        run: pnpm lint
+
+      # Step 8: Run type checking
+      # Uses TypeScript compiler to verify type correctness
+      # Ensures all type annotations are valid without generating output files
+      # Catches type errors that might cause runtime issues
+      - name: Run Type Checking
+        run: pnpm typecheck
+
+      # Step 9: Run unit tests
+      # Executes the test suite using Vitest through Turbo
+      # Verifies that all components and functions work as expected
+      # Ensures code changes don't break existing functionality
+      - name: Run Unit Testing
+        run: pnpm test
