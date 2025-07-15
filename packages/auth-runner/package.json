@@ -1,0 +1,42 @@
+{
+  "name": "@repo/auth-runner",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./engine": {
+      "types": "./dist/engine/index.d.ts",
+      "import": "./dist/engine/index.js"
+    },
+    "./rules": {
+      "types": "./dist/rules/index.d.ts",
+      "import": "./dist/rules/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "build": "tsc",
+    "lint": "biome check .",
+    "lint:fix": "biome check --apply ."
+  },
+  "peerDependencies": {
+    "@repo/auth-rbac": "workspace:*",
+    "@repo/auth-abac": "workspace:*",
+    "@repo/auth-log": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/auth-rbac": "workspace:*",
+    "@repo/auth-abac": "workspace:*",
+    "@repo/auth-log": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "5.8.3"
+  }
+}
