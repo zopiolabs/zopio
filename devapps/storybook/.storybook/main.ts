@@ -5,12 +5,12 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import type { StorybookConfig } from '@storybook/nextjs';
-import type { Configuration } from 'webpack';
 
 const require = createRequire(import.meta.url);
 
 // Define regex at the top level scope to avoid performance issues
 const cssRegex = /\.css$/;
+const cssIncludeRegex = /.*\.css$/;
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -30,7 +30,7 @@ const config: StorybookConfig = {
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-themes'),
     getAbsolutePath('@storybook/addon-a11y'),
-    getAbsolutePath("@storybook/addon-docs")
+    getAbsolutePath('@storybook/addon-docs'),
   ],
 
   framework: {
@@ -50,23 +50,26 @@ const config: StorybookConfig = {
     if (!config.module) {
       config.module = { rules: [] };
     }
-    
+
     if (!config.module.rules) {
       config.module.rules = [];
     }
 
     // Remove existing CSS rules
-    config.module.rules = config.module.rules.filter(
-      (rule) => {
-        if (!rule || typeof rule !== 'object') return true;
-        const ruleObj = rule as { test?: RegExp | string };
-        return !(ruleObj.test instanceof RegExp && ruleObj.test.toString().includes('css'));
+    config.module.rules = config.module.rules.filter((rule) => {
+      if (!rule || typeof rule !== 'object') {
+        return true;
       }
-    );
+      const ruleObj = rule as { test?: RegExp | string };
+      return !(
+        ruleObj.test instanceof RegExp &&
+        ruleObj.test.toString().includes('css')
+      );
+    });
 
     // Add new CSS rule with proper configuration for Tailwind CSS v4
     config.module.rules.push({
-      test: /\.css$/,
+      test: cssRegex,
       use: [
         'style-loader',
         {
@@ -89,7 +92,7 @@ const config: StorybookConfig = {
           },
         },
       ],
-      include: [/.*\.css$/],
+      include: [cssIncludeRegex],
     });
 
     return config;
