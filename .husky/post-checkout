@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+if [ "$CI" = "true" ]; then
+  echo "CI environment detected. Skipping post-checkout hook."
+  exit 0
+fi
+
+echo "🔄 Running post-checkout tasks..."
+
+# Optional: Run turbo prune when branch changes
+echo "   - Pruning Turbo cache for web apps"
+pnpm turbo prune --scope=web
+
+# Optional: Automatic dependency installation
+echo "   - Installing dependencies"
+pnpm install
+
+echo "${GREEN}✅ post-checkout done.${NC}"

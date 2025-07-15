@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+if [ "$CI" = "true" ]; then
+  echo "CI environment detected. Skipping post-merge hook."
+  exit 0
+fi
+
+echo "Running post-merge steps..."
+echo "ℹ️  Updating dependencies after merge"
+
+# Install dependencies to ensure they're up-to-date after merge
+pnpm install || {
+  echo "${RED}❌ Failed to update dependencies${NC}"
+  echo "   Please run 'pnpm install' manually"
+  exit 1
+}
+
+echo "${GREEN}✅ Dependencies updated successfully${NC}"

@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+if [ "$CI" = "true" ]; then
+  echo "CI environment detected. Skipping commit-msg hook."
+  exit 0
+fi
+
+echo "📝 Validating commit message format..."
+
+# Show commit message guidelines
+echo "ℹ️  Commit message should follow the format: type(scope): subject"
+echo "   Examples: feat(auth): add login functionality"
+echo "             fix(api): resolve data fetching issue"
+echo "   Valid types: build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test"
+
+# Enforce conventional commit messages
+pnpm commitlint --edit "$1" && {
+  echo "${GREEN}✅ Commit message format is valid!${NC}"
+} || {
+  echo "${RED}❌ Invalid commit message format.${NC}"
+  echo "   Please follow the conventional commit format."
+  exit 1
+}

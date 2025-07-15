@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+if [ "$CI" = "true" ]; then
+  echo "CI environment detected. Skipping pre-commit hook."
+  exit 0
+fi
+
+echo "🔍 Running pre-commit checks..."
+echo "ℹ️  This hook ensures code quality before committing"
+
+# Run lint-staged to check only staged files
+echo "🔎 Running lint-staged checks..."
+echo "   - Formatting and linting only staged files"
+pnpm lint-staged && {
+  echo "   ✓ Staged files pass lint and format checks"
+} || {
+  echo "${RED}❌ Lint-staged checks failed${NC}"
+  echo "   Please fix the issues before committing"
+  exit 1
+}
+
+# Check for SPDX license headers in staged files
+echo "🔎 Checking SPDX license headers..."
+node scripts/check-spdx.js --staged --quiet && {
+  echo "   ✓ SPDX license headers check passed"
+} || {
+  echo "${RED}❌ SPDX license headers check failed${NC}"
+  echo "   Some files are missing SPDX license headers"
+  echo "   Run 'node scripts/check-spdx.js --fix' to add missing headers"
+  echo "   Or run 'pnpm run check-spdx --fix' to fix all files"
+
+  # Ask if the user wants to automatically fix the headers
+  read -p "   Do you want to automatically fix missing SPDX headers? (y/N) " yn
+  case $yn in
+    [Yy]* )
+      echo "   🔧 Fixing SPDX headers..."
+      node scripts/check-spdx.js --staged --fix --quiet && {
+        echo "   ✓ SPDX headers fixed successfully"
+        echo "   Please stage the fixed files and commit again"
+        exit 1
+      } || {
+        echo "${RED}❌ Failed to fix SPDX headers${NC}"
+        exit 1
+      }
+      ;;
+    * )
+      echo "   Please fix the SPDX headers manually before committing"
+      exit 1
+      ;;
+  esac
+}
+
+echo "${GREEN}✅ All pre-commit checks passed!${NC}"
+echo "   Your code is ready to be committed"

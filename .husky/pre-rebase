@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+if [ "$CI" = "true" ]; then
+  echo "CI environment detected. Skipping pre-rebase hook."
+  exit 0
+fi
+
+echo "🔄 Running pre-rebase checks..."
+echo "ℹ️  This hook ensures code quality before rebasing"
+
+# Run Turbo lint on affected packages
+echo "🔎 Running turbo affected lint..."
+echo "   - Linting only packages affected by your changes"
+pnpm turbo run lint --filter=...[origin/develop] && {
+  echo "   ✓ Affected packages lint passed"
+} || {
+  echo "${RED}❌ Turbo lint checking failed${NC}"
+  echo "   Please fix linting issues before rebasing"
+  exit 1
+}
+
+# Run Turbo type checking on affected packages
+echo "🔎 Running turbo affected type check..."
+echo "   - Verifying TypeScript types of affected packages"
+pnpm turbo run typecheck --filter=...[origin/develop] && {
+  echo "   ✓ Affected packages type check passed"
+} || {
+echo "${RED}❌ Turbo type checking failed${NC}"
+echo "   Please fix type errors before rebasing"
+exit 1
+}
+
+# Run unit tests on affected packages
+echo "🧪 Running unit tests on affected packages..."
+echo "   - Verifying that all tests pass before rebasing"
+pnpm test --changed && {
+  echo "   ✓ Affected packages unit tests passed"
+} || {
+  echo "${RED}❌ Unit tests failed${NC}"
+  echo "   Please fix failing tests before rebasing"
+  exit 1
+}
+
+echo "${GREEN}✅ All pre-rebase checks passed!${NC}"
+echo "   Your code is ready to be rebased"

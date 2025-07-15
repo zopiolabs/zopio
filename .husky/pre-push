@@ -1,0 +1,71 @@
+#!/usr/bin/env sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+if [[ "$CI" == "true" || "$CI" == "1" ]]; then
+  echo "CI environment detected. Skipping pre-push hook."
+  exit 0
+fi
+
+echo "🚀 Running pre-push checks..."
+echo "ℹ️  This hook ensures code quality before pushing to remote"
+
+# Run full format checking on the entire project
+echo "🔎 Running full format check..."
+echo "   - Verifying that all code meets format standards"
+pnpm format && {
+  echo "   ✓ Format check passed successfully"
+} || {
+  echo "${RED}❌ Format check failed${NC}"
+  echo "   Please fix formating issues before pushing"
+  exit 1
+}
+
+
+# Run full lint checking on the entire project
+echo "🔎 Running full lint check..."
+echo "   - Verifying that all code meets linting standards"
+pnpm lint && {
+  echo "   ✓ Lint check passed successfully"
+} || {
+  echo "${RED}❌ Lint check failed${NC}"
+  echo "   Please fix linting issues before pushing"
+  exit 1
+}
+
+# Run full type checking on the entire project (temporary disabled)
+echo "🔎 Running full type check..."
+echo "   - Verifying TypeScript types across the project"
+pnpm typecheck && {
+  echo "   ✓ TypeScript type check passed"
+} || {
+  echo "${RED}❌ Type checking failed${NC}"
+  echo "   Please fix type errors before rebasing"
+  exit 1
+}
+
+# Run full tests and build
+echo "🧪 Running tests..."
+echo "   - Verifying that all tests pass before pushing"
+pnpm test && {
+  echo "   ✓ All tests passed successfully"
+} || {
+  echo "${RED}❌ Tests failed${NC}"
+  echo "   Please fix failing tests before pushing"
+  exit 1
+}
+
+#echo "💪 Building project..."
+#echo "   - Ensuring the project builds correctly"
+#pnpm build && {
+#  echo "   ✓ Build completed successfully"
+#} || {
+#  echo "${RED}❌ Build failed${NC}"
+#  echo "   Please fix build errors before pushing"
+#  exit 1
+#}
+
+echo "${GREEN}All pre-push checks passed!${NC}"
+echo "   Your code is ready to be pushed to the remote repository"

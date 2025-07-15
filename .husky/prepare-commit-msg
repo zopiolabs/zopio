@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+if [ "$CI" = "true" ]; then
+  echo "CI environment detected. Skipping prepare-commit-msg hook."
+  exit 0
+fi
+
+# Get the current branch name
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+
+# Check if branch name contains "wip", "draft", "spike", or "temp"
+if echo "$BRANCH_NAME" | grep -E -q "^(wip|draft|spike|temp)/"; then
+  echo "ℹ️  WIP-like branch detected: $BRANCH_NAME"
+  echo "   Adding [skip ci] to commit message"
+
+  # Avoid duplicate skip ci
+  if ! grep -q "\[skip ci\]" "$1"; then
+    echo "[skip ci]" >> "$1"
+  fi
+
+  echo "${GREEN}✅ CI will be skipped for this commit${NC}"
+fi
