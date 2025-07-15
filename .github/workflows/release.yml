@@ -23,7 +23,7 @@
 # - Provides immediate availability of new versions
 # ═══════════════════════════════════════════════════════════════════════════
 
-name: Release Workflow
+name: Release
 
 # The event that will trigger the action
 on:
