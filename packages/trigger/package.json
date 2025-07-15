@@ -1,0 +1,13 @@
+{
+  "name": "@repo/trigger",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.ts",
+  "dependencies": {
+    "@trigger.dev/sdk": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21"
+  }
+}
