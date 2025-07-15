@@ -1,0 +1,33 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "extends": ["ultracite"],
+  "javascript": {
+    "globals": ["Liveblocks"]
+  },
+  "files": {
+    "ignore": [
+      "**/__tests__/**",
+      ".bin/**",
+      ".cache/**",
+      ".git/**",
+      ".next/**",
+      ".turbo/**",
+      "apps/docs/**/*.json",
+      "devapps/emailstudio/.react-email/**",
+      "devapps/storybook/storybook-static/**",
+      "build/**",
+      "dist/**",
+      "node_modules/**",
+      "packages/collaboration/config.ts",
+      "packages/database/generated/**",
+      "packages/design-system/blocks/**",
+      "packages/design-system/hooks/**",
+      "packages/design-system/lib/**",
+      "packages/design-system/shared/**",
+      "packages/design-system/ui/**",
+      "scripts/**",
+      "websites/zopio-docs/**/*.json",
+      "websites/zopio-docs/snippets/**"
+    ]
+  }
+}
