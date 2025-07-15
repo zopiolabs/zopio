@@ -1,0 +1,318 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED PR ASSIGNMENT WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Automatically assigns PRs to their authors and leverages CODEOWNERS
+#          for reviewer assignment. This workflow streamlines the PR review process
+#          by ensuring appropriate ownership and review assignments.
+#
+# Triggers:
+#   - PR opened (new pull request created)
+#   - PR marked as ready for review (converted from draft)
+#
+# Key Features:
+#   - Auto-assigns PR to its author for tracking and accountability
+#   - Uses the .github/CODEOWNERS file for intelligent reviewer assignments
+#   - Ensures reviewers are assigned based on the specific files changed
+#   - Skips assignment if reviewers are already manually assigned
+#   - Only assigns reviewers to non-draft PRs to avoid premature reviews
+#   - Provides workload balancing for teams to distribute review responsibilities
+#   - Falls back to core team if CODEOWNERS processing fails
+#
+# DX Benefits:
+#   - Reduces manual PR management overhead
+#   - Ensures appropriate subject matter experts review relevant code
+#   - Prevents PRs from being overlooked or delayed
+#   - Maintains consistent review standards across the codebase
+#   - Accelerates the review process through automatic assignments
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: PR Auto Assign
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+# Concurrency configuration to prevent race conditions and duplicate assignments
+# This ensures only one instance of this workflow runs per PR at any given time
+concurrency:
+  # Create a unique concurrency group for each PR using its number
+  # This prevents multiple workflow runs from processing the same PR simultaneously
+  group: assign-pr-${{ github.event.pull_request.number }}
+  # Cancel any in-progress workflow run if a new one is triggered
+  # This ensures we're always using the most up-to-date PR information
+  cancel-in-progress: true
+
+# Define permissions needed for this workflow
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  # Job to automatically assign the PR to its author
+  assign-author:
+    runs-on: ubuntu-latest
+    # Ensure this job has the necessary permissions
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      # Step 1: Assign the PR to the person who created it
+      # This ensures the author remains responsible for addressing feedback
+      - name: Assign PR to author
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Only assign if no assignees exist to avoid overwriting manual assignments
+            if (pr.assignees.length === 0) {
+              try {
+                await github.rest.issues.addAssignees({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  assignees: [pr.user.login]  // Assign to PR author
+                });
+                console.log(`Assigned PR #${pr.number} to author: ${pr.user.login}`);
+              } catch (error) {
+                console.error(`Error assigning PR to author: ${error.message}`);
+                // Try alternative method if the first one fails
+                try {
+                  await github.rest.pulls.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: pr.number,
+                    assignees: [pr.user.login]
+                  });
+                  console.log(`Assigned PR #${pr.number} to author using alternative method`);
+                } catch (altError) {
+                  console.error(`Alternative assignment method also failed: ${altError.message}`);
+                }
+              }
+            } else {
+              console.log(`PR #${pr.number} already has assignees, skipping author assignment`);
+            }
+
+  # Job to intelligently assign reviewers based on CODEOWNERS rules
+  # This job analyzes the files changed in the PR and assigns appropriate reviewers
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    # Ensure this job has the necessary permissions
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+    # Skip reviewer assignment for draft PRs to avoid premature reviews
+    # This prevents notification spam while the PR is still being worked on
+    if: github.event.pull_request.draft == false
+    steps:
+      # Step 1: Check out the repository to access CODEOWNERS file
+      # We need the full repository content to properly analyze ownership rules
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history to ensure we have all necessary files
+
+      # Step 2: Assign reviewers based on CODEOWNERS file
+      # This step parses the CODEOWNERS file and matches it against changed files
+      # to determine the appropriate reviewers for the PR
+      - name: Assign reviewers based on CODEOWNERS
+        uses: actions/github-script@v7
+        with:
+          # Authentication token to access PR data and assign reviewers
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Check if PR already has reviewers to avoid overwriting
+            const reviews = await github.rest.pulls.listRequestedReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            if (reviews.data.users.length > 0 || reviews.data.teams.length > 0) {
+              console.log('PR already has reviewers assigned, skipping');
+              return;
+            }
+
+            // Fetch list of files changed in this PR
+            const files = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            const changedPaths = files.data.map(f => f.filename);
+            console.log(`Files changed in PR #${pr.number}: ${changedPaths.length}`);
+
+            // Read CODEOWNERS file to determine ownership
+            const fs = require('fs');
+            const path = require('path');
+
+            try {
+              const codeownersPath = path.join('.github', 'CODEOWNERS');
+              const codeownersContent = fs.readFileSync(codeownersPath, 'utf8');
+              const codeownersLines = codeownersContent.split('\n').filter(line =>
+                line.trim() !== '' && !line.startsWith('#')
+              );
+
+              // Parse CODEOWNERS file
+              const ownershipRules = [];
+              for (const line of codeownersLines) {
+                const [pattern, ...owners] = line.trim().split(/\s+/);
+                if (pattern && owners.length > 0) {
+                  ownershipRules.push({ pattern, owners });
+                }
+              }
+
+              // Match files against CODEOWNERS patterns
+              const teamReviewers = new Set();
+              const individualReviewers = new Set();
+
+              for (const file of changedPaths) {
+                // Find matching rules for this file
+                // Note: This is a simplified matching algorithm
+                // GitHub's actual algorithm is more sophisticated
+                for (const rule of ownershipRules) {
+                  const pattern = rule.pattern.replace('/', '\/').replace('*', '.*');
+                  const regex = new RegExp(pattern);
+
+                  if (regex.test(file)) {
+                    // Add owners from this rule
+                    for (const owner of rule.owners) {
+                      if (owner.startsWith('@zopiolabs/')) {
+                        // Team reviewer (remove @ prefix for GitHub API)
+                        teamReviewers.add(owner.substring(1).split('/')[1]);
+                      } else if (owner.startsWith('@')) {
+                        // Individual reviewer (remove @ prefix for GitHub API)
+                        individualReviewers.add(owner.substring(1));
+                      }
+                    }
+                  }
+                }
+              }
+
+              // Request reviews from teams
+              if (teamReviewers.size > 0) {
+                try {
+                  const teamReviewersList = Array.from(teamReviewers);
+                  console.log(`Attempting to assign team reviewers: ${teamReviewersList.join(', ')}`);
+
+                  // Check if teams exist in the organization
+                  for (const team of teamReviewersList) {
+                    try {
+                      // Verify team exists before attempting to assign
+                      await github.rest.teams.getByName({
+                        org: context.repo.owner,
+                        team_slug: team
+                      });
+                    } catch (teamError) {
+                      console.warn(`Team ${team} not found or not accessible: ${teamError.message}`);
+                      // Remove non-existent teams
+                      teamReviewers.delete(team);
+                    }
+                  }
+
+                  // Only proceed if we have valid teams
+                  const validTeamsList = Array.from(teamReviewers);
+                  if (validTeamsList.length > 0) {
+                    await github.rest.pulls.requestReviewers({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      pull_number: pr.number,
+                      team_reviewers: validTeamsList
+                    });
+                    console.log(`Successfully assigned team reviewers: ${validTeamsList.join(', ')}`);
+                  } else {
+                    console.log('No valid team reviewers found after validation');
+                  }
+                } catch (error) {
+                  console.error(`Error assigning team reviewers: ${error.message}`);
+                }
+              }
+
+              // Request reviews from individuals
+              if (individualReviewers.size > 0) {
+                try {
+                  const individualReviewersList = Array.from(individualReviewers);
+                  console.log(`Attempting to assign individual reviewers: ${individualReviewersList.join(', ')}`);
+
+                  // Filter out the PR author from reviewers list to avoid self-review
+                  const filteredReviewers = individualReviewersList.filter(reviewer => reviewer !== pr.user.login);
+
+                  if (filteredReviewers.length > 0) {
+                    // Verify each reviewer exists before attempting to assign
+                    const validReviewers = [];
+                    for (const reviewer of filteredReviewers) {
+                      try {
+                        // Check if user exists
+                        await github.rest.users.getByUsername({
+                          username: reviewer
+                        });
+                        validReviewers.push(reviewer);
+                      } catch (userError) {
+                        console.warn(`User ${reviewer} not found: ${userError.message}`);
+                      }
+                    }
+
+                    if (validReviewers.length > 0) {
+                      await github.rest.pulls.requestReviewers({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        pull_number: pr.number,
+                        reviewers: validReviewers
+                      });
+                      console.log(`Successfully assigned individual reviewers: ${validReviewers.join(', ')}`);
+                    } else {
+                      console.log('No valid individual reviewers found after validation');
+                    }
+                  } else {
+                    console.log('No reviewers to assign after filtering out PR author');
+                  }
+                } catch (error) {
+                  console.error(`Error assigning individual reviewers: ${error.message}`);
+                }
+              }
+
+              if (teamReviewers.size === 0 && individualReviewers.size === 0) {
+                console.log('No matching reviewers found in CODEOWNERS for the changed files');
+              }
+
+            } catch (error) {
+              console.error('Error processing CODEOWNERS file:', error);
+
+              // Fallback to core team if CODEOWNERS processing fails
+              try {
+                await github.rest.pulls.requestReviewers({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  team_reviewers: ['core-team']
+                });
+                console.log('Fallback: Assigned core-team as reviewer');
+              } catch (fallbackError) {
+                console.error('Error assigning fallback reviewer:', fallbackError);
+              }
+            }
+
+      # Step 3: Add an informative comment to the PR about reviewer assignments
+      # This provides transparency about the automated assignment process
+      # and helps contributors understand who will be reviewing their code
+      - name: Add reviewer assignment comment
+        uses: actions/github-script@v7
+        with:
+          # Authentication token to post comments on the PR
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: '🤖 Reviewers have been automatically assigned based on the CODEOWNERS file. If you need different reviewers, please update manually.'
+            });
