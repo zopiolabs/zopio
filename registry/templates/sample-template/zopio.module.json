@@ -1,0 +1,20 @@
+{
+  "type": "template",
+  "name": "sample-template",
+  "category": "dashboard",
+  "tags": ["sample", "widget"],
+  "entry": "index.ts",
+  "schema": "schema.json",
+  "version": "1.0.0",
+  "description": "sample-template - A Zopio template",
+  "author": "Zopio Team",
+  "license": "MIT",
+  "zopio": {
+    "category": "template",
+    "icon": "default-icon"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

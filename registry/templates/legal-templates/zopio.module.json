@@ -1,0 +1,16 @@
+{
+  "name": "legal-templates",
+  "version": "1.0.0",
+  "description": "legal-templates - A Zopio template",
+  "author": "Zopio Team",
+  "license": "MIT",
+  "type": "template",
+  "zopio": {
+    "category": "template",
+    "icon": "default-icon"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

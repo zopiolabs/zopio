@@ -1,0 +1,71 @@
+{
+  "name": "@repo/sample-integration",
+  "version": "1.0.0",
+  "type": "integration",
+  "description": "Sample third-party integration for Zopio",
+  "author": "Zopio Labs",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@repo/auth": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "axios": "^1.6.0"
+  },
+  "keywords": ["zopio", "integration", "sample", "api"],
+  "zopio": {
+    "category": "integration",
+    "icon": "cloud",
+    "provider": "SampleProvider",
+    "authType": "oauth",
+    "configSchema": {
+      "clientId": {
+        "type": "string",
+        "required": true,
+        "description": "OAuth Client ID"
+      },
+      "clientSecret": {
+        "type": "string",
+        "required": true,
+        "description": "OAuth Client Secret",
+        "sensitive": true
+      },
+      "scopes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": ["read", "write"],
+        "description": "OAuth Scopes"
+      }
+    },
+    "endpoints": [
+      {
+        "name": "getUsers",
+        "path": "/users",
+        "method": "GET",
+        "description": "Get all users from the provider"
+      },
+      {
+        "name": "createUser",
+        "path": "/users",
+        "method": "POST",
+        "description": "Create a new user in the provider"
+      }
+    ],
+    "webhooks": [
+      {
+        "name": "userCreated",
+        "event": "user.created",
+        "description": "Triggered when a new user is created"
+      },
+      {
+        "name": "userUpdated",
+        "event": "user.updated",
+        "description": "Triggered when a user is updated"
+      }
+    ]
+  }
+}

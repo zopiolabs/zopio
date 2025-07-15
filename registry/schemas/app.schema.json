@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "App Module Schema",
+  "description": "Schema for Zopio app modules",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "./module.schema.json"
+    }
+  ],
+  "properties": {
+    "type": {
+      "const": "app"
+    },
+    "zopio": {
+      "type": "object",
+      "required": ["category", "icon", "routes"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Category of the app"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon for the app"
+        },
+        "routes": {
+          "type": "array",
+          "description": "Routes for the app",
+          "items": {
+            "type": "object",
+            "required": ["path", "component"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "URL path for the route"
+              },
+              "component": {
+                "type": "string",
+                "description": "Component to render for the route"
+              },
+              "auth": {
+                "type": "boolean",
+                "description": "Whether authentication is required for the route"
+              },
+              "layout": {
+                "type": "string",
+                "description": "Layout to use for the route"
+              }
+            }
+          }
+        },
+        "navigation": {
+          "type": "array",
+          "description": "Navigation items for the app",
+          "items": {
+            "type": "object",
+            "required": ["title", "path"],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Title of the navigation item"
+              },
+              "path": {
+                "type": "string",
+                "description": "URL path for the navigation item"
+              },
+              "icon": {
+                "type": "string",
+                "description": "Icon for the navigation item"
+              },
+              "group": {
+                "type": "string",
+                "description": "Group for the navigation item"
+              }
+            }
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Permissions required by the app",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

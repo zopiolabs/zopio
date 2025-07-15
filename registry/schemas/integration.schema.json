@@ -1,0 +1,183 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Integration Module Schema",
+  "description": "Schema for Zopio integration modules",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "./module.schema.json"
+    }
+  ],
+  "properties": {
+    "type": {
+      "const": "integration"
+    },
+    "zopio": {
+      "type": "object",
+      "required": ["category", "icon", "auth"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Category of the integration"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon for the integration"
+        },
+        "auth": {
+          "type": "object",
+          "description": "Authentication configuration",
+          "oneOf": [
+            {
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "const": "oauth"
+                },
+                "authUrl": {
+                  "type": "string",
+                  "description": "OAuth authorization URL"
+                },
+                "tokenUrl": {
+                  "type": "string",
+                  "description": "OAuth token URL"
+                },
+                "scope": {
+                  "type": "array",
+                  "description": "OAuth scopes",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "clientId": {
+                  "type": "string",
+                  "description": "OAuth client ID"
+                },
+                "clientSecret": {
+                  "type": "string",
+                  "description": "OAuth client secret"
+                }
+              }
+            },
+            {
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "const": "apikey"
+                },
+                "keyName": {
+                  "type": "string",
+                  "description": "Name of the API key"
+                },
+                "keyLocation": {
+                  "type": "string",
+                  "description": "Location of the API key (header, query, body)",
+                  "enum": ["header", "query", "body"]
+                }
+              }
+            },
+            {
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "const": "credentials"
+                },
+                "fields": {
+                  "type": "array",
+                  "description": "Credential fields",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "type"],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the field"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "Type of the field",
+                        "enum": ["string", "password"]
+                      },
+                      "label": {
+                        "type": "string",
+                        "description": "Label for the field"
+                      },
+                      "required": {
+                        "type": "boolean",
+                        "description": "Whether the field is required"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "webhooks": {
+          "type": "array",
+          "description": "Webhooks provided by the integration",
+          "items": {
+            "type": "object",
+            "required": ["name", "event", "handler"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the webhook"
+              },
+              "event": {
+                "type": "string",
+                "description": "Event that triggers the webhook"
+              },
+              "handler": {
+                "type": "string",
+                "description": "Handler function for the webhook"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the webhook"
+              }
+            }
+          }
+        },
+        "endpoints": {
+          "type": "array",
+          "description": "API endpoints provided by the integration",
+          "items": {
+            "type": "object",
+            "required": ["name", "method", "path", "handler"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the endpoint"
+              },
+              "method": {
+                "type": "string",
+                "description": "HTTP method for the endpoint",
+                "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"]
+              },
+              "path": {
+                "type": "string",
+                "description": "URL path for the endpoint"
+              },
+              "handler": {
+                "type": "string",
+                "description": "Handler function for the endpoint"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the endpoint"
+              }
+            }
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Permissions required by the integration",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

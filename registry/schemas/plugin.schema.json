@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Plugin Module Schema",
+  "description": "Schema for Zopio plugin modules",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "./module.schema.json"
+    }
+  ],
+  "properties": {
+    "type": {
+      "const": "plugin"
+    },
+    "zopio": {
+      "type": "object",
+      "required": ["category", "icon", "slots"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Category of the plugin"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon for the plugin"
+        },
+        "slots": {
+          "type": "array",
+          "description": "UI slots that the plugin can be rendered in",
+          "items": {
+            "type": "object",
+            "required": ["name", "component"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the slot"
+              },
+              "component": {
+                "type": "string",
+                "description": "Component to render in the slot"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the slot"
+              }
+            }
+          }
+        },
+        "settings": {
+          "type": "array",
+          "description": "Settings for the plugin",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the setting"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the setting",
+                "enum": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "select",
+                  "multiselect",
+                  "color"
+                ]
+              },
+              "label": {
+                "type": "string",
+                "description": "Label for the setting"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the setting"
+              },
+              "default": {
+                "description": "Default value for the setting"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Whether the setting is required"
+              },
+              "options": {
+                "type": "array",
+                "description": "Options for select and multiselect settings",
+                "items": {
+                  "type": "object",
+                  "required": ["label", "value"],
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "Label for the option"
+                    },
+                    "value": {
+                      "description": "Value for the option"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Permissions required by the plugin",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

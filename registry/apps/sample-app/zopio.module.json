@@ -1,0 +1,45 @@
+{
+  "name": "@repo/sample-app",
+  "version": "1.0.0",
+  "type": "app",
+  "description": "Sample dashboard application for Zopio",
+  "author": "Zopio Labs",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@repo/design-system": "^1.0.0",
+    "@repo/auth": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "keywords": ["zopio", "dashboard", "sample", "widget"],
+  "zopio": {
+    "category": "ui",
+    "icon": "dashboard",
+    "routes": [
+      {
+        "path": "/sample-app",
+        "component": "Dashboard",
+        "auth": true,
+        "layout": "main"
+      },
+      {
+        "path": "/sample-app/settings",
+        "component": "Settings",
+        "auth": true,
+        "layout": "main"
+      }
+    ],
+    "navigation": [
+      {
+        "title": "Sample App",
+        "path": "/sample-app",
+        "icon": "dashboard",
+        "group": "apps"
+      }
+    ],
+    "permissions": ["view:sample-app", "edit:sample-app"]
+  }
+}

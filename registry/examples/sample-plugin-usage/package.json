@@ -1,0 +1,14 @@
+{
+  "name": "@repo/sample-plugin-usage",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/sample-plugin": "^1.0.0"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

@@ -1,0 +1,27 @@
+import type { FC } from 'react';
+
+interface {{ComponentName}}Props {
+  title?: string;
+  className?: string;
+}
+
+/**
+ * {{ComponentName}} Component
+ * 
+ * @description {{ComponentDescription}}
+ */
+export const {{ComponentName}}: FC<{{ComponentName}}Props> = ({
+  title,
+  className = '',
+}) => {
+  return (
+    <div className={`bg-white p-4 rounded-lg shadow ${className}`}>
+      {title && <h2 className="font-medium mb-2 text-lg">{title}</h2>}
+      <div>
+        {/* Component content goes here */}
+      </div>
+    </div>
+  );
+};
+
+export default {{ComponentName}};

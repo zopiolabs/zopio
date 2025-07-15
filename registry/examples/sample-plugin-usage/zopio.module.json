@@ -1,0 +1,16 @@
+{
+  "name": "@repo/sample-plugin-usage",
+  "version": "1.0.0",
+  "type": "example",
+  "description": "sample-plugin-usage - A Zopio example",
+  "author": "Zopio Team",
+  "license": "MIT",
+  "zopio": {
+    "category": "example",
+    "icon": "default-icon"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

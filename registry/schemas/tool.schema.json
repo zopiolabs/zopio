@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tool Module Schema",
+  "description": "Schema for Zopio tool modules",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "./module.schema.json"
+    }
+  ],
+  "properties": {
+    "type": {
+      "const": "tool"
+    },
+    "zopio": {
+      "type": "object",
+      "required": ["category", "icon", "commands"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Category of the tool"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon for the tool"
+        },
+        "commands": {
+          "type": "array",
+          "description": "Commands provided by the tool",
+          "items": {
+            "type": "object",
+            "required": ["name", "description", "handler"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the command"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the command"
+              },
+              "args": {
+                "type": "array",
+                "description": "Arguments for the command",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "description", "type"],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the argument"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the argument"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Type of the argument",
+                      "enum": ["string", "number", "boolean", "array", "object"]
+                    },
+                    "required": {
+                      "type": "boolean",
+                      "description": "Whether the argument is required"
+                    },
+                    "default": {
+                      "description": "Default value for the argument"
+                    }
+                  }
+                }
+              },
+              "handler": {
+                "type": "string",
+                "description": "Handler function for the command"
+              }
+            }
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Permissions required by the tool",
+          "items": {
+            "type": "string"
+          }
+        },
+        "env": {
+          "type": "array",
+          "description": "Environment variables required by the tool",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the environment variable"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the environment variable"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Whether the environment variable is required"
+              },
+              "default": {
+                "type": "string",
+                "description": "Default value for the environment variable"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

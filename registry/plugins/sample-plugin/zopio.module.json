@@ -1,0 +1,59 @@
+{
+  "name": "@repo/sample-plugin",
+  "version": "1.0.0",
+  "type": "plugin",
+  "description": "Sample UI plugin for Zopio",
+  "author": "Zopio Labs",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@repo/design-system": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "keywords": ["zopio", "plugin", "widget", "dashboard"],
+  "zopio": {
+    "category": "ui",
+    "icon": "puzzle",
+    "slots": [
+      {
+        "name": "dashboard-widget",
+        "component": "DashboardWidget",
+        "props": {
+          "title": {
+            "type": "string",
+            "default": "Sample Widget"
+          },
+          "showHeader": {
+            "type": "boolean",
+            "default": true
+          },
+          "variant": {
+            "type": "string",
+            "enum": ["default", "compact", "expanded"],
+            "default": "default"
+          }
+        }
+      },
+      {
+        "name": "settings-panel",
+        "component": "SettingsPanel"
+      }
+    ],
+    "permissions": ["view:dashboard"],
+    "settings": {
+      "apiKey": {
+        "type": "string",
+        "required": false,
+        "description": "API Key for external service"
+      },
+      "refreshInterval": {
+        "type": "number",
+        "default": 60,
+        "description": "Data refresh interval in seconds"
+      }
+    }
+  }
+}
