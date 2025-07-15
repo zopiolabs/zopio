@@ -1,0 +1,18 @@
+{
+  "name": "@repo/auth-hooks",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "main": "./hooks/use-access.ts",
+  "types": "./hooks/use-access.ts",
+  "dependencies": {
+    "@repo/auth-runner": "workspace:*",
+    "react": "^19.1.0"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0"
+  }
+}
