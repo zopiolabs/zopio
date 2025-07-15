@@ -1,0 +1,384 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED PR VALIDATION WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Enforces quality standards and conventions for all pull requests
+#          to maintain code quality, consistency, and proper documentation.
+#          This unified workflow combines multiple validation checks in one place.
+#
+# Triggers:
+#   - PR opened, edited, synchronized (new commits), or reopened
+#   - PR target events for security with external contributors
+#   - Branch creation events for early branch name validation
+#
+# Key Features:
+#   - Branch naming convention enforcement (feat/, fix/, etc.)
+#   - Semantic PR title validation (conventional commits format)
+#   - PR size limit enforcement to prevent massive changes
+#   - Breaking change documentation verification
+#   - Automated feedback via PR comments and labels
+#
+# DX Benefits:
+#   - Ensures consistent PR standards across the project
+#   - Provides immediate feedback on PR quality issues
+#   - Reduces review cycles by catching common issues early
+#   - Maintains clean git history through standardized commits
+#   - Simplifies release notes and changelog generation
+#   - Enforces documentation of breaking changes
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: PR Validations
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - main
+      - develop
+  pull_request_target:
+    types: [opened, edited, synchronize]
+  create:
+
+# Concurrency configuration to prevent duplicate validation runs
+# This ensures only one validation workflow runs per PR at any given time
+concurrency:
+  # Create a unique concurrency group for each PR or branch reference
+  # This prevents multiple workflow runs from processing the same PR simultaneously
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  # Cancel any in-progress workflow run if a new one is triggered
+  # This ensures we're always validating against the latest PR state
+  cancel-in-progress: false
+
+jobs:
+  # Main validation job that performs all checks in sequence
+  # Using a single job for all validations improves performance and provides a unified status check
+  PR-Validations:
+    runs-on: ubuntu-latest
+    # Required permissions to comment on PRs and add/remove labels
+    permissions:
+      pull-requests: write  # Needed to comment on PRs and modify PR metadata
+      issues: write         # Needed to add/remove labels and create comments
+    steps:
+      # Step 1: Branch Naming Convention Check
+      # Validates that branch names follow the project's standardized naming conventions
+      # This ensures consistent branch organization and enables automated workflows
+      # based on branch name patterns (e.g., automatic versioning, deployment)
+      - name: Check branch naming convention
+        # Run this check for PRs and when new branches are created
+        # This provides early feedback on branch naming issues
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target' || github.event_name == 'create'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = context.payload.pull_request?.head?.ref || context.ref.replace('refs/heads/', '');
+            const targetBranch = context.payload.pull_request?.base?.ref;
+            console.log(`Checking branch name: ${branchName}`);
+            console.log(`Target branch: ${targetBranch}`);
+
+            // Special case: Allow staging → main PRs as part of git flow
+            if (context.payload.pull_request && branchName === 'staging' && targetBranch === 'main') {
+              console.log(`✅ Staging → main PR is allowed as part of git flow process.`);
+              return;
+            }
+
+            const patterns = [
+              /^main$/,
+              /^develop$/,
+              /^staging$/,
+              /^feat\/.+$/,
+              /^feature\/.+$/,
+              /^fix\/.+$/,
+              /^hotfix\/.+$/,
+              /^release\/v\d+\.\d+\.\d+$/,
+              /^docs\/.+$/,
+              /^chore\/.+$/,
+              /^test\/.+$/,
+              /^refactor\/.+$/,
+              /^ci\/.+$/,
+              /^build\/.+$/,
+              /^perf\/.+$/,
+              /^style\/.+$/,
+              /^revert\/.+$/,
+              /^v\d+\.\d+$/,
+              /^sync\/.+$/,
+              /^dependabot\/.+$/,
+              /^codex\/.+$/,
+              /^wip\/.+$/
+              ];
+
+            const isValid = patterns.some(pattern => pattern.test(branchName));
+
+            if (!isValid) {
+              const message = `❌ Branch name "${branchName}" does not follow naming conventions.
+
+              **Allowed patterns:**
+              - \`main\`, \`develop\`, \`staging\` (protected branches)
+              - \`feat/*\` or \`feature/*\` - New features
+              - \`fix/*\` - Bug fixes
+              - \`hotfix/*\` - Emergency fixes
+              - \`release/v*.*.*\` - Release branches
+              - \`docs/*\` - Documentation
+              - \`chore/*\` - Maintenance
+              - \`test/*\` - Tests
+              - \`refactor/*\` - Refactoring
+              - \`ci/*\` - CI/CD changes
+              - \`build/*\` - Build changes
+              - \`perf/*\` - Performance
+              - \`style/*\` - Code style
+              - \`revert/*\` - Reverts
+              - \`v*.*\` - Version branches
+              - \`wip/*\` - Work in progress`;
+
+              if (context.payload.pull_request) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: message
+                });
+
+                try {
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.issue.number,
+                    labels: ['invalid branch name']
+                  });
+                } catch (e) {
+                  console.log('Label might not exist, continuing...');
+                }
+              }
+
+              core.setFailed(message);
+            } else {
+              console.log(`✅ Branch name "${branchName}" follows naming conventions.`);
+
+              if (context.payload.pull_request) {
+                try {
+                  await github.rest.issues.removeLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.issue.number,
+                    name: 'invalid branch name'
+                  });
+                } catch (e) {
+                  // Label might not exist - this is expected
+                }
+              }
+            }
+
+      # Step 2: Semantic PR Title Validation
+      # Ensures PR titles follow the Conventional Commits specification
+      # This standardization enables automated changelog generation and semantic versioning
+      # Format: type(scope): description  [e.g., feat(auth): add SSO support]
+      - name: Validate PR title format
+        # Only run on PR events (not on branch creation)
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        uses: amannn/action-semantic-pull-request@v5
+        id: semantic  # ID used to reference this step in later steps if needed
+        env:
+          # Token for GitHub API access to comment on PRs
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+            release
+          scopes: |
+            api
+            app
+            auth
+            build
+            ci
+            cli
+            core
+            crud
+            data
+            database
+            deps
+            design-system
+            docs
+            email
+            i18n
+            infra
+            monitoring
+            payments
+            security
+            studio
+            tests
+            ui
+            web
+            workspace
+          requireScope: false
+          validateSingleCommit: false
+          subjectPattern: ^(?![A-Z]).+$
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}"
+            doesn't match the configured pattern. Please ensure that the subject
+            doesn't start with an uppercase character.
+
+      # Step 3: Breaking Change Documentation Check
+      # Detects breaking changes (indicated by '!' in PR title) and ensures proper documentation
+      # This enforces that breaking changes are well-documented with migration instructions
+      # to help users adapt to API changes and maintain backward compatibility awareness
+      - name: Check for breaking changes documentation
+        # Only run on PR events (not on branch creation)
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            const body = context.payload.pull_request.body || '';
+
+            if (title.includes('!')) {
+              const hasBreakingSection = body.toLowerCase().includes('breaking change');
+
+              if (!hasBreakingSection) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  body: `⚠️ **Breaking Change Detected**
+
+                  Your PR title indicates a breaking change (contains "!"), but the PR description doesn't include a "Breaking Changes" section.
+
+                  Please update your PR description to include:
+                  - A clear description of what is breaking
+                  - Migration instructions for users
+                  - Why this breaking change is necessary
+
+                  Example:
+                  \`\`\`
+                  ## Breaking Changes
+
+                  - Changed \`doSomething()\` API to require a config parameter
+                  - Migration: Update all calls from \`doSomething()\` to \`doSomething({ legacy: true })\`
+                  - This change allows for better extensibility and performance improvements
+                  \`\`\``
+                });
+
+                core.setFailed('PR contains breaking changes but lacks proper documentation');
+              }
+            }
+
+      # Step 4: PR Size Limit Check
+      # Enforces reasonable PR sizes to improve code review quality and velocity
+      # Large PRs are harder to review thoroughly and often lead to missed issues
+      # This check provides warnings for medium-sized PRs and blocks excessively large ones
+      - name: Check PR size
+        # Only run on PR events (not on branch creation)
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            const additions = pullRequest.additions;
+            const deletions = pullRequest.deletions;
+            const totalChanges = additions + deletions;
+            const changedFiles = pullRequest.changed_files;
+
+            console.log(`PR Stats:`);
+            console.log(`- Total changes: ${totalChanges} (${additions} additions, ${deletions} deletions)`);
+            console.log(`- Changed files: ${changedFiles}`);
+
+            // Check file count limit
+            if (changedFiles > 100) {
+              core.setFailed(`❌ PR changes too many files (${changedFiles} files). Maximum allowed: 100 files.`);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: `### ❌ PR Size Check Failed\n\nThis PR changes ${changedFiles} files, exceeding the limit of 100 files.\n\nPlease split this PR into smaller, more focused changes.`
+              });
+              return;
+            }
+
+            // Check line count limit
+            // TODO: Monitor the soft limit and lower it over time. Target 1000
+            const softLimit = 3000;
+            const hardLimit = 5000;
+
+            let comment = '';
+            let failed = false;
+
+            if (totalChanges > hardLimit) {
+              failed = true;
+              comment = `### ❌ PR Size Check Failed\n\nThis PR changes ${totalChanges} lines across ${changedFiles} files, exceeding the hard limit of ${hardLimit} lines.\n\nPlease split this PR into smaller, more focused changes.`;
+            } else if (totalChanges > softLimit) {
+              comment = `### ⚠️ PR Size Warning\n\nThis PR changes ${totalChanges} lines across ${changedFiles} files, exceeding the soft limit of ${softLimit} lines.\n\nWhile not required, consider splitting this into smaller PRs for easier review.`;
+            } else {
+              comment = `### ✅ PR Size Check Passed\n\nThis PR changes ${totalChanges} lines across ${changedFiles} files.`;
+            }
+
+            // Find and update existing size check comment or create new one
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number
+            });
+
+            const botComment = comments.data.find(comment =>
+              comment.user.type === 'Bot' && comment.body.includes('PR Size Check')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: comment
+              });
+            }
+
+            if (failed) {
+              core.setFailed(`PR is too large (${totalChanges} lines changed). Maximum allowed: ${hardLimit} lines.`);
+            }
+
+      # Step 5: Validation Summary - Provides a helpful error message when any validation fails
+      # This step creates a comprehensive comment with guidance on fixing validation issues
+      # The comment includes links to documentation and specific requirements for each check
+      # This improves DX by providing clear, actionable feedback to contributors
+      - name: Add validation summary
+        # Only run this step if a previous step has failed and we're processing a PR
+        if: failure() && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const validTypes = ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'revert', 'release'];
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `## ❌ PR Validation Failed
+
+              Please ensure your PR meets all requirements:
+
+              1. **Branch Naming**: Follow conventions like \`feat/description\`, \`fix/issue-123\`
+              2. **PR Title**: Use format \`<type>(<scope>): <subject>\` (e.g., \`feat(auth): add OAuth support\`)
+              3. **PR Size**: Keep changes under 5000 lines and 100 files
+              4. **Breaking Changes**: Document with "!" in title and description
+
+              See our [Contributing Guide](https://github.com/zopiolabs/zopio/blob/main/.github/CONTRIBUTING.md) for details.`
+            });
