@@ -1,0 +1,39 @@
+# EditorConfig for Zopio Monorepo
+# https://EditorConfig.org
+
+root = true
+
+# Global settings for all file types
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# JSON and JSONC files (e.g., tsconfig, turbo.json, settings.json)
+[*.json]
+indent_size = 2
+
+[*.jsonc]
+indent_size = 2
+
+# YAML files (e.g., GitHub Actions, dependabot)
+[*.yml]
+indent_size = 2
+
+[*.yaml]
+indent_size = 2
+
+# Markdown files (docs, PR templates, etc.)
+[*.md]
+trim_trailing_whitespace = false
+
+# Prisma schema files
+[*.prisma]
+indent_size = 2
+
+# TypeScript, JavaScript, and JSX/TSX files
+[*.{ts,tsx,js,jsx}]
+indent_size = 2
