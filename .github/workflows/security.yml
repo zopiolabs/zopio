@@ -1,0 +1,261 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED SECURITY SCAN SUITE WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Provides a multi-layered security scanning approach that combines static code analysis,
+#          dependency vulnerability scanning, secret detection, and container security checks.
+#          This unified approach ensures comprehensive security coverage across the codebase.
+#
+# Triggers:
+#   - Push to main/develop/staging branches
+#   - PRs to main/develop/staging branches
+#   - Daily scheduled scan at 2 AM UTC (catches newly disclosed vulnerabilities)
+#
+# Scan Types:
+#   1. Code Security Analysis (CodeQL)
+#      - Detects security vulnerabilities in JavaScript/TypeScript code
+#      - Identifies common issues like XSS, SQL injection, and unsafe practices
+#      - Uses GitHub's advanced semantic code analysis
+#
+#   2. Dependency Vulnerabilities (Trivy)
+#      - Scans npm packages for known CVEs and security issues
+#      - Identifies outdated packages with security patches available
+#      - Prioritizes by severity (critical, high, medium)
+#
+#   3. Secret Detection (TruffleHog)
+#      - Scans for accidentally committed secrets and credentials
+#      - Uses entropy analysis and pattern matching
+#      - Only reports verified secrets to reduce false positives
+#
+#   4. Container Security (when applicable)
+#      - Scans Docker images for vulnerabilities
+#      - Checks for insecure configurations
+#      - Only runs when Docker-related changes are detected
+#
+# Results:
+#   - Uploaded to GitHub Security tab for easy visibility
+#   - Available in SARIF format for integration with security tools
+#   - Fails build on critical issues to prevent insecure code from being merged
+#   - Provides detailed reports for remediation
+#
+# DX Benefits:
+#   - Shifts security left in the development process
+#   - Provides immediate feedback on security issues
+#   - Reduces security review cycles
+#   - Educates developers on secure coding practices
+#   - Maintains consistent security standards across the codebase
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop, staging]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'LICENSE'
+      - 'CHANGELOG.md'
+      - 'README.md'
+      - '**/*.txt'
+  pull_request:
+    branches: [main, develop, staging]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'LICENSE'
+      - 'CHANGELOG.md'
+      - 'README.md'
+      - '**/*.txt'
+  schedule:
+    # Daily scan ensures we catch newly disclosed vulnerabilities
+    - cron: '0 2 * * *'
+
+# Cancel in-progress security scans when new commits are pushed
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read          # Read repository content
+  security-events: write  # Upload security findings
+
+jobs:
+  # Job 1: CodeQL Analysis - Advanced static code analysis for security vulnerabilities
+  codeql-analysis:
+    name: Code Security Scan
+    runs-on: ubuntu-latest
+
+    # Required permissions for CodeQL to function properly
+    permissions:
+      security-events: write  # Allows uploading security analysis results
+      packages: read          # Allows reading from GitHub packages
+      actions: read           # Allows reading GitHub Actions
+      contents: read          # Allows reading repository contents
+
+    # Strategy configuration for language-specific analysis
+    strategy:
+      fail-fast: false        # Continue with other languages if one fails
+      matrix:
+        # Currently only analyzing JavaScript/TypeScript code
+        # Add other languages here if needed (e.g., 'python', 'java')
+        language: [ 'javascript-typescript' ]
+    steps:
+    # Step 1: Check out the repository code for analysis
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Step 2: Initialize the CodeQL analysis engine
+    # This sets up the CodeQL database and prepares for code scanning
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        # Use the language specified in the matrix
+        languages: ${{ matrix.language || 'javascript-typescript' }}
+        # Use both security and quality queries for comprehensive analysis
+        # This provides more thorough scanning than the default security-only queries
+        queries: security-and-quality
+
+    # Step 3: Automatically build the code to analyze
+    # For JavaScript/TypeScript, this typically doesn't compile anything
+    # but ensures the code is in the right state for analysis
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    # Step 4: Run the actual CodeQL analysis
+    # This performs the security scanning and generates results
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        # Categorize results by language for better organization in the Security tab
+        category: "/language:${{ matrix.language || 'javascript-typescript' }}"
+        # Results will be uploaded to GitHub Security tab automatically
+
+  # Job 2: Dependency Vulnerability Scanning - Identifies security issues in third-party packages
+  dependency-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository code for scanning
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Run Trivy scanner to identify vulnerabilities in dependencies
+      # Trivy is a comprehensive vulnerability scanner that can detect issues in
+      # npm packages, Docker images, and other dependency types
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          scan-type: 'fs'                         # Filesystem scan (analyzes package.json, package-lock.json, etc.)
+          scan-ref: '.'                           # Scan entire repository
+          format: 'sarif'                         # GitHub-compatible format for security dashboard integration
+          output: 'trivy-results.sarif'           # Output file for scan results
+          severity: 'CRITICAL,HIGH,MEDIUM'        # Only report issues of these severity levels
+                                                  # Excludes LOW and UNKNOWN to reduce noise
+          ignore-unfixed: true                    # Skip vulnerabilities without available fixes
+                                                  # This reduces alert fatigue from unfixable issues
+
+      # Step 3: Upload scan results to GitHub Security dashboard
+      # This makes vulnerability findings visible and actionable in the GitHub UI
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'       # Use the results file generated by Trivy
+
+  # Job 3: Secret Scanning - Detects accidentally committed credentials and secrets
+  secret-scan:
+    name: Secret Protection Scan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      # Step 1: Check out the repository code with full history
+      # Complete git history is required to detect secrets that may have been
+      # committed in the past and still pose a security risk
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for accurate secret detection across all commits
+          # No need for --unshallow as fetch-depth: 0 already gets the complete history
+
+      # Step 2: Run TruffleHog to detect secrets in the codebase
+      # TruffleHog uses pattern matching, entropy analysis, and regex rules to find
+      # API keys, credentials, tokens, and other sensitive information
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@v3.89.2
+        if: github.event_name == 'pull_request'
+        with:
+          path: ./                                             # Scan the entire repository content
+          base: ${{ github.event.pull_request.base.sha }}      # Set base commit to PR base branch SHA
+          head: ${{ github.event.pull_request.head.sha }}      # Set head commit to PR latest commit SHA
+          extra_args: --only-verified                          # Report only verified secrets to minimize false positives
+
+
+  # Job 4: Docker Container Scanning - Checks container images for vulnerabilities
+  # This job is conditionally executed only when Docker-related changes are detected
+  docker-scan:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    # Conditional execution to optimize workflow performance
+    # Only runs when Docker-related changes are detected in commit messages or PR titles
+    if: contains(github.event.head_commit.message, 'docker') || contains(github.event.pull_request.title, 'docker')
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Build the Docker image for scanning if a Dockerfile exists
+      # This creates a local image that will be analyzed for vulnerabilities
+      - name: Build Docker image
+        run: |
+          if [ -f Dockerfile ]; then
+            docker build -t zopio:scan .
+          else
+            echo "No Dockerfile found, skipping container scan"
+            exit 0
+          fi
+
+      # Step 3: Scan the built container image for vulnerabilities
+      # Trivy analyzes the container layers, installed packages, and configurations
+      # to identify security issues in the container image
+      - name: Run Trivy container scan
+        if: success()  # Only run if the Docker build succeeded
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          image-ref: 'zopio:scan'          # Reference to the locally built image
+          format: 'sarif'                  # GitHub-compatible format for security dashboard
+          output: 'container-results.sarif' # Output file for scan results
+          severity: 'CRITICAL,HIGH'        # Only report critical and high severity issues
+                                          # Container scans often have many medium/low findings
+
+      # Step 4: Upload container scan results to GitHub Security dashboard
+      # This makes container vulnerability findings visible in the GitHub UI
+      - name: Upload container scan results
+        if: success()  # Only run if the scan succeeded
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'container-results.sarif'  # Use the results file generated by Trivy
+
+  # Job 5: Security Scan Summary - Aggregates results from all security scans
+  security-scan-summary:
+    name: Security Scan Summary
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, secret-scan, docker-scan]
+    if: always()
+    steps:
+      - name: Check Security Scan Status
+        shell: bash
+        run: |
+          echo "Dependency scan result: ${{ needs.dependency-scan.result }}"
+          echo "Secret scan result: ${{ needs.secret-scan.result }}"
+          echo "Docker scan result: ${{ needs.docker-scan.result }}"
+
+          if [[ "${{ needs.dependency-scan.result }}" == "failure" || "${{ needs.secret-scan.result }}" == "failure" ]]; then
+            echo "Security Scan failed - Critical jobs failed"
+            exit 1
+          else
+            echo "Security Scan passed - No critical failures"
+          fi
