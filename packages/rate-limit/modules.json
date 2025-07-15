@@ -1,0 +1,6 @@
+{
+  "category": "Infrastructure",
+  "name": "Rate Limit",
+  "definition": "A utility package for implementing rate limiting in Zopio applications using Upstash Redis.",
+  "importCode": "import { createRateLimiter } from '@repo/rate-limit';"
+}
