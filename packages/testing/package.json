@@ -1,0 +1,15 @@
+{
+  "name": "@repo/testing",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.js",
+  "type": "module",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "typecheck": "echo 'No TypeScript files found in testing package' && exit 0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.5.0",
+    "vitest": "^3.1.4"
+  }
+}
