@@ -1,0 +1,56 @@
+{
+  "category": "AI",
+  "name": "Model Context Protocol",
+  "definition": "A standardized protocol for defining, validating, and interacting with AI model contexts across the Zopio codebase",
+  "importCode": "import { MCPServer, MCPClient } from '@repo/mcp';",
+  "modules": [
+    {
+      "category": "Core",
+      "name": "Protocol",
+      "definition": "Core protocol implementation with resource validation",
+      "importCode": "import { validateResource, createResource } from '@repo/mcp';"
+    },
+    {
+      "category": "Core",
+      "name": "Server",
+      "definition": "MCP server implementation for hosting resources",
+      "importCode": "import { MCPServer } from '@repo/mcp';"
+    },
+    {
+      "category": "Core",
+      "name": "Client",
+      "definition": "MCP client for consuming resources from servers",
+      "importCode": "import { MCPClient } from '@repo/mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "Package Schema",
+      "definition": "Schema for package resources",
+      "importCode": "import { packageSchema, createPackageResource } from '@repo/mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "Component Schema",
+      "definition": "Schema for UI component resources",
+      "importCode": "import { componentSchema, createComponentResource } from '@repo/mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "API Schema",
+      "definition": "Schema for API endpoint resources",
+      "importCode": "import { apiSchema, createApiResource } from '@repo/mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "Model Schema",
+      "definition": "Schema for data model resources",
+      "importCode": "import { modelSchema, createModelResource } from '@repo/mcp';"
+    },
+    {
+      "category": "Utils",
+      "name": "Resource Utilities",
+      "definition": "Utility functions for working with MCP resources",
+      "importCode": "import { generateResourceId, getResourceIdentifier } from '@repo/mcp';"
+    }
+  ]
+}
