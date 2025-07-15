@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Join Community Discussions
+    url: https://github.com/zopiolabs/zopio/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📖 Explore Documentation Portal
+    url: https://docs.zopio.dev
+    about: Check our documentation portal for guides

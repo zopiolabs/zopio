@@ -1,0 +1,132 @@
+name: "🛠️ DevOps Implementation Task"
+description: Track a DevOps workflow implementation task
+title: '[DevOps]: '
+labels:
+- devops
+- needs triage
+- 'status: awaiting review'
+- 'type: devops'
+body:
+- attributes:
+    value: '## 🛠️ DevOps Task Request Guide
+
+      Thanks for submitting a DevOps task request!
+
+
+      - Clearly describe the task.
+
+      - Explain why it''s needed.
+
+      - Add logs, error messages, or links if available.
+
+      '
+  type: markdown
+- attributes:
+    description: Which implementation phase does this belong to?
+    label: Phase
+    options:
+    - Phase 1 - Foundation & Assessment
+    - Phase 2 - Core Branch Strategy
+    - Phase 3 - CI/CD Pipeline Core
+    - Phase 4 - Security & Compliance
+    - Phase 5 - Automation & Developer Experience
+    - Phase 6 - Advanced Features
+    - Phase 7 - Documentation & Training
+  id: phase
+  type: dropdown
+  validations:
+    required: true
+- attributes:
+    description: Which component area does this relate to?
+    label: Component
+    options:
+    - CI/CD
+    - Security
+    - Automation
+    - Documentation
+    - Infrastructure
+    - Testing
+  id: component
+  type: dropdown
+  validations:
+    required: true
+- attributes:
+    description: How urgent is this task?
+    label: Priority
+    options:
+    - Critical
+    - High
+    - Medium
+    - Low
+  id: priority
+  type: dropdown
+  validations:
+    required: true
+- attributes:
+    description: Provide a detailed description of what needs to be done
+    label: Task Description
+    placeholder: 'Clear description of the task...
+
+      Include any relevant context or dependencies...
+
+      '
+  id: description
+  type: textarea
+  validations:
+    required: true
+- attributes:
+    description: How do we know this task is complete?
+    label: Acceptance Criteria
+    placeholder: '- [ ] Criterion 1
+
+      - [ ] Criterion 2
+
+      - [ ] Criterion 3
+
+      '
+  id: acceptance
+  type: textarea
+  validations:
+    required: true
+- attributes:
+    description: Any specific commands, configurations, or approaches to consider
+    label: Implementation Notes
+    placeholder: 'Example commands:
+
+      ```bash
+
+      gh api repos/owner/repo/...
+
+      ```
+
+
+      Configuration examples:
+
+      ```yaml
+
+      # workflow configuration
+
+      ```
+
+      '
+  id: implementation
+  type: textarea
+- attributes:
+    description: 1-8 story points (1 = few hours, 8 = full week)
+    label: Estimated Effort (Story Points)
+    placeholder: '3'
+  id: effort
+  type: input
+  validations:
+    required: true
+- attributes:
+    description: Check any dependencies this task has
+    label: Dependencies
+    options:
+    - label: Depends on other Phase 1 tasks
+    - label: Requires repository admin access
+    - label: Needs security scanning features
+    - label: Requires GitHub Pro/Enterprise features
+  id: dependencies
+  type: checkboxes
+

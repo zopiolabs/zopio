@@ -1,0 +1,94 @@
+name: ❓ Question
+description: Ask a question about using or contributing to Zopio
+title: '[Question]: '
+labels:
+- 'type: question'
+- question
+- triage
+- 'status: awaiting response'
+- needs triage
+
+body:
+- attributes:
+    value: 'Thanks for your interest in Zopio! Before asking your question:
+
+      - 📖 Check our [documentation](https://docs.zopio.dev)
+
+      - 🔍 Search [existing issues](https://github.com/zopiolabs/zopio/issues)
+
+      - 💬 Consider using [GitHub Discussions](https://github.com/zopiolabs/zopio/discussions)
+      for general questions
+
+      '
+  type: markdown
+- attributes:
+    description: What area does your question relate to?
+    label: Question Category
+    options:
+    - Installation & Setup
+    - Configuration
+    - Usage & Best Practices
+    - Integration
+    - Contributing
+    - Architecture & Design
+    - Performance
+    - Security
+    - Other
+  id: question-category
+  type: dropdown
+  validations:
+    required: true
+- attributes:
+    description: Ask your question with as much detail as possible
+    label: Your Question
+    placeholder: How do I... / What is the best way to... / Why does...
+  id: question
+  type: textarea
+  validations:
+    required: true
+- attributes:
+    description: Provide any context that might help us answer your question better
+    label: Context
+    placeholder: I'm trying to build... / My use case is...
+  id: context
+  type: textarea
+- attributes:
+    description: Describe any attempts you've made to find an answer
+    label: What have you tried?
+    placeholder: I've looked at... / I tried...
+  id: attempted-solutions
+  type: textarea
+- attributes:
+    description: What version of Zopio are you using? (if applicable)
+    label: Zopio Version
+    placeholder: e.g., 1.0.0
+  id: zopio-version
+  type: input
+- attributes:
+    description: How urgent is getting an answer to this question?
+    label: Urgency
+    options:
+    - Low - Just curious
+    - Medium - Would help my project
+    - High - Blocking my work
+  id: urgency
+  type: dropdown
+  validations:
+    required: true
+- attributes:
+    description: Would you be willing to help document the answer?
+    label: Helping Others
+    options:
+    - label: I'd be willing to contribute documentation once I understand the answer
+    - label: I can help others with similar questions in the future
+  id: help-others
+  type: checkboxes
+- attributes:
+    description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/zopiolabs/zopio/blob/main/.github/CODE_OF_CONDUCT.md)
+    label: Code of Conduct
+    options:
+    - label: I agree to follow this project's Code of Conduct
+      required: true
+  id: terms
+  type: checkboxes
+

@@ -1,0 +1,89 @@
+name: ✨ Enhancement Request
+description: Suggest an enhancement or improvement to existing functionality
+title: '[Enhancement]: '
+labels:
+- 'status: awaiting review'
+- 'type: enhancement'
+- enhancement
+- triage
+- needs triage
+body:
+- attributes:
+    value: 'Thanks for taking the time to suggest an enhancement! This form is for
+      improvements to existing features.
+
+      For entirely new features, please use the Feature Request template.
+
+      '
+  type: markdown
+- attributes:
+    description: Describe how the feature currently works
+    label: Current Behavior
+    placeholder: Currently, the system does...
+  id: current-behavior
+  type: textarea
+  validations:
+    required: true
+- attributes:
+    description: Describe your proposed improvement in detail
+    label: Proposed Enhancement
+    placeholder: I propose that we enhance this by...
+  id: proposed-enhancement
+  type: textarea
+  validations:
+    required: true
+- attributes:
+    description: Why would this enhancement be valuable? What problems does it solve?
+    label: Motivation
+    placeholder: This enhancement would help because...
+  id: motivation
+  type: textarea
+  validations:
+    required: true
+- attributes:
+    description: Have you considered any alternative solutions or workarounds?
+    label: Alternatives Considered
+    placeholder: I've considered...
+  id: alternatives
+  type: textarea
+- attributes:
+    description: How many users/developers would benefit from this enhancement?
+    label: Expected Impact
+    options:
+    - Low - Affects specific edge cases
+    - Medium - Affects a moderate number of users
+    - High - Affects most users
+    - Critical - Blocks common workflows
+  id: impact
+  type: dropdown
+  validations:
+    required: true
+- attributes:
+    description: Would this enhancement require breaking changes?
+    label: Breaking Change
+    options:
+    - 'No'
+    - 'Yes'
+    - Unsure
+  id: breaking-change
+  type: dropdown
+  validations:
+    required: true
+- attributes:
+    description: Are you willing to help implement this enhancement?
+    label: Contribution
+    options:
+    - label: I am willing to submit a PR for this enhancement
+    - label: I would need guidance on implementation
+    - label: I can help test the implementation
+  id: contribution
+  type: checkboxes
+- attributes:
+    description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/zopiolabs/zopio/blob/main/.github/CODE_OF_CONDUCT.md)
+    label: Code of Conduct
+    options:
+    - label: I agree to follow this project's Code of Conduct
+      required: true
+  id: terms
+  type: checkboxes
+
