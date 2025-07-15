@@ -1,0 +1,113 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED PR BACKMERGE WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# This workflow automatically creates a pull request to backmerge changes from the main branch
+# to the develop branch, but only when triggered by version bump commits.
+# This ensures that version updates made in production are properly synchronized back to the
+# development branch, maintaining version consistency across branches.
+#
+# Workflow logic:
+# 1. Triggers only on pushes to main branch with 'bump version' in commit message
+# 2. Checks if there are differences between main and develop branches
+# 3. Creates a PR to merge main into develop if differences exist
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Backmerge main to develop after version bump
+
+# Trigger conditions for the workflow
+on:
+  push:
+    branches:
+      - main
+
+# Add permissions needed for PR creation
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  backmerge:
+    runs-on: ubuntu-latest
+    # Only run this workflow when the commit message contains 'bump version'
+    if: contains(github.event.head_commit.message, 'bump version')
+
+    steps:
+      # Step 1: Check out the repository code with full history
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for proper branch comparison
+
+      # Step 2: Fetch the latest develop branch and display branch information
+      - name: Fetch develop branch and display branch info
+        run: |
+          git fetch origin develop:develop
+          git branch -a
+          echo "Current branch: $(git branch --show-current)"
+          echo "Develop branch commit: $(git rev-parse develop)"
+          echo "Main branch commit: $(git rev-parse main)"
+
+      # Step 3: Check if there are differences between main and develop branches
+      - name: Check for differences between main and develop
+        id: check_diff
+        run: |
+          if git diff --quiet main develop; then
+            echo "No differences found between main and develop branches."
+            echo "has_diff=false" >> $GITHUB_OUTPUT
+          else
+            echo "Found differences between main and develop branches."
+            echo "has_diff=true" >> $GITHUB_OUTPUT
+            echo "Changes detected:"
+            git diff --stat main develop
+          fi
+
+      # Step 4: Create an automated pull request for the backmerge
+      - name: Create Backmerge PR
+        uses: peter-evans/create-pull-request@v7
+        if: steps.check_diff.outputs.has_diff == 'true'
+        with:
+          token: ${{ secrets.GH_PAT }}
+          base: develop
+          branch: sync/backmerge-main-to-develop-${{ github.run_number }}
+          title: "🔁 Backmerge: main → develop (after version bump)"
+          body: |
+            ## Automated Backmerge PR
+
+            This PR syncs the **develop** branch with **main** after a production version bump.
+
+            ### Details
+            - Triggered by commit: `${{ github.event.head_commit.message }}`
+            - Commit SHA: `${{ github.sha }}`
+            - Workflow run: [View Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            Please review the changes and merge when ready.
+          commit-message: "chore(backmerge): sync main into develop after version bump"
+          delete-branch: true
+          labels: |
+            automated-pr
+            backmerge
+
+      # Step 5: Report workflow status
+      - name: PR Creation Status
+        if: always()
+        run: |
+          echo "has_diff value: ${{ steps.check_diff.outputs.has_diff }}"
+          if [ "${{ steps.check_diff.outputs.has_diff }}" != 'true' ]; then
+            echo "✅ No PR created: No differences found between main and develop branches."
+          else
+            echo "PR creation attempted."
+            echo "If no PR was created, please check:"
+            echo "1. GitHub token permissions: ${{ toJson(github.token_permissions) }}"
+            echo "2. Repository settings for GitHub Actions"
+            echo "3. Branch protection rules on develop branch"
+          fi
+
+      # Step 6: Notify on workflow completion
+      - name: Workflow Summary
+        if: always()
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          echo "::notice::Backmerge workflow completed at $(date)"
+          echo "::notice::Triggered by commit: $COMMIT_MESSAGE"
