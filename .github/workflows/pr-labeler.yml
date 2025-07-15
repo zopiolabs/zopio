@@ -1,0 +1,44 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTOMATED PR LABEL WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Purpose: Automatically applies area and type labels to pull requests based on
+#          the files changed, using rules defined in .github/labeler.yml
+#
+# Triggers:
+# - On pull_request_target events (including PRs from forks)
+#
+# Key Features:
+# - Uses GitHub's labeler action to analyze changed files
+# - Applies consistent labels based on predefined patterns
+# - Supports monorepo structure with area-based and type-based labels
+# - Runs with pull-request write permissions for label management
+#
+# DX Benefits:
+# - Reduces manual labeling effort for maintainers
+# - Improves PR organization and discoverability
+# - Enables automated workflows based on labels
+# - Provides consistent categorization across all PRs
+# - Helps with project metrics and reporting
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: PR Auto Label
+on: [pull_request_target]
+
+jobs:
+  # Main job that analyzes PR changes and applies appropriate labels
+  # This job runs on every PR, including those from forks (pull_request_target)
+  label:
+    runs-on: ubuntu-latest
+    # Permissions required for labeling PRs
+    permissions:
+      contents: read      # To read repository files
+      pull-requests: write # To modify PR labels
+      issues: write       # To modify issues
+
+    steps:
+    # Apply labels based on the rules in .github/labeler.yml
+    # This action analyzes the files changed in the PR and applies matching labels
+    - uses: actions/labeler@v5
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"  # Token for GitHub API access
