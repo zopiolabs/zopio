@@ -1,0 +1,61 @@
+# Dependabot Configuration
+#
+# Purpose: Automates dependency updates for both GitHub Actions and npm packages
+#          to ensure security patches and new features are regularly integrated.
+#
+# Configuration Overview:
+# - Uses Dependabot API
+# - Configured for both GitHub Actions workflows and npm dependencies
+# - Monthly update schedule to minimize disruption while maintaining security
+# - Limited to 10 open PRs at a time to prevent overwhelming maintainers
+#
+# Benefits:
+# - Reduces security vulnerabilities by keeping dependencies updated
+# - Minimizes technical debt from outdated packages
+# - Automates routine maintenance tasks
+# - Provides consistent PR format for dependency updates
+#
+# For more information on configuration options:
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+
+  # GitHub Actions Dependency Updates
+  #
+  # Automatically updates workflow files (.github/workflows/*.yml)
+  # to use the latest versions of GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"                     # Scans workflows in .github/workflows
+    open-pull-requests-limit: 10         # Prevents overwhelming with too many PRs
+    schedule:
+      interval: "monthly"              # Updates once per month
+    labels:
+      - "dependencies"                 # Auto-labels PRs for easy filtering
+      - "github-actions"
+
+  # npm Package Dependency Updates
+  #
+  # Automatically updates package.json files throughout the monorepo
+  # to keep dependencies secure and up-to-date
+  - package-ecosystem: "npm"
+    directory: "/"                     # Root directory (will find all package.json files)
+    open-pull-requests-limit: 10         # Limits concurrent open PRs
+    schedule:
+      interval: "monthly"              # Updates once per month
+    labels:
+      - "dependencies"                 # Auto-labels PRs for easy filtering
+      - "npm"
+    # Dependency groups help batch related updates together
+    groups:
+      # Group minor and patch updates for React packages
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+      # Group TypeScript and related type definitions
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"

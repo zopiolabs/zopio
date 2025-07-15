@@ -1,0 +1,94 @@
+# CODEOWNERS for Zopio Monorepo
+
+# 🔒 Default: All files require core-team review unless overridden
+* @zopiolabs/core-team
+
+# ──────────────────────────────────────────────────────
+# 🔌 DX Team (Development Experience and Backend Logics)
+/apps/api/                       @zopiolabs/dx-team @zopiolabs/core-team
+/devapps/dbstudio/               @zopiolabs/dx-team @zopiolabs/core-team
+/packages/auth/                  @zopiolabs/dx-team @zopiolabs/core-team
+/packages/auth-abac/             @zopiolabs/dx-team @zopiolabs/core-team
+/packages/auth-hooks/            @zopiolabs/dx-team @zopiolabs/core-team
+/packages/auth-log/              @zopiolabs/dx-team @zopiolabs/core-team
+/packages/auth-rbac/             @zopiolabs/dx-team @zopiolabs/core-team
+/packages/auth-runner/           @zopiolabs/dx-team @zopiolabs/core-team
+/packages/core-utils/            @zopiolabs/dx-team @zopiolabs/core-team
+/packages/database/              @zopiolabs/dx-team @zopiolabs/core-team
+/packages/mcp/                   @zopiolabs/dx-team @zopiolabs/core-team
+/packages/trigger/               @zopiolabs/dx-team @zopiolabs/core-team
+/packages/trigger-rules/         @zopiolabs/dx-team @zopiolabs/core-team
+/packages/webhooks/              @zopiolabs/dx-team @zopiolabs/core-team
+/registry/schemas/               @zopiolabs/dx-team @zopiolabs/core-team
+/registry/types/                 @zopiolabs/dx-team @zopiolabs/core-team
+
+# ───────────────────────────────────────────
+# 🎨 UX Team (User Experience and Interfaces)
+/apps/web/                       @zopiolabs/ux-team @zopiolabs/core-team
+/devapps/emailstudio/            @zopiolabs/ux-team @zopiolabs/core-team
+/devapps/storybook/              @zopiolabs/ux-team @zopiolabs/core-team
+/packages/cms/                   @zopiolabs/ux-team @zopiolabs/core-team
+/packages/design-system/         @zopiolabs/ux-team @zopiolabs/core-team
+/packages/email/                 @zopiolabs/ux-team @zopiolabs/core-team
+/packages/internationalization/  @zopiolabs/ux-team @zopiolabs/core-team
+/packages/notifications/         @zopiolabs/ux-team @zopiolabs/core-team
+/packages/seo/                   @zopiolabs/ux-team @zopiolabs/core-team
+/websites/zopio-splash/          @zopiolabs/ux-team @zopiolabs/core-team
+/registry/examples/              @zopiolabs/ux-team @zopiolabs/core-team
+
+# ─────────────────────────────────────────────
+# 📚 Docs Team (MD Documentations, Docs Portal)
+/apps/docs/                      @zopiolabs/docs-team @zopiolabs/core-team
+/websites/zopio-docs/            @zopiolabs/docs-team @zopiolabs/core-team
+/README.md                       @zopiolabs/docs-team @zopiolabs/core-team
+/CHANGELOG.md                    @zopiolabs/docs-team @zopiolabs/core-team
+/CONTRIBUTING.md                 @zopiolabs/docs-team @zopiolabs/core-team
+/LICENSE.md                      @zopiolabs/docs-team @zopiolabs/core-team
+/registry/README.md              @zopiolabs/docs-team @zopiolabs/core-team
+
+# ──────────────────────────────────────────────────────────
+# 🧩 Product Team (App, Analytics, Payments, Business Flows)
+/apps/app/                       @zopiolabs/product-team @zopiolabs/core-team
+/packages/ai/                    @zopiolabs/product-team @zopiolabs/core-team
+/packages/analytics/             @zopiolabs/product-team @zopiolabs/core-team
+/packages/collaboration/         @zopiolabs/product-team @zopiolabs/core-team
+/packages/feature-flags/         @zopiolabs/product-team @zopiolabs/core-team
+/packages/payments/              @zopiolabs/product-team @zopiolabs/core-team
+/registry/apps/                  @zopiolabs/product-team @zopiolabs/core-team
+/registry/integrations/          @zopiolabs/product-team @zopiolabs/core-team
+/registry/plugins/               @zopiolabs/product-team @zopiolabs/core-team
+
+# ───────────────────────────────────────────────────────
+# ⚙️ Infra Team (Infrastructure, CI/CD, DevOps, Security)
+/.github/                        @zopiolabs/infra-team @zopiolabs/core-team
+/.husky/                         @zopiolabs/infra-team @zopiolabs/core-team
+/.vscode/                        @zopiolabs/infra-team @zopiolabs/core-team
+/e2e/                            @zopiolabs/infra-team @zopiolabs/core-team
+/packages/next-config/           @zopiolabs/infra-team @zopiolabs/core-team
+/packages/observability/         @zopiolabs/infra-team @zopiolabs/core-team
+/packages/rate-limit/            @zopiolabs/infra-team @zopiolabs/core-team
+/packages/security/              @zopiolabs/infra-team @zopiolabs/core-team
+/packages/storage/               @zopiolabs/infra-team @zopiolabs/core-team
+/packages/testing/               @zopiolabs/infra-team @zopiolabs/core-team
+/packages/typescript-config/     @zopiolabs/infra-team @zopiolabs/core-team
+/registry/ci/                    @zopiolabs/infra-team @zopiolabs/core-team
+/registry/templates/             @zopiolabs/infra-team @zopiolabs/core-team
+/registry/tools/                 @zopiolabs/infra-team @zopiolabs/core-team
+/scripts/                        @zopiolabs/infra-team @zopiolabs/core-team
+/turbo/                          @zopiolabs/infra-team @zopiolabs/core-team
+/.autorc                         @zopiolabs/infra-team @zopiolabs/core-team
+/.cursorrules                    @zopiolabs/infra-team @zopiolabs/core-team
+/.editorconfig                   @zopiolabs/infra-team @zopiolabs/core-team
+/.gitattributes                  @zopiolabs/infra-team @zopiolabs/core-team
+/.gitignore                      @zopiolabs/infra-team @zopiolabs/core-team
+/.lintstagedrc.js                @zopiolabs/infra-team @zopiolabs/core-team
+/.windsurfrules                  @zopiolabs/infra-team @zopiolabs/core-team
+/biome.json                      @zopiolabs/infra-team @zopiolabs/core-team
+/commitlint.config.js            @zopiolabs/infra-team @zopiolabs/core-team
+/package.json                    @zopiolabs/infra-team @zopiolabs/core-team
+/pnpm-lock.yaml                  @zopiolabs/infra-team @zopiolabs/core-team
+/pnpm-workspace.yaml             @zopiolabs/infra-team @zopiolabs/core-team
+/tsconfig.json                   @zopiolabs/infra-team @zopiolabs/core-team
+/tsup.config.ts                  @zopiolabs/infra-team @zopiolabs/core-team
+/turbo.json                      @zopiolabs/infra-team @zopiolabs/core-team
+

@@ -1,0 +1,94 @@
+# PR Labeler Configuration
+#
+# Purpose: Defines rules for automatically applying labels to pull requests
+#          based on the files modified, supporting the monorepo structure.
+#
+# This configuration works with the .github/workflows/label.yml workflow
+# to automatically categorize PRs by both area and type.
+#
+# Label Structure:
+# - area/*: Indicates which part of the codebase is affected (frontend, backend, etc.)
+# - type/*: Indicates what kind of change is being made (test, docs, config, etc.)
+#
+# Pattern Matching:
+# - Uses glob patterns to match file paths
+# - 'any' means any of the patterns must match for the label to be applied
+# - '**/' matches any directory depth
+# - '*' matches any character sequence within a path segment
+
+# ────────────────────────────────────────────────────────────
+# Area-based labels - Categorize PRs by the part of the system affected
+# ────────────────────────────────────────────────────────────
+
+# Frontend changes (web app, UI components, client-side code)
+"area/frontend":
+  - any: ['apps/web/**/*', '**/frontend/**/*']
+
+# Backend changes (API, server-side logic, endpoints)
+"area/backend":
+  - any: ['apps/api/**/*', '**/backend/**/*']
+
+# Database changes (schema, migrations, queries, ORM)
+"area/database":
+  - any: ['**/database/**/*', '**/migrations/**/*']
+
+# Infrastructure changes (deployment, containers, cloud resources)
+"area/infrastructure":
+  - any: ['docker/**/*', '**/infra/**/*', 'terraform/**/*', 'k8s/**/*']
+
+# Internationalization changes (translations, localization files)
+"area/i18n":
+  - any: ['**/locales/**/*', '**/i18n/**/*', 'dictionaries/**/*']
+
+# ────────────────────────────────────────────────────────────
+# Type-based labels - Categorize PRs by the nature of the change
+# ────────────────────────────────────────────────────────────
+
+# Test-related changes (unit tests, integration tests, test utilities)
+"type/test":
+  - any: ['**/*.test.*', '**/*.spec.*', '**/tests/**/*']
+
+# Documentation changes (README files, docs site, comments)
+"type/documentation":
+  - any: ['**/*.md', '**/*.txt', 'docs/**/*', '.github/ISSUE_TEMPLATE/**', '.github/PULL_REQUEST_TEMPLATE.md']
+
+# Configuration changes (settings, environment files, build configs)
+"type/configuration":
+  - any: ['*.json', '*.yaml', '*.yml', '**/config/**/*', '.github/**/*.yml', '.github/**/*.yaml']
+
+# Dependency updates (package.json, lock files, requirements)
+"type/dependencies":
+  - any: ['package.json', 'pnpm-lock.yaml', '**/package.json', '**/requirements.txt', '**/pom.xml']
+
+# CI/CD pipeline changes (GitHub Actions, build scripts)
+"type/ci":
+  - any: ['.github/workflows/**/*', 'scripts/ci/**/*']
+
+# Security-related changes (auth, encryption, security policies)
+"type/security":
+  - any: ['**/security/**/*', '.github/SECURITY.md']
+
+# ────────────────
+# Docs Subtypes (Optional - can remove if too granular)
+# ────────────────
+"docs/readme":
+  - any: ['**/README.md']
+
+"docs/changelog":
+  - any: ['**/CHANGELOG.md']
+
+"docs/contributing":
+  - any: ['**/CONTRIBUTING.md']
+
+# ────────────────
+# Priority labels (Optional - only if manually needed)
+# ────────────────
+"priority/critical":
+  - any: []
+
+"priority/high":
+  - any: []
+
+"priority/low":
+  - any: []
+
