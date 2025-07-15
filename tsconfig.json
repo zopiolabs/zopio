@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Root",
+  "extends": "./packages/typescript-config/base.json",
+  "compilerOptions": {},
+  "exclude": ["node_modules"],
+  "include": [],
+  "references": []
+}
