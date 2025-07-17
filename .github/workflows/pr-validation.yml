@@ -130,12 +130,19 @@ jobs:
               - \`wip/*\` - Work in progress`;
 
               if (context.payload.pull_request) {
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.issue.number,
-                  body: message
-                });
+                // Check if this is a fork PR
+                const isFork = context.payload.pull_request.head.repo.full_name !== context.payload.repository.full_name;
+                
+                if (!isFork) {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.issue.number,
+                    body: message
+                  });
+                } else {
+                  console.log('Skipping comment for fork PR due to permission limitations');
+                }
 
                 try {
                   await github.rest.issues.addLabels({
@@ -243,28 +250,35 @@ jobs:
               const hasBreakingSection = body.toLowerCase().includes('breaking change');
 
               if (!hasBreakingSection) {
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.pull_request.number,
-                  body: `⚠️ **Breaking Change Detected**
+                // Check if this is a fork PR
+                const isFork = context.payload.pull_request.head.repo.full_name !== context.payload.repository.full_name;
+                
+                if (!isFork) {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.payload.pull_request.number,
+                    body: `⚠️ **Breaking Change Detected**
 
-                  Your PR title indicates a breaking change (contains "!"), but the PR description doesn't include a "Breaking Changes" section.
+                    Your PR title indicates a breaking change (contains "!"), but the PR description doesn't include a "Breaking Changes" section.
 
-                  Please update your PR description to include:
-                  - A clear description of what is breaking
-                  - Migration instructions for users
-                  - Why this breaking change is necessary
+                    Please update your PR description to include:
+                    - A clear description of what is breaking
+                    - Migration instructions for users
+                    - Why this breaking change is necessary
 
-                  Example:
-                  \`\`\`
-                  ## Breaking Changes
+                    Example:
+                    \`\`\`
+                    ## Breaking Changes
 
-                  - Changed \`doSomething()\` API to require a config parameter
-                  - Migration: Update all calls from \`doSomething()\` to \`doSomething({ legacy: true })\`
-                  - This change allows for better extensibility and performance improvements
-                  \`\`\``
-                });
+                    - Changed \`doSomething()\` API to require a config parameter
+                    - Migration: Update all calls from \`doSomething()\` to \`doSomething({ legacy: true })\`
+                    - This change allows for better extensibility and performance improvements
+                    \`\`\``
+                  });
+                } else {
+                  console.log('Skipping breaking changes comment for fork PR due to permission limitations');
+                }
 
                 core.setFailed('PR contains breaking changes but lacks proper documentation');
               }
@@ -298,12 +312,20 @@ jobs:
             // Check file count limit
             if (changedFiles > 100) {
               core.setFailed(`❌ PR changes too many files (${changedFiles} files). Maximum allowed: 100 files.`);
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-                body: `### ❌ PR Size Check Failed\n\nThis PR changes ${changedFiles} files, exceeding the limit of 100 files.\n\nPlease split this PR into smaller, more focused changes.`
-              });
+              
+              // Check if this is a fork PR
+              const isFork = context.payload.pull_request.head.repo.full_name !== context.payload.repository.full_name;
+              
+              if (!isFork) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  body: `### ❌ PR Size Check Failed\n\nThis PR changes ${changedFiles} files, exceeding the limit of 100 files.\n\nPlease split this PR into smaller, more focused changes.`
+                });
+              } else {
+                console.log('Skipping file count comment for fork PR due to permission limitations');
+              }
               return;
             }
 
@@ -343,12 +365,19 @@ jobs:
                 body: comment
               });
             } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-                body: comment
-              });
+              // Check if this is a fork PR
+              const isFork = context.payload.pull_request.head.repo.full_name !== context.payload.repository.full_name;
+              
+              if (!isFork) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  body: comment
+                });
+              } else {
+                console.log('Skipping PR size comment for fork PR due to permission limitations');
+              }
             }
 
             if (failed) {
@@ -367,18 +396,25 @@ jobs:
           script: |
             const validTypes = ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'revert', 'release'];
 
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: `## ❌ PR Validation Failed
+            // Check if this is a fork PR
+            const isFork = context.payload.pull_request.head.repo.full_name !== context.payload.repository.full_name;
+            
+            if (!isFork) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: `## ❌ PR Validation Failed
 
-              Please ensure your PR meets all requirements:
+                Please ensure your PR meets all requirements:
 
-              1. **Branch Naming**: Follow conventions like \`feat/description\`, \`fix/issue-123\`
-              2. **PR Title**: Use format \`<type>(<scope>): <subject>\` (e.g., \`feat(auth): add OAuth support\`)
-              3. **PR Size**: Keep changes under 5000 lines and 100 files
-              4. **Breaking Changes**: Document with "!" in title and description
+                1. **Branch Naming**: Follow conventions like \`feat/description\`, \`fix/issue-123\`
+                2. **PR Title**: Use format \`<type>(<scope>): <subject>\` (e.g., \`feat(auth): add OAuth support\`)
+                3. **PR Size**: Keep changes under 5000 lines and 100 files
+                4. **Breaking Changes**: Document with "!" in title and description
 
-              See our [Contributing Guide](https://github.com/zopiolabs/zopio/blob/main/.github/CONTRIBUTING.md) for details.`
-            });
+                See our [Contributing Guide](https://github.com/zopiolabs/zopio/blob/main/.github/CONTRIBUTING.md) for details.`
+              });
+            } else {
+              console.log('Skipping validation summary comment for fork PR due to permission limitations');
+            }

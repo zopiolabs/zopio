@@ -66,6 +66,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
+            const isFork = pr.head.repo.full_name !== context.payload.repository.full_name;
+
+            // Skip assignment for fork PRs if they don't have write permissions
+            if (isFork) {
+              console.log(`PR #${pr.number} is from a fork. Assignment may fail due to permissions.`);
+            }
 
             // Only assign if no assignees exist to avoid overwriting manual assignments
             if (pr.assignees.length === 0) {
@@ -78,18 +84,26 @@ jobs:
                 });
                 console.log(`Assigned PR #${pr.number} to author: ${pr.user.login}`);
               } catch (error) {
-                console.error(`Error assigning PR to author: ${error.message}`);
-                // Try alternative method if the first one fails
-                try {
-                  await github.rest.pulls.update({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    pull_number: pr.number,
-                    assignees: [pr.user.login]
-                  });
-                  console.log(`Assigned PR #${pr.number} to author using alternative method`);
-                } catch (altError) {
-                  console.error(`Alternative assignment method also failed: ${altError.message}`);
+                if (error.status === 403 && isFork) {
+                  console.log(`Cannot assign PR author for fork PR due to permissions. This is expected behavior.`);
+                } else {
+                  console.error(`Error assigning PR to author: ${error.message}`);
+                  // Try alternative method if the first one fails
+                  try {
+                    await github.rest.pulls.update({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      pull_number: pr.number,
+                      assignees: [pr.user.login]
+                    });
+                    console.log(`Assigned PR #${pr.number} to author using alternative method`);
+                  } catch (altError) {
+                    if (altError.status === 403 && isFork) {
+                      console.log(`Cannot assign PR author for fork PR due to permissions. This is expected behavior.`);
+                    } else {
+                      console.error(`Alternative assignment method also failed: ${altError.message}`);
+                    }
+                  }
                 }
               }
             } else {
@@ -302,7 +316,10 @@ jobs:
       # Step 3: Add an informative comment to the PR about reviewer assignments
       # This provides transparency about the automated assignment process
       # and helps contributors understand who will be reviewing their code
+      # Note: This step is skipped for fork PRs due to permission limitations
       - name: Add reviewer assignment comment
+        # Skip comment for fork PRs as they don't have write permissions
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/github-script@v7
         with:
           # Authentication token to post comments on the PR
