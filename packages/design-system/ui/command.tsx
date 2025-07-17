@@ -16,21 +16,25 @@ import {
   DialogTitle,
 } from '@repo/design-system/ui/dialog';
 
-const Command = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  // @ts-ignore - CommandPrimitive has JSX compatibility issues with React 19.1.0
-  return React.createElement(CommandPrimitive as any, {
-    ref,
-    'data-slot': 'command',
-    className: cn(
-      'flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground',
-      className as string | undefined
-    ),
-    ...props,
-  });
-});
+type CommandProps = React.HTMLAttributes<HTMLDivElement> & {
+  filter?: (value: any, search: any) => number;
+};
+
+const Command = React.forwardRef<HTMLDivElement, CommandProps>(
+  ({ className, filter, ...props }, ref) => {
+    // @ts-ignore - CommandPrimitive has JSX compatibility issues with React 19.1.0
+    return React.createElement(CommandPrimitive as any, {
+      ref,
+      'data-slot': 'command',
+      className: cn(
+        'flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground',
+        className as string | undefined
+      ),
+      filter,
+      ...props,
+    });
+  }
+);
 
 interface DialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   children: React.ReactNode;
