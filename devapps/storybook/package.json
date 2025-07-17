@@ -31,6 +31,7 @@
     "@chromatic-com/storybook": "^4.0.1",
     "@repo/typescript-config": "workspace:*",
     "@storybook/addon-a11y": "^9.0.16",
+    "@storybook/addon-actions": "^9.0.8",
     "@storybook/addon-docs": "^9.0.16",
     "@storybook/addon-links": "^9.0.16",
     "@storybook/addon-onboarding": "^9.0.16",
