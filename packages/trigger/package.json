@@ -5,7 +5,7 @@
   "main": "index.ts",
   "types": "index.ts",
   "dependencies": {
-    "@trigger.dev/sdk": "^2.2.0"
+    "@trigger.dev/sdk": "^3.3.17"
   },
   "devDependencies": {
     "@types/node": "^22.15.21"

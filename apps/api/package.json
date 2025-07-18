@@ -26,7 +26,7 @@
     "@repo/trigger": "workspace:*",
     "@sentry/nextjs": "^9.22.0",
     "@t3-oss/env-nextjs": "^0.13.4",
-    "@trigger.dev/sdk": "^2.2.0",
+    "@trigger.dev/sdk": "^3.3.17",
     "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
