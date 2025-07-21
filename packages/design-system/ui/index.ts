@@ -65,12 +65,16 @@ export * from './credit-card';
 export * from './cursor';
 export * from './dialog-stack';
 export * from './dialog';
+export * from './display-cards';
 export * from './drawer';
 export * from './dropdown-menu';
 export * from './dropzone';
-export * from './editor';
+export * from './expandable-card';
+import { FloatingActionPanelRoot } from './floating-action-panel';
+export { FloatingActionPanelRoot };
 export * from './form';
 export * from './glimpse';
+export * from './hero-badge';
 export * from './hover-card';
 export * from './image-crop';
 export * from './image-zoom';
@@ -97,6 +101,7 @@ export * from './pagination';
 export * from './pill';
 export * from './popover';
 export * from './progress';
+export * from './project-status-card';
 export * from './qr-code';
 export * from './radio-group';
 export * from './rating';
@@ -115,6 +120,7 @@ export { SonnerToaster };
 export * from './spinner';
 import { Status as StatusComponent } from './status';
 export { StatusComponent };
+export * from './status-badge';
 export * from './switch';
 export * from './table';
 export * from './tabs';
@@ -132,3 +138,33 @@ export * from './typography';
 export * from './use-toast';
 export * from './video-player';
 export * from './relative-time';
+export * from './tweet-card';
+import {
+  PopoverRoot,
+  PopoverTrigger as InteractivePopoverTrigger,
+  PopoverContent as InteractivePopoverContent,
+  PopoverForm,
+  PopoverLabel,
+  PopoverTextarea,
+  PopoverFooter,
+  PopoverCloseButton,
+  PopoverSubmitButton,
+  PopoverHeader,
+  PopoverBody,
+  PopoverButton
+} from './interactive-popover';
+
+export {
+  PopoverRoot,
+  InteractivePopoverTrigger,
+  InteractivePopoverContent,
+  PopoverForm,
+  PopoverLabel,
+  PopoverTextarea,
+  PopoverFooter,
+  PopoverCloseButton,
+  PopoverSubmitButton,
+  PopoverHeader,
+  PopoverBody,
+  PopoverButton
+};

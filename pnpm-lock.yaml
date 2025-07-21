@@ -1133,6 +1133,9 @@ importers:
       react-svg-credit-card-payment-icons:
         specifier: ^4.0.0
         version: 4.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-tweet:
+        specifier: ^3.2.2
+        version: 3.2.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       recharts:
         specifier: ^2.15.3
         version: 2.15.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
