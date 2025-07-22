@@ -4,6 +4,7 @@
 
 // Export all UI components
 export * from './accordion';
+export * from './action-button';
 export * from './alert-dialog';
 export * from './alert';
 export * from './announcement';
@@ -15,6 +16,7 @@ export * from './badge';
 export * from './banner';
 export * from './breadcrumb';
 export * from './button';
+export * from './button-group';
 import {
   CalendarBody,
   CalendarDate,
@@ -69,12 +71,14 @@ export * from './display-cards';
 export * from './drawer';
 export * from './dropdown-menu';
 export * from './dropzone';
+export * from './enhanced-button';
 export * from './expandable-card';
 import { FloatingActionPanelRoot } from './floating-action-panel';
 export { FloatingActionPanelRoot };
 export * from './form';
 export * from './glimpse';
 export * from './hero-badge';
+export * from './hero';
 export * from './hover-card';
 export * from './image-crop';
 export * from './image-zoom';
@@ -100,6 +104,7 @@ export * from './new-gantt/explain';
 export * from './pagination';
 export * from './pill';
 export * from './popover';
+export * from './pricing';
 export * from './progress';
 export * from './project-status-card';
 export * from './qr-code';
@@ -138,7 +143,12 @@ export * from './typography';
 export * from './use-toast';
 export * from './video-player';
 export * from './relative-time';
+export * from './timeline';
 export * from './tweet-card';
+export * from './open-source';
+export * from './logo-carousel';
+export * from './word-reveal';
+export * from './number-flow';
 import {
   PopoverRoot,
   PopoverTrigger as InteractivePopoverTrigger,
