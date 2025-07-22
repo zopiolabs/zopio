@@ -149,6 +149,26 @@ export * from './open-source';
 export * from './logo-carousel';
 export * from './word-reveal';
 export * from './number-flow';
+export * from './number-counter';
+// Explicitly re-export from number-flow-barvian to avoid naming conflicts
+import {
+  NumberFlowBarvian,
+  NumberFlowBarvianGroup,
+  continuous,
+  useCanAnimate,
+  // Avoid re-exporting conflicting types
+  type Plugin,
+  type NumberFlowBarvianProps
+} from './number-flow-barvian';
+
+export {
+  NumberFlowBarvian,
+  NumberFlowBarvianGroup,
+  continuous,
+  useCanAnimate,
+  type Plugin,
+  type NumberFlowBarvianProps
+};
 import {
   PopoverRoot,
   PopoverTrigger as InteractivePopoverTrigger,

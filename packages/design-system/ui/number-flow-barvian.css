@@ -1,0 +1,123 @@
+/**
+ * SPDX-License-Identifier: MIT
+ */
+
+/* NumberFlowBarvian component styles */
+.number-flow-animated {
+  --number-flow-char-height: 0.85em;
+  --number-flow-mask-height: 0.25em;
+  --number-flow-mask-width: 0.5em;
+  --number-flow-spin-duration: 750ms;
+  --number-flow-spin-easing: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+  --number-flow-opacity-duration: 350ms;
+  --number-flow-opacity-easing: cubic-bezier(0.4, 0.0, 0.2, 1.0);
+}
+
+/* Static display for reduced motion or unsupported browsers */
+.number-flow-static .number-flow-value {
+  display: inline-block;
+}
+
+/* Animated display with masking effects */
+.number-flow-animated .number-flow-value {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0); /* Force GPU acceleration */
+  backface-visibility: hidden;
+}
+
+/* Digit styling */
+.number-flow-animated .number-flow-digit {
+  display: inline-block;
+  position: relative;
+  height: var(--number-flow-char-height);
+  transition: opacity var(--number-flow-opacity-duration) var(--number-flow-opacity-easing);
+}
+
+/* Mask for spinning digits */
+.number-flow-animated .number-flow-digit::before,
+.number-flow-animated .number-flow-digit::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--number-flow-mask-height);
+  background: linear-gradient(to bottom, currentColor 10%, transparent 90%);
+  opacity: 0;
+  transition: opacity var(--number-flow-opacity-duration) var(--number-flow-opacity-easing);
+  z-index: 1;
+  /* Use a smoother gradient for the mask to eliminate harsh black shadows */
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+}
+
+.number-flow-animated .number-flow-digit::before {
+  top: 0;
+}
+
+.number-flow-animated .number-flow-digit::after {
+  bottom: 0;
+  transform: rotate(180deg);
+}
+
+/* Spinning animation for digits */
+.number-flow-animated .number-flow-digit[data-animating="true"] {
+  animation: number-flow-spin var(--number-flow-spin-duration) var(--number-flow-spin-easing) forwards;
+  will-change: transform;
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+.number-flow-animated .number-flow-digit[data-animating="true"]::before,
+.number-flow-animated .number-flow-digit[data-animating="true"]::after {
+  opacity: 1;
+}
+
+/* Trend direction animations */
+.number-flow-animated[data-trend="1"] .number-flow-digit[data-animating="true"] {
+  animation-name: number-flow-spin-up;
+}
+
+.number-flow-animated[data-trend="-1"] .number-flow-digit[data-animating="true"] {
+  animation-name: number-flow-spin-down;
+}
+
+/* Animation keyframes */
+@keyframes number-flow-spin-up {
+  0% {
+    transform: translateY(0);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  10% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  100% {
+    transform: translateY(calc(-9 * var(--number-flow-char-height)));
+    filter: drop-shadow(0 0 0 transparent);
+  }
+}
+
+@keyframes number-flow-spin-down {
+  0% {
+    transform: translateY(0);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  10% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  100% {
+    transform: translateY(calc(9 * var(--number-flow-char-height)));
+    filter: drop-shadow(0 0 0 transparent);
+  }
+}
+
+@keyframes number-flow-spin {
+  0% {
+    transform: translateY(0);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  100% {
+    transform: translateY(0);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+}
