@@ -150,6 +150,7 @@ export * from './logo-carousel';
 export * from './word-reveal';
 export * from './number-flow';
 export * from './number-counter';
+export * from './flow';
 // Explicitly re-export from number-flow-barvian to avoid naming conflicts
 import {
   NumberFlowBarvian,
