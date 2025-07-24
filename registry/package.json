@@ -21,6 +21,7 @@
     "react-dom": "^19.1.0"
   },
   "dependencies": {
+    "@xyflow/react": "^12.8.2",
     "commander": "^14.0.0"
   }
 }

@@ -1040,9 +1040,6 @@ importers:
       '@uidotdev/usehooks':
         specifier: ^2.4.1
         version: 2.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@xyflow/react':
-        specifier: ^12.8.2
-        version: 12.8.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       canvas-confetti:
         specifier: ^1.9.3
         version: 1.9.3
@@ -1175,9 +1172,6 @@ importers:
       zod:
         specifier: ^3.25.28
         version: 3.25.76
-      zustand:
-        specifier: ^4.5.2
-        version: 4.5.7(@types/react@19.1.8)(react@19.1.0)
     devDependencies:
       '@codesandbox/sandpack-react':
         specifier: ^2.20.0
@@ -1626,6 +1620,43 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  registry:
+    dependencies:
+      '@xyflow/react':
+        specifier: ^12.8.2
+        version: 12.8.2(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      commander:
+        specifier: ^14.0.0
+        version: 14.0.0
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.1.0(react@19.1.0)
+    devDependencies:
+      '@types/chalk':
+        specifier: ^2.2.4
+        version: 2.2.4
+      '@types/react':
+        specifier: ^19.1.8
+        version: 19.1.8
+      '@types/react-dom':
+        specifier: ^19.1.6
+        version: 19.1.6(@types/react@19.1.8)
+      ajv:
+        specifier: 8.17.1
+        version: 8.17.1
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@24.0.13)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -5820,6 +5851,10 @@ packages:
 
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
+
+  '@types/chalk@2.2.4':
+    resolution: {integrity: sha512-pb/QoGqtCpH2famSp72qEsXkNzcErlVmiXlQ/ww+5AddD8TmmYS7EWg5T20YiNCAiTgs8pMf2G8SJG5h/ER1ZQ==}
+    deprecated: This is a stub types definition. chalk provides its own type definitions, so you do not need this installed.
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
@@ -16985,6 +17020,10 @@ snapshots:
   '@types/chai@5.2.2':
     dependencies:
       '@types/deep-eql': 4.0.2
+
+  '@types/chalk@2.2.4':
+    dependencies:
+      chalk: 5.4.1
 
   '@types/connect@3.4.38':
     dependencies:
