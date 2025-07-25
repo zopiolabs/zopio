@@ -10,7 +10,8 @@
     "paths": {
       "@repo/*": ["../*"],
       "@repo/design-system/*": ["./*"]
-    }
+    },
+    "typeRoots": ["../../node_modules/@types", "../../types"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
