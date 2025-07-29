@@ -135,6 +135,7 @@
     "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
     "lowlight": "^3.3.0",
+    "lru-cache": "^11.1.0",
     "lucide-react": "^0.511.0",
     "media-chrome": "^4.12.0",
     "motion": "^12.23.6",
@@ -178,9 +179,15 @@
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "next": "^15.3.3",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.7",
     "tippy": "^0.0.0",
     "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "next": "^15.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   }
 }
