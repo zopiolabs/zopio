@@ -5,9 +5,19 @@
   "description": "A customizable node-based graph visualization plugin using XYFlow for the Zopio ecosystem.",
   "main": "index.tsx",
   "author": "tec",
-  "dependencies": ["react", "react-dom", "@xyflow/react"],
   "tags": ["flow", "visualization", "diagram", "node-graph", "interactive"],
   "schemaVersion": "1.0.0",
   "license": "MIT",
-  "spdx": true
+  "spdx": true,
+  "zopio": {
+    "category": "plugin",
+    "icon": "default-icon"
+  },
+  "peerDependencies": {
+    "0": "react",
+    "1": "react-dom",
+    "2": "@xyflow/react",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
 }

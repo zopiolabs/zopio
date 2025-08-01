@@ -1,19 +1,17 @@
 {
-  "name": "xyflow-plugin",
+  "name": "@repo/xyflow-plugin",
   "version": "0.1.0",
   "main": "index.tsx",
-  "dependencies": {
-    "@xyflow/react": "^12.8.0",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
-  },
   "peerDependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@xyflow/react": "^12.8.0"
   },
   "devDependencies": {
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6",
-    "typescript": "5.8.3"
-  }
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "typescript": "^5.8.3"
+  },
+  "type": "module",
+  "sideEffects": false
 }
