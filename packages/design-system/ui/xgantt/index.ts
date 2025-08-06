@@ -17,3 +17,6 @@ export * from './GanttProvider';
 export * from './GanttCreateFeatureTrigger';
 export * from './GanttEditFeatureModal';
 export * from './GanttFeatureClickTrigger';
+export * from './TaskPopover';
+export * from './TaskAddPopover';
+export * from './EditableGantt';

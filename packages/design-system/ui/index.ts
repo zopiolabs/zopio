@@ -75,6 +75,7 @@ export * from './cursor';
 export * from './dialog-stack';
 export * from './dialog';
 export * from './display-cards';
+export * from './editable-field';
 export * from './drawer';
 export * from './dropdown-menu';
 export * from './dropzone';

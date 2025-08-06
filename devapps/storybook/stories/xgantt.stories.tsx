@@ -3,6 +3,7 @@
  */
 
 import {
+  EditableGantt,
   GanttCreateFeatureTrigger,
   GanttCreateMarkerTrigger,
   type GanttFeature,
@@ -516,11 +517,16 @@ export const QuarterlyView: Story = {
             ))}
           </GanttSidebar>
           <GanttTimeline>
-            <GanttHeader />
             <GanttFeatureList>
-              <GanttFeatureRow features={features} onMove={handleFeatureMove} />
-              <GanttCreateFeatureTrigger onCreateFeature={handleAddFeature} />
+              {features.map((feature) => (
+                <GanttFeatureRow
+                  key={feature.id}
+                  features={[feature]}
+                  onMove={handleFeatureMove}
+                />
+              ))}
             </GanttFeatureList>
+            <GanttHeader />
             <GanttToday />
             {markers.map((marker) => (
               <GanttMarker
@@ -530,8 +536,108 @@ export const QuarterlyView: Story = {
               />
             ))}
             <GanttCreateMarkerTrigger onCreateMarker={handleAddMarker} />
+            <GanttCreateFeatureTrigger onCreateFeature={handleAddFeature} />
           </GanttTimeline>
         </GanttProvider>
+      </div>
+    );
+  },
+};
+
+export const EditableDailyView: Story = {
+  render: () => {
+    // Define sample tasks with different statuses
+    const initialTasks: GanttFeature[] = [
+      {
+        id: 'task-1',
+        name: 'Design System Updates',
+        startAt: new Date(),
+        endAt: addDays(new Date(), 7),
+        status: {
+          id: 'design',
+          name: 'Design',
+          color: '#6366F1', // Indigo
+        },
+      },
+      {
+        id: 'task-2',
+        name: 'Frontend Implementation',
+        startAt: addDays(new Date(), 3),
+        endAt: addDays(new Date(), 14),
+        status: {
+          id: 'development',
+          name: 'Development',
+          color: '#10B981', // Emerald
+        },
+      },
+      {
+        id: 'task-3',
+        name: 'Backend API Integration',
+        startAt: addDays(new Date(), 10),
+        endAt: addDays(new Date(), 25),
+        status: {
+          id: 'development',
+          name: 'Development',
+          color: '#10B981', // Emerald
+        },
+      },
+      {
+        id: 'task-4',
+        name: 'Testing & QA',
+        startAt: addDays(new Date(), 20),
+        endAt: addDays(new Date(), 30),
+        status: {
+          id: 'testing',
+          name: 'Testing',
+          color: '#F59E0B', // Amber
+        },
+      },
+    ];
+
+    // State for tasks
+    const [tasks, setTasks] = useState<GanttFeature[]>(initialTasks);
+
+    // Handle task updates
+    const handleTaskUpdate = (updatedTask: GanttFeature) => {
+      setTasks((currentTasks) =>
+        currentTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        )
+      );
+    };
+
+    // Handle task moves (drag and drop)
+    const handleTaskMove = (id: string, startAt: Date, endAt: Date | null) => {
+      setTasks((currentTasks) =>
+        currentTasks.map((task) =>
+          task.id === id ? { ...task, startAt, endAt } : task
+        )
+      );
+    };
+
+    // Handle adding new tasks
+    const handleAddTask = (newTask: GanttFeature) => {
+      setTasks((currentTasks) => [...currentTasks, newTask]);
+    };
+
+    return (
+      <div className="h-[600px] w-full rounded-md border border-border">
+        <h3 className="px-4 py-2 font-medium text-sm">
+          Enhanced Gantt with Task Management
+        </h3>
+        <p className="px-4 pb-2 text-muted-foreground text-xs">
+          Click the + button to add tasks, click on task names to edit, and use
+          the popover to modify dates. Timeline extends to 60 days with proper
+          date dividers.
+        </p>
+        <EditableGantt
+          tasks={tasks}
+          onUpdate={handleTaskUpdate}
+          onTaskMove={handleTaskMove}
+          onAddTask={handleAddTask}
+          editableDailyTasks={true}
+          columnDays={60}
+        />
       </div>
     );
   },

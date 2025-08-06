@@ -36,7 +36,6 @@
     "@storybook/addon-actions": "^9.0.8",
     "@storybook/addon-docs": "^9.0.16",
     "@storybook/addon-links": "^9.0.16",
-    "@storybook/addon-onboarding": "^9.0.16",
     "@storybook/addon-themes": "^9.0.16",
     "@storybook/nextjs": "^9.0.16",
     "@tailwindcss/postcss": "^4.1.11",

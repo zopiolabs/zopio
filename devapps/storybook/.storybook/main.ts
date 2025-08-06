@@ -26,7 +26,6 @@ const config: StorybookConfig = {
   ],
 
   addons: [
-    getAbsolutePath('@storybook/addon-onboarding'),
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-themes'),
     getAbsolutePath('@storybook/addon-a11y'),
@@ -46,7 +45,26 @@ const config: StorybookConfig = {
     disableTelemetry: true,
   },
 
+  // Suppress warnings by setting log level
+  logLevel: 'error',
+
   webpackFinal: async (config) => {
+    // Reduce warnings by configuring webpack
+    if (!config.stats) {
+      config.stats = {};
+    }
+
+    // Set webpack stats configuration to minimize warnings
+    config.stats = {
+      warnings: false,
+      errors: true,
+    };
+
+    // Disable performance hints which can cause warnings
+    if (!config.performance) {
+      config.performance = {};
+    }
+    config.performance.hints = false;
     if (!config.module) {
       config.module = { rules: [] };
     }

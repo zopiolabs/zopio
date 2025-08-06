@@ -19,6 +19,7 @@ export type GanttProviderProps = {
   onAddItem?: (date: Date) => void;
   children: ReactNode;
   className?: string;
+  editableDailyTasks?: boolean;
 };
 
 export const GanttProvider: FC<GanttProviderProps> = ({
@@ -27,6 +28,7 @@ export const GanttProvider: FC<GanttProviderProps> = ({
   onAddItem,
   children,
   className,
+  editableDailyTasks = false,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [timelineData, setTimelineData] = useState<TimelineData>(
@@ -197,6 +199,7 @@ export const GanttProvider: FC<GanttProviderProps> = ({
         placeholderLength: 2,
         ref: scrollRef,
         scrollToFeature,
+        editableDailyTasks,
       }}
     >
       <div

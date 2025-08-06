@@ -13,9 +13,11 @@ import {
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 import { useMouse, useThrottle } from '@uidotdev/usehooks';
 import { addDays, format } from 'date-fns';
-import { FC, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@repo/design-system/lib/utils';
 import { Card } from '@repo/design-system/ui/card';
+import { Input } from '@repo/design-system/ui/input';
+import { TaskPopover } from './TaskPopover';
 import { GanttContext, useGanttDragging, useGanttScrollX } from './context';
 import { GanttFeature } from './types';
 import { getDateByMousePosition, getDifferenceIn, getInnerDifferenceIn, getOffset, getWidth, getAddRange } from './utils';
@@ -75,9 +77,10 @@ export type GanttFeatureItemCardProps = Pick<GanttFeature, 'id'> & {
   children?: ReactNode;
 };
 
-export const GanttFeatureItemCard: FC<GanttFeatureItemCardProps> = ({
+export const GanttFeatureItemCard: FC<GanttFeatureItemCardProps & { onClick?: (e: React.MouseEvent) => void }> = ({
   id,
   children,
+  onClick,
 }) => {
   const [, setDragging] = useGanttDragging();
   const { attributes, listeners, setNodeRef } = useDraggable({ id });
@@ -102,6 +105,7 @@ export const GanttFeatureItemCard: FC<GanttFeatureItemCardProps> = ({
 
 export type GanttFeatureItemProps = GanttFeature & {
   onMove?: (id: string, startDate: Date, endDate: Date | null) => void;
+  onUpdate?: (updatedFeature: GanttFeature) => void;
   children?: ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -109,6 +113,7 @@ export type GanttFeatureItemProps = GanttFeature & {
 
 export const GanttFeatureItem: FC<GanttFeatureItemProps> = ({
   onMove,
+  onUpdate,
   children,
   className,
   ...feature
@@ -121,6 +126,15 @@ export const GanttFeatureItem: FC<GanttFeatureItemProps> = ({
   );
   const [startAt, setStartAt] = useState<Date>(feature.startAt);
   const [endAt, setEndAt] = useState<Date | null>(feature.endAt);
+  const [taskName, setTaskName] = useState<string>(feature.name);
+  const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
+  
+  // Reference for storing feature data during drag operations
+  const featureRef = useRef<{
+    id: string;
+    startAt: Date;
+    endAt: Date | null;
+  }>({ id: feature.id, startAt, endAt });
   // Memoize expensive calculations
   const width = useMemo(
     () => getWidth(startAt, endAt, gantt),
@@ -140,14 +154,65 @@ export const GanttFeatureItem: FC<GanttFeatureItemProps> = ({
       distance: 10,
     },
   });
+  // Already replaced in previous chunk
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value;
+    setTaskName(newName);
+
+    if (onUpdate) {
+      onUpdate({
+        ...feature,
+        name: newName,
+        startAt,
+        endAt
+      });
+    }
+  };
+
+  const handlePopoverUpdate = (updatedFeature: GanttFeature) => {
+    if (onUpdate) {
+      setStartAt(updatedFeature.startAt);
+      setEndAt(updatedFeature.endAt);
+      setTaskName(updatedFeature.name);
+
+      onUpdate(updatedFeature);
+
+      if ((updatedFeature.startAt !== feature.startAt || updatedFeature.endAt !== feature.endAt) && onMove) {
+        onMove(updatedFeature.id, updatedFeature.startAt, updatedFeature.endAt);
+      }
+    }
+  };
+
+  const handleItemClick = (e: React.MouseEvent) => {
+    if (gantt.editableDailyTasks && onUpdate) {
+      setPopoverOpen(true);
+      e.stopPropagation();
+    }
+  };
+
   const handleItemDragStart = useCallback(() => {
+    // Track initial position and dates
     setPreviousMouseX(mousePosition.x);
     setPreviousStartAt(startAt);
     setPreviousEndAt(endAt);
-  }, [mousePosition.x, startAt, endAt]);
+    
+    // Store in ref for future operations
+    featureRef.current = {
+      id: feature.id,
+      startAt,
+      endAt,
+    };
+  }, [feature.id, mousePosition.x, startAt, endAt]);
+
   const handleItemDragMove = useCallback(() => {
     const currentDate = getDateByMousePosition(gantt, mousePosition.x);
     const originalDate = getDateByMousePosition(gantt, previousMouseX);
+
+    if (!(currentDate && originalDate)) {
+      return;
+    }
+    
     const delta =
       gantt.range === 'daily'
         ? getDifferenceIn(gantt.range)(currentDate, originalDate)
@@ -162,19 +227,29 @@ export const GanttFeatureItem: FC<GanttFeatureItemProps> = ({
     [onMove, feature.id, startAt, endAt]
   );
   const handleLeftDragMove = useCallback(() => {
-    const ganttRect = gantt.ref?.current?.getBoundingClientRect();
-    const x =
-      mousePosition.x - (ganttRect?.left ?? 0) + scrollX - gantt.sidebarWidth;
-    const newStartAt = getDateByMousePosition(gantt, x);
-    setStartAt(newStartAt);
-  }, [gantt, mousePosition.x, scrollX]);
+    const date = getDateByMousePosition(gantt, mousePosition.x);
+    if (!date) return;
+    setStartAt(date);
+  }, [gantt, mousePosition.x]);
+
   const handleRightDragMove = useCallback(() => {
-    const ganttRect = gantt.ref?.current?.getBoundingClientRect();
-    const x =
-      mousePosition.x - (ganttRect?.left ?? 0) + scrollX - gantt.sidebarWidth;
-    const newEndAt = getDateByMousePosition(gantt, x);
-    setEndAt(newEndAt);
-  }, [gantt, mousePosition.x, scrollX]);
+    const date = getDateByMousePosition(gantt, mousePosition.x);
+    if (!date) return;
+    setEndAt(date);
+  }, [gantt, mousePosition.x]);
+  
+  // Notify about task updates when dates are changed
+  useEffect(() => {
+    if (onUpdate && (startAt !== feature.startAt || endAt !== feature.endAt)) {
+      onUpdate({
+        ...feature,
+        name: taskName,
+        startAt,
+        endAt
+      });
+    }
+  }, [startAt, endAt, feature, taskName, onUpdate]);
+
   return (
     <div
       className={cn('relative flex w-max min-w-full py-0.5', className)}
@@ -202,19 +277,67 @@ export const GanttFeatureItem: FC<GanttFeatureItemProps> = ({
             />
           </DndContext>
         )}
-        <DndContext
-          modifiers={[restrictToHorizontalAxis]}
-          onDragEnd={onDragEnd}
-          onDragMove={handleItemDragMove}
-          onDragStart={handleItemDragStart}
-          sensors={[mouseSensor]}
-        >
-          <GanttFeatureItemCard id={feature.id}>
-            {children ?? (
-              <p className="flex-1 truncate text-xs">{feature.name}</p>
-            )}
-          </GanttFeatureItemCard>
-        </DndContext>
+        {gantt.editableDailyTasks && onUpdate ? (
+          <TaskPopover
+            feature={{
+              ...feature,
+              name: taskName,
+              startAt,
+              endAt
+            }}
+            onUpdate={handlePopoverUpdate}
+            open={popoverOpen}
+            onOpenChange={setPopoverOpen}
+          >
+            <DndContext
+              modifiers={[restrictToHorizontalAxis]}
+              onDragEnd={onDragEnd}
+              onDragMove={handleItemDragMove}
+              onDragStart={handleItemDragStart}
+              sensors={[mouseSensor]}
+            >
+              <GanttFeatureItemCard id={feature.id} onClick={handleItemClick}>
+                <div 
+                  className="flex-1 h-full flex items-center" 
+                  style={{
+                    backgroundColor: feature.status.color ? `${feature.status.color}20` : undefined,
+                    borderLeft: `3px solid ${feature.status.color}`
+                  }}
+                >
+                  <Input 
+                    className="flex-1 h-full text-xs font-medium p-1 bg-transparent border-none hover:bg-secondary-foreground/10"
+                    value={taskName}
+                    onChange={handleNameChange}
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                  />
+                </div>
+              </GanttFeatureItemCard>
+            </DndContext>
+          </TaskPopover>
+        ) : (
+          <DndContext
+            modifiers={[restrictToHorizontalAxis]}
+            onDragEnd={onDragEnd}
+            onDragMove={handleItemDragMove}
+            onDragStart={handleItemDragStart}
+            sensors={[mouseSensor]}
+          >
+            <GanttFeatureItemCard id={feature.id}>
+              <div 
+                className="flex-1 h-full flex items-center" 
+                style={{
+                  backgroundColor: feature.status.color ? `${feature.status.color}20` : undefined,
+                  borderLeft: `3px solid ${feature.status.color}`
+                }}
+              >
+                {children ?? (
+                  <p className="flex-1 truncate text-xs px-2">{feature.name}</p>
+                )}
+              </div>
+            </GanttFeatureItemCard>
+          </DndContext>
+        )}
         {onMove && (
           <DndContext
             modifiers={[restrictToHorizontalAxis]}
@@ -251,6 +374,7 @@ export const GanttFeatureListGroup: FC<GanttFeatureListGroupProps> = ({
 export type GanttFeatureRowProps = {
   features: GanttFeature[];
   onMove?: (id: string, startAt: Date, endAt: Date | null) => void;
+  onUpdate?: (updatedFeature: GanttFeature) => void;
   children?: (feature: GanttFeature) => ReactNode;
   className?: string;
 };
@@ -258,6 +382,7 @@ export type GanttFeatureRowProps = {
 export const GanttFeatureRow: FC<GanttFeatureRowProps> = ({
   features,
   onMove,
+  onUpdate,
   children,
   className,
 }) => {
@@ -309,6 +434,7 @@ export const GanttFeatureRow: FC<GanttFeatureRowProps> = ({
           <GanttFeatureItem
             {...feature}
             onMove={onMove}
+            onUpdate={onUpdate}
           >
             {children ? children(feature) : (
               <p className="flex-1 truncate text-xs">{feature.name}</p>
