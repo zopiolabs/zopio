@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Skeleton } from '@repo/design-system/ui/skeleton';
+import { Skeleton } from '@repo/design-system/ui';
 
 /**
  * Use to show a placeholder while content is loading.

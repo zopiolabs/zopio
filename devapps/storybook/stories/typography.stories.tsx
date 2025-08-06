@@ -15,7 +15,7 @@ import {
   TypographyMuted,
   TypographyP,
   TypographySmall,
-} from '@repo/design-system/ui/typography';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 /**
@@ -35,7 +35,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
  *   TypographyH1,
  *   TypographyP,
  *   TypographyBlockquote
- * } from "@repo/design-system/ui/typography";
+ * } from '@repo/design-system/ui';
  *
  * export function MyComponent() {
  *   return (

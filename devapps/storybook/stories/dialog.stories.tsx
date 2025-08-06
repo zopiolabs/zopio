@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@repo/design-system/ui/dialog';
+} from '@repo/design-system/ui';
 
 /**
  * A window overlaid on either the primary window or another dialog window,

@@ -10,7 +10,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@repo/design-system/ui/accordion';
+} from '@repo/design-system/ui';
 
 /**
  * A vertically stacked set of interactive headings that each reveal a section

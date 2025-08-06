@@ -17,8 +17,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button } from '@repo/design-system/ui/button';
-import * as FloatingActionPanel from '@repo/design-system/ui/floating-action-panel';
+import { Button } from '@repo/design-system/ui';
+import * as FloatingActionPanel from '@repo/design-system/ui';
 
 /**
  * The FloatingActionPanel component provides a contextual popup panel that appears

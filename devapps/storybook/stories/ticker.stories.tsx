@@ -8,7 +8,7 @@ import {
   TickerPrice,
   TickerPriceChange,
   TickerSymbol,
-} from '@repo/design-system/ui/ticker';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Ticker> = {

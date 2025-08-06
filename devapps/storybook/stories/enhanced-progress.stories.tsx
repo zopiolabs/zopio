@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useEffect, useState } from 'react';
 
-import { EnhancedProgress } from '@repo/design-system/ui/enhanced-progress';
+import { EnhancedProgress } from '@repo/design-system/ui';
 
 /**
  * An enhanced progress component that supports linear and radial progress bars with various styles,

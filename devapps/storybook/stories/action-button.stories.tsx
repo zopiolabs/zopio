@@ -6,8 +6,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Save } from 'lucide-react';
 import { useState } from 'react';
 
-import { ActionButton } from '@repo/design-system/ui/action-button';
-import { Card } from '@repo/design-system/ui/card';
+import { ActionButton } from '@repo/design-system/ui';
+import { Card } from '@repo/design-system/ui';
 
 /**
  * ActionButton extends the standard Button with loading state management.

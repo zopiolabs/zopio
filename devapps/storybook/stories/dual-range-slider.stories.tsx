@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 
-import { DualRangeSlider } from '@repo/design-system/ui/dual-range-slider';
+import { DualRangeSlider } from '@repo/design-system/ui';
 
 const meta: Meta<typeof DualRangeSlider> = {
   title: 'UI/DualRangeSlider',

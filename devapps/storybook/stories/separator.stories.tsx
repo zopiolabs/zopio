@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Separator } from '@repo/design-system/ui/separator';
+import { Separator } from '@repo/design-system/ui';
 
 /**
  * Visually or semantically separates content.

@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Progress } from '@repo/design-system/ui/progress';
+import { Progress } from '@repo/design-system/ui';
 
 /**
  * Displays an indicator showing the completion progress of a task, typically

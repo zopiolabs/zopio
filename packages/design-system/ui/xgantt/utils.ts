@@ -13,16 +13,14 @@ import {
   endOfDay,
   endOfMonth,
   getDaysInMonth,
+  getDate,
   isSameDay,
   startOfDay,
   startOfMonth,
 } from 'date-fns';
-
 import { GanttContextProps, Range, TimelineData } from './types';
 
-/**
- * Gets the appropriate function to calculate days in a range based on the range type
- */
+// Helper functions for date calculations based on the range
 export const getsDaysIn = (range: Range) => {
   // For when range is daily
   let fn = (_date: Date) => 1;
@@ -32,9 +30,6 @@ export const getsDaysIn = (range: Range) => {
   return fn;
 };
 
-/**
- * Gets the appropriate difference function based on the range type
- */
 export const getDifferenceIn = (range: Range) => {
   let fn = differenceInDays;
   if (range === 'monthly' || range === 'quarterly') {
@@ -43,9 +38,6 @@ export const getDifferenceIn = (range: Range) => {
   return fn;
 };
 
-/**
- * Gets the appropriate inner difference function based on the range type
- */
 export const getInnerDifferenceIn = (range: Range) => {
   let fn = differenceInHours;
   if (range === 'monthly' || range === 'quarterly') {
@@ -54,9 +46,6 @@ export const getInnerDifferenceIn = (range: Range) => {
   return fn;
 };
 
-/**
- * Gets the appropriate start-of function based on the range type
- */
 export const getStartOf = (range: Range) => {
   let fn = startOfDay;
   if (range === 'monthly' || range === 'quarterly') {
@@ -65,9 +54,6 @@ export const getStartOf = (range: Range) => {
   return fn;
 };
 
-/**
- * Gets the appropriate end-of function based on the range type
- */
 export const getEndOf = (range: Range) => {
   let fn = endOfDay;
   if (range === 'monthly' || range === 'quarterly') {
@@ -76,9 +62,6 @@ export const getEndOf = (range: Range) => {
   return fn;
 };
 
-/**
- * Gets the appropriate add function based on the range type
- */
 export const getAddRange = (range: Range) => {
   let fn = addDays;
   if (range === 'monthly' || range === 'quarterly') {
@@ -87,10 +70,14 @@ export const getAddRange = (range: Range) => {
   return fn;
 };
 
-/**
- * Calculates a date based on mouse position in the timeline
- */
+// Calculate a date based on mouse position in the Gantt chart
 export const getDateByMousePosition = (context: GanttContextProps, mouseX: number) => {
+  // Check if timelineData exists and has at least one item
+  if (!context.timelineData || context.timelineData.length === 0) {
+    // Return current date if timeline data is not available
+    return new Date();
+  }
+
   const timelineStartDate = new Date(context.timelineData[0].year, 0, 1);
   const columnWidth = (context.columnWidth * context.zoom) / 100;
   const offset = Math.floor(mouseX / columnWidth);
@@ -104,9 +91,7 @@ export const getDateByMousePosition = (context: GanttContextProps, mouseX: numbe
   return actualDate;
 };
 
-/**
- * Creates initial timeline data structure for the Gantt chart
- */
+// Create initial timeline data for the Gantt chart
 export const createInitialTimelineData = (today: Date) => {
   const data: TimelineData = [];
   data.push(
@@ -127,9 +112,7 @@ export const createInitialTimelineData = (today: Date) => {
   return data;
 };
 
-/**
- * Calculates the horizontal offset for a date in the timeline
- */
+// Calculate the offset position of a feature from the timeline start
 export const getOffset = (
   date: Date,
   timelineStartDate: Date,
@@ -148,9 +131,7 @@ export const getOffset = (
   return fullColumns * parsedColumnWidth + partialColumns * pixelsPerDay;
 };
 
-/**
- * Calculates the width of a feature item based on its start and end dates
- */
+// Calculate the width of a feature based on its start and end dates
 export const getWidth = (
   startAt: Date,
   endAt: Date | null,
@@ -175,8 +156,8 @@ export const getWidth = (
   if (isSameDay(startOf(startAt), startOf(endAt))) {
     return innerDifferenceIn(endAt, startAt) * pixelsPerDayInStartMonth;
   }
-  const startRangeOffset = daysInStartMonth - startAt.getDate();
-  const endRangeOffset = endAt.getDate();
+  const startRangeOffset = daysInStartMonth - getDate(startAt);
+  const endRangeOffset = getDate(endAt);
   const fullRangeOffset = differenceIn(startOf(endAt), startOf(startAt));
   const daysInEndMonth = getDaysInMonth(endAt);
   const pixelsPerDayInEndMonth = parsedColumnWidth / daysInEndMonth;
@@ -187,9 +168,7 @@ export const getWidth = (
   );
 };
 
-/**
- * Calculates the inner offset within a column for a specific date
- */
+// Calculate inner offset for precise positioning within a cell
 export const calculateInnerOffset = (
   date: Date,
   range: Range,

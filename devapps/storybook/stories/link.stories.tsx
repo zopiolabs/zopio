@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { ArrowRight, Github, Mail } from 'lucide-react';
 
-import { Link } from '@repo/design-system/ui/link';
+import { Link } from '@repo/design-system/ui';
 
 /**
  * The Link component provides accessible navigation with various styling options.

@@ -1,6 +1,6 @@
-import { Button } from '@repo/design-system/ui/button';
-import { Label } from '@repo/design-system/ui/label';
-import { Rating, RatingButton } from '@repo/design-system/ui/rating';
+import { Button } from '@repo/design-system/ui';
+import { Label } from '@repo/design-system/ui';
+import { Rating, RatingButton } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { HeartIcon, StarIcon, ThumbsUpIcon } from 'lucide-react';
 /**

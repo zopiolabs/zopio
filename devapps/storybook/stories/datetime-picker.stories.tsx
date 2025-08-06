@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { zhTW } from 'date-fns/locale';
 import { useState } from 'react';
 
-import { DateTimePicker } from '@repo/design-system/ui/datetime-picker';
+import { DateTimePicker } from '@repo/design-system/ui';
 
 const meta: Meta<typeof DateTimePicker> = {
   title: 'UI/DateTimePicker',

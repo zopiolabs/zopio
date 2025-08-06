@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Button } from '@repo/design-system/ui/button';
-import { NumberFlow } from '@repo/design-system/ui/number-flow';
+import { Button } from '@repo/design-system/ui';
+import { NumberFlow } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useEffect, useState } from 'react';
 

@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Card, CardContent } from '@repo/design-system/ui/card';
-import { OpenSource } from '@repo/design-system/ui/open-source';
+import { Card, CardContent } from '@repo/design-system/ui';
+import { OpenSource } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof OpenSource> = {

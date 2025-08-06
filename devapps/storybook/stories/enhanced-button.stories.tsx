@@ -6,8 +6,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Download, Heart, Send, Settings, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-import { Card } from '@repo/design-system/ui/card';
-import { EnhancedButton } from '@repo/design-system/ui/enhanced-button';
+import { Card } from '@repo/design-system/ui';
+import { EnhancedButton } from '@repo/design-system/ui';
 
 /**
  * EnhancedButton extends the standard Button with loading states, icons, and positioning options.

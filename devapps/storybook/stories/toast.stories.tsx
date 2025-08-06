@@ -10,8 +10,8 @@ import {
   ToastAction,
   type ToastActionElement,
   type ToastProps,
-} from '@repo/design-system/ui/toast';
-import { Toaster } from '@repo/design-system/ui/toaster';
+} from '@repo/design-system/ui';
+import { Toaster } from '@repo/design-system/ui';
 
 /**
  * A succinct message that is displayed temporarily.

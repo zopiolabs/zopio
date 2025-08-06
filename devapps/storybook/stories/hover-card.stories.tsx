@@ -8,7 +8,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '@repo/design-system/ui/hover-card';
+} from '@repo/design-system/ui';
 
 /**
  * For sighted users to preview content available behind a link.

@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { CalendarIcon, ExternalLinkIcon } from 'lucide-react';
 
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 import {
   Glimpse,
   GlimpseContent,
@@ -14,7 +14,7 @@ import {
   type GlimpseProps,
   GlimpseTitle,
   GlimpseTrigger,
-} from '@repo/design-system/ui/glimpse';
+} from '@repo/design-system/ui';
 
 /**
  * A component that shows a preview of a URL when hovering over a link.

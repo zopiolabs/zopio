@@ -17,7 +17,8 @@ export * from './global-draggable-avatar';
 export * from './badge';
 export * from './banner';
 export * from './breadcrumb';
-export * from './button';
+import { Button, buttonVariants } from './button';
+export { Button, buttonVariants };
 export * from './button-group';
 import {
   CalendarBody,
@@ -91,27 +92,26 @@ export * from './image-zoom';
 export * from './icon';
 export * from './input-otp';
 export * from './input';
+export * from './infinite-scroll';
 export * from './kanban';
 export * from './kbd';
 export * from './label';
+export * from './link';
 export * from './list';
 export * from './listbox';
+export * from './loading-button';
+export * from './logo-carousel';
+export * from './magic-back-button';
 export * from './marquee';
 export * from './menu';
 export * from './menubar';
+export * from './modal';
 export * from './mini-calendar';
 export * from './mode-toggle';
 export * from './multiple-selector';
+export { default as MultipleSelector } from './multiple-selector';
 export * from './navbar';
 export * from './navigation-menu';
-export * from './new-gantt/GanttFeatureItem';
-export * from './new-gantt/GanttHeader';
-export * from './new-gantt/GanttMarker';
-export * from './new-gantt/GanttProvider';
-export * from './new-gantt/GanttSidebar';
-export * from './new-gantt/GanttTimeline';
-export * from './new-gantt/context';
-export * from './new-gantt/explain';
 export * from './pagination';
 export * from './pill';
 export * from './popover';
@@ -136,8 +136,8 @@ export * from './snippet';
 import { Toaster as SonnerToaster } from './sonner';
 export { SonnerToaster };
 export * from './spinner';
-import { Status as StatusComponent } from './status';
-export { StatusComponent };
+import { Status as StatusComponent, StatusIndicator, StatusLabel } from './status';
+export { StatusComponent, StatusIndicator, StatusLabel };
 export * from './status-badge';
 export * from './switch';
 export * from './table';
@@ -164,15 +164,18 @@ export * from './open-source';
 export * from './logo-carousel';
 export * from './word-reveal';
 export * from './number-flow';
+// Export xgantt components using the barrel file pattern
+export * from './xgantt';
 export * from './number-counter';
+export * from './number-flow-input';
+export * from './number-flow-motion';
 export * from './flow';
-// Explicitly re-export from number-flow-barvian to avoid naming conflicts
+export * from './rate-limit-demo';
 import {
   NumberFlowBarvian,
   NumberFlowBarvianGroup,
   continuous,
   useCanAnimate,
-  // Avoid re-exporting conflicting types
   type Plugin,
   type NumberFlowBarvianProps
 } from './number-flow-barvian';

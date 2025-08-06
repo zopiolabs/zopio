@@ -4,16 +4,20 @@
 
 'use client';
 
-import { useContext, useId } from 'react';
-import { format } from 'date-fns';
-import { addDays } from 'date-fns';
+import { format, addDays } from 'date-fns';
+import { FC, ReactNode, useContext, useId } from 'react';
 import { cn } from '@repo/design-system/lib/utils';
-
 import { GanttContext } from './context';
-import { GanttContentHeaderProps, GanttHeaderProps, Range } from './types';
-import { GanttColumns } from './GanttTimeline';
+import { Range } from './types';
+import { GanttColumns } from './index';
 
-export const GanttContentHeader: React.FC<GanttContentHeaderProps> = ({
+export type GanttContentHeaderProps = {
+  renderHeaderItem: (index: number) => ReactNode;
+  title: string;
+  columns: number;
+};
+
+export const GanttContentHeader: FC<GanttContentHeaderProps> = ({
   title,
   columns,
   renderHeaderItem,
@@ -53,7 +57,8 @@ export const GanttContentHeader: React.FC<GanttContentHeaderProps> = ({
   );
 };
 
-const DailyHeader: React.FC = () => {
+// Daily header component - shows days of month with day of week
+const DailyHeader: FC = () => {
   const gantt = useContext(GanttContext);
   return gantt.timelineData.map((year) =>
     year.quarters
@@ -90,7 +95,8 @@ const DailyHeader: React.FC = () => {
   );
 };
 
-const MonthlyHeader: React.FC = () => {
+// Monthly header component - shows months of year
+const MonthlyHeader: FC = () => {
   const gantt = useContext(GanttContext);
   return gantt.timelineData.map((year) => (
     <div className="relative flex flex-col" key={year.year}>
@@ -108,7 +114,8 @@ const MonthlyHeader: React.FC = () => {
   ));
 };
 
-const QuarterlyHeader: React.FC = () => {
+// Quarterly header component - shows quarters with months
+const QuarterlyHeader: FC = () => {
   const gantt = useContext(GanttContext);
   return gantt.timelineData.map((year) =>
     year.quarters.map((quarter, quarterIndex) => (
@@ -131,13 +138,19 @@ const QuarterlyHeader: React.FC = () => {
   );
 };
 
-const headers: Record<Range, React.FC> = {
+// Map of range to header component
+const headers: Record<Range, FC> = {
   daily: DailyHeader,
   monthly: MonthlyHeader,
   quarterly: QuarterlyHeader,
 };
 
-export const GanttHeader: React.FC<GanttHeaderProps> = ({ className, children }) => {
+export type GanttHeaderProps = {
+  className?: string;
+  children?: ReactNode;
+};
+
+export const GanttHeader: FC<GanttHeaderProps> = ({ className, children }) => {
   const gantt = useContext(GanttContext);
   const Header = headers[gantt.range];
   return (

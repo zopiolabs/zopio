@@ -5,16 +5,16 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 
-import { Input } from '@repo/design-system/ui/input';
-import { Label } from '@repo/design-system/ui/label';
-import { QRCode } from '@repo/design-system/ui/qr-code';
+import { Input } from '@repo/design-system/ui';
+import { Label } from '@repo/design-system/ui';
+import { QRCode } from '@repo/design-system/ui';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@repo/design-system/ui/select';
+} from '@repo/design-system/ui';
 
 /**
  * QR Code is a component that generates a QR code from a string.

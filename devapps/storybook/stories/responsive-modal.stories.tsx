@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 import {
   ResponsiveModal,
   ResponsiveModalContent,
@@ -13,7 +13,7 @@ import {
   ResponsiveModalHeader,
   ResponsiveModalTitle,
   ResponsiveModalTrigger,
-} from '@repo/design-system/ui/responsive-modal';
+} from '@repo/design-system/ui';
 
 /**
  * A responsive modal component that adapts to different screen sizes.

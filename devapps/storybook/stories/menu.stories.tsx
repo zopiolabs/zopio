@@ -8,7 +8,7 @@ import {
   MenuItem,
   MenuSection,
   MenuTitle,
-} from '@repo/design-system/ui/menu';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Menu> = {

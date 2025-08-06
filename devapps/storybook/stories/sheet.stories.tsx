@@ -13,7 +13,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@repo/design-system/ui/sheet';
+} from '@repo/design-system/ui';
 
 /**
  * Extends the Dialog component to display content that complements the main

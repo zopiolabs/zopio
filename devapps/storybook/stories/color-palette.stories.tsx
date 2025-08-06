@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { ColorPalette } from '@repo/design-system/ui/color-palette';
+import { ColorPalette } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 /**

@@ -5,11 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { AlertCircle } from 'lucide-react';
 
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from '@repo/design-system/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@repo/design-system/ui';
 
 /**
  * Displays a callout for user attention.

@@ -11,7 +11,7 @@ import {
   ListboxOptions,
   ListboxSection,
   ListboxSelectedOption,
-} from '@repo/design-system/ui/listbox';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { type FormEvent, useState } from 'react';
 

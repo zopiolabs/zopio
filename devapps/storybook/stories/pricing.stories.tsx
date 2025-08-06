@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Pricing } from '@repo/design-system/ui/pricing';
+import { Pricing } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Pricing> = {

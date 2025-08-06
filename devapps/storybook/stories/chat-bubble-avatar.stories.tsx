@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useEffect, useState } from 'react';
 
-import { GlobalDraggableAvatar } from '@repo/design-system/ui/global-draggable-avatar';
+import { GlobalDraggableAvatar } from '@repo/design-system/ui';
 
 /**
  * A draggable avatar component with chat-bubble integration that can be freely positioned anywhere on the screen.

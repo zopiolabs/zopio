@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 import {
   VideoPlayer,
   VideoPlayerContent,
@@ -14,7 +14,7 @@ import {
   VideoPlayerTimeDisplay,
   VideoPlayerTimeRange,
   VideoPlayerVolumeRange,
-} from '@repo/design-system/ui/video-player';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import type React from 'react';
 import { type CSSProperties, useState } from 'react';

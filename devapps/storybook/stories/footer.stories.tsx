@@ -21,7 +21,7 @@ import {
   FooterLogo,
   FooterSection,
   FooterSocialLinks,
-} from '@repo/design-system/ui/footer';
+} from '@repo/design-system/ui';
 
 /**
  * Footer component for website layout.

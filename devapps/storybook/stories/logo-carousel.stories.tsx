@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { LogoCarousel } from '@repo/design-system/ui/logo-carousel';
+import { LogoCarousel } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import {
   Airplay,

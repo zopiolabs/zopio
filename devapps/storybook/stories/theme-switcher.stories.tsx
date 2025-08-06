@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { ThemeSwitcher } from '@repo/design-system/ui/theme-switcher';
+import { ThemeSwitcher } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

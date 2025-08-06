@@ -4,11 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@repo/design-system/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@repo/design-system/ui';
 
 /**
  * An image element with a fallback for representing the user.

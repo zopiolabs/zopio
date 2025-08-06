@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Timeline, type TimelineItem } from '@repo/design-system/ui/timeline';
+import { Timeline, type TimelineItem } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Calendar, Code, Package, Truck } from 'lucide-react';
 

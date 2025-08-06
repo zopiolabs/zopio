@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import type * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { GlobalDraggableAvatar } from '@repo/design-system/ui/global-draggable-avatar';
+import { GlobalDraggableAvatar } from '@repo/design-system/ui';
 
 /**
  * A global draggable avatar component that can be moved across the entire Storybook interface.

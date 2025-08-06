@@ -4,20 +4,20 @@
 
 'use client';
 
-import { createContext } from 'react';
 import { atom, useAtom } from 'jotai';
+import { createContext } from 'react';
 import { GanttContextProps } from './types';
 
-// Create atoms for global state management
+// Global atoms for state management
 export const draggingAtom = atom(false);
 export const scrollXAtom = atom(0);
 
-// Export atom hooks
+// Custom hooks to access global state
 export const useGanttDragging = () => useAtom(draggingAtom);
 export const useGanttScrollX = () => useAtom(scrollXAtom);
 
-// Create the Gantt context with default values
-const GanttContext = createContext<GanttContextProps>({
+// Create default context values
+export const GanttContext = createContext<GanttContextProps>({
   zoom: 100,
   range: 'monthly',
   columnWidth: 50,
@@ -30,6 +30,3 @@ const GanttContext = createContext<GanttContextProps>({
   ref: null,
   scrollToFeature: undefined,
 });
-
-export { GanttContext };
-

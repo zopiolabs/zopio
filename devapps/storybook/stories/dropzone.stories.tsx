@@ -6,7 +6,7 @@ import {
   Dropzone,
   DropzoneContent,
   DropzoneEmptyState,
-} from '@repo/design-system/ui/dropzone';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import Image from 'next/image';
 import { useState } from 'react';

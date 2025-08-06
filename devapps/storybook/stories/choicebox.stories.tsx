@@ -16,7 +16,7 @@ import {
   ChoiceboxItemSubtitle,
   ChoiceboxItemTitle,
   DraggableChoicebox,
-} from '@repo/design-system/ui/choicebox';
+} from '@repo/design-system/ui';
 
 /**
  * Choiceboxes are a great way to show radio or checkbox options with a card style.

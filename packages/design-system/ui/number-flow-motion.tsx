@@ -8,12 +8,12 @@ import { cn } from "@repo/design-system/lib/utils";
 import { ArrowUp } from "lucide-react";
 import * as React from 'react';
 import { forwardRef } from 'react';
-import { NumberFlowBarvian, useCanAnimate } from './number-flow-barvian';
+import { NumberFlowBarvian, useCanAnimate, Format } from './number-flow-barvian';
 import { motion, MotionConfig, HTMLMotionProps } from 'framer-motion';
 
 // Create motion versions of our components
-const MotionNumberFlow = motion(NumberFlowBarvian);
-const MotionArrowUp = motion(ArrowUp);
+const MotionNumberFlow = motion.create(NumberFlowBarvian);
+const MotionArrowUp = motion.create(ArrowUp);
 
 export interface NumberFlowMotionProps extends Omit<HTMLMotionProps<"span">, 'onAnimationStart' | 'onDrag' | 'onDragEnd' | 'onDragStart'> {
   /**
@@ -23,7 +23,7 @@ export interface NumberFlowMotionProps extends Omit<HTMLMotionProps<"span">, 'on
   /**
    * Format options for the number display
    */
-  format?: Intl.NumberFormatOptions;
+  format?: Format;
   /**
    * Whether to show the trend indicator arrow
    */

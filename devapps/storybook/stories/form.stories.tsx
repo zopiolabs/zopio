@@ -16,7 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@repo/design-system/ui/form';
+} from '@repo/design-system/ui';
 
 /**
  * Building forms with React Hook Form and Zod.

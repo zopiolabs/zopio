@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 import {
   MegaMenu,
   MegaMenuColumn,
@@ -31,7 +31,7 @@ import {
   MegaMenuItem,
   MegaMenuSection,
   MegaMenuTrigger,
-} from '@repo/design-system/ui/mega-menu';
+} from '@repo/design-system/ui';
 import Link from 'next/link';
 
 /**

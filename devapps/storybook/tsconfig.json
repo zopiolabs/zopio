@@ -1,7 +1,17 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["../../*"],
+      "@repo/design-system": ["../../packages/design-system"],
+      "@repo/design-system/*": ["../../packages/design-system/*"],
+      "@repo/design-system/ui": ["../../packages/design-system/ui"],
+      "@repo/design-system/ui/*": ["../../packages/design-system/ui/*"],
+      "@repo/design-system/hooks/use-toast": [
+        "../../packages/design-system/hooks/use-toast"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",

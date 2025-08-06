@@ -95,6 +95,59 @@ const config: StorybookConfig = {
       include: [cssIncludeRegex],
     });
 
+    // Add resolve configuration to handle module resolution
+    if (!config.resolve) {
+      config.resolve = {};
+    }
+
+    if (!config.resolve.alias) {
+      config.resolve.alias = {};
+    }
+
+    // Use direct path references for module resolution
+    const path = require('node:path');
+    const rootDir = path.resolve(__dirname, '../../');
+
+    // Add path alias for design system components
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@repo/design-system': path.resolve(rootDir, 'packages/design-system'),
+      '@repo/design-system/ui': path.resolve(
+        rootDir,
+        'packages/design-system/ui'
+      ),
+      '@repo/design-system/hooks/use-toast': path.resolve(
+        rootDir,
+        'packages/design-system/hooks/use-toast'
+      ),
+    };
+
+    // Ensure we can resolve packages from the root node_modules
+    if (!config.resolve.modules) {
+      config.resolve.modules = [];
+    }
+
+    config.resolve.modules = [
+      ...config.resolve.modules,
+      path.resolve(rootDir, 'node_modules'),
+      'node_modules',
+    ];
+
+    // Ensure we use the root package.json modules
+    if (!config.resolveLoader) {
+      config.resolveLoader = {};
+    }
+
+    if (!config.resolveLoader.modules) {
+      config.resolveLoader.modules = [];
+    }
+
+    config.resolveLoader.modules = [
+      ...config.resolveLoader.modules,
+      path.resolve(rootDir, 'node_modules'),
+      'node_modules',
+    ];
+
     return config;
   },
 };

@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { RadioGroup, RadioGroupItem } from '@repo/design-system/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '@repo/design-system/ui';
 
 /**
  * A set of checkable buttons—known as radio buttons—where no more than one of

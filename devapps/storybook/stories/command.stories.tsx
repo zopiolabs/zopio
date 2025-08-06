@@ -13,7 +13,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@repo/design-system/ui/command';
+} from '@repo/design-system/ui';
 
 interface CommandGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   heading?: string;

@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { AutosizeTextarea } from '@repo/design-system/ui/autosize-textarea';
+import { AutosizeTextarea } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

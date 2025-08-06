@@ -29,11 +29,7 @@ import {
   Trash2,
 } from 'lucide-react';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@repo/design-system/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@repo/design-system/ui';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -41,12 +37,12 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@repo/design-system/ui/breadcrumb';
+} from '@repo/design-system/ui';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@repo/design-system/ui/collapsible';
+} from '@repo/design-system/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,8 +52,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@repo/design-system/ui/dropdown-menu';
-import { Separator } from '@repo/design-system/ui/separator';
+} from '@repo/design-system/ui';
+import { Separator } from '@repo/design-system/ui';
 import {
   Sidebar,
   SidebarContent,
@@ -76,7 +72,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
-} from '@repo/design-system/ui/sidebar';
+} from '@repo/design-system/ui';
 import { useState } from 'react';
 
 const meta: Meta<typeof Sidebar> = {

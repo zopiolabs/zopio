@@ -32,7 +32,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@repo/design-system/ui/dropdown-menu';
+} from '@repo/design-system/ui';
 
 /**
  * Displays a menu to the user — such as a set of actions or functions —

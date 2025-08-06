@@ -4,34 +4,29 @@
 
 'use client';
 
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { DndContext, MouseSensor, useDraggable, useSensor } from '@dnd-kit/core';
+import {
+  DndContext,
+  MouseSensor,
+  useDraggable,
+  useSensor,
+} from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
-import { useMouse } from '@uidotdev/usehooks';
-import { addDays } from 'date-fns';
+import { useMouse, useThrottle } from '@uidotdev/usehooks';
+import { addDays, format } from 'date-fns';
+import { FC, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { cn } from '@repo/design-system/lib/utils';
 import { Card } from '@repo/design-system/ui/card';
-
 import { GanttContext, useGanttDragging, useGanttScrollX } from './context';
-import {
-  GanttFeatureItemCardProps,
-  GanttFeatureItemProps,
-  GanttFeatureDragHelperProps,
-  GanttFeatureListProps,
-  GanttFeatureListGroupProps,
-  GanttFeatureRowProps,
-  GanttFeature
-} from './types';
-import {
-  getAddRange,
-  getDateByMousePosition,
-  getDifferenceIn,
-  getInnerDifferenceIn,
-  getOffset,
-  getWidth
-} from './utils';
+import { GanttFeature } from './types';
+import { getDateByMousePosition, getDifferenceIn, getInnerDifferenceIn, getOffset, getWidth, getAddRange } from './utils';
 
-export const GanttFeatureDragHelper: React.FC<GanttFeatureDragHelperProps> = ({
+export type GanttFeatureDragHelperProps = {
+  featureId: GanttFeature['id'];
+  direction: 'left' | 'right';
+  date: Date | null;
+};
+
+export const GanttFeatureDragHelper: FC<GanttFeatureDragHelperProps> = ({
   direction,
   featureId,
   date,
@@ -40,11 +35,8 @@ export const GanttFeatureDragHelper: React.FC<GanttFeatureDragHelperProps> = ({
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: `feature-drag-helper-${featureId}`,
   });
-
   const isPressed = Boolean(attributes['aria-pressed']);
-
-  useEffect(() => { setDragging(isPressed); }, [isPressed, setDragging]);
-
+  useEffect(() => setDragging(isPressed), [isPressed, setDragging]);
   return (
     <div
       className={cn(
@@ -72,23 +64,25 @@ export const GanttFeatureDragHelper: React.FC<GanttFeatureDragHelperProps> = ({
             isPressed && 'block'
           )}
         >
-          {date.toLocaleDateString()}
+          {format(date, 'MMM dd, yyyy')}
         </div>
       )}
     </div>
   );
 };
 
-export const GanttFeatureItemCard: React.FC<GanttFeatureItemCardProps> = ({
+export type GanttFeatureItemCardProps = Pick<GanttFeature, 'id'> & {
+  children?: ReactNode;
+};
+
+export const GanttFeatureItemCard: FC<GanttFeatureItemCardProps> = ({
   id,
   children,
 }) => {
   const [, setDragging] = useGanttDragging();
   const { attributes, listeners, setNodeRef } = useDraggable({ id });
   const isPressed = Boolean(attributes['aria-pressed']);
-
-  useEffect(() => { setDragging(isPressed); }, [isPressed, setDragging]);
-
+  useEffect(() => setDragging(isPressed), [isPressed, setDragging]);
   return (
     <Card className="h-full w-full rounded-md bg-background p-2 text-xs shadow-sm">
       <div
@@ -106,7 +100,14 @@ export const GanttFeatureItemCard: React.FC<GanttFeatureItemCardProps> = ({
   );
 };
 
-export const GanttFeatureItem: React.FC<GanttFeatureItemProps> = ({
+export type GanttFeatureItemProps = GanttFeature & {
+  onMove?: (id: string, startDate: Date, endDate: Date | null) => void;
+  children?: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+export const GanttFeatureItem: FC<GanttFeatureItemProps> = ({
   onMove,
   children,
   className,
@@ -114,45 +115,36 @@ export const GanttFeatureItem: React.FC<GanttFeatureItemProps> = ({
 }) => {
   const [scrollX] = useGanttScrollX();
   const gantt = useContext(GanttContext);
-
   const timelineStartDate = useMemo(
     () => new Date(gantt.timelineData.at(0)?.year ?? 0, 0, 1),
     [gantt.timelineData]
   );
-
   const [startAt, setStartAt] = useState<Date>(feature.startAt);
   const [endAt, setEndAt] = useState<Date | null>(feature.endAt);
-
   // Memoize expensive calculations
   const width = useMemo(
     () => getWidth(startAt, endAt, gantt),
     [startAt, endAt, gantt]
   );
-
   const offset = useMemo(
     () => getOffset(startAt, timelineStartDate, gantt),
     [startAt, timelineStartDate, gantt]
   );
-
   const addRange = useMemo(() => getAddRange(gantt.range), [gantt.range]);
-
   const [mousePosition] = useMouse<HTMLDivElement>();
   const [previousMouseX, setPreviousMouseX] = useState(0);
   const [previousStartAt, setPreviousStartAt] = useState(startAt);
   const [previousEndAt, setPreviousEndAt] = useState(endAt);
-
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 10,
     },
   });
-
   const handleItemDragStart = useCallback(() => {
     setPreviousMouseX(mousePosition.x);
     setPreviousStartAt(startAt);
     setPreviousEndAt(endAt);
   }, [mousePosition.x, startAt, endAt]);
-
   const handleItemDragMove = useCallback(() => {
     const currentDate = getDateByMousePosition(gantt, mousePosition.x);
     const originalDate = getDateByMousePosition(gantt, previousMouseX);
@@ -165,12 +157,10 @@ export const GanttFeatureItem: React.FC<GanttFeatureItemProps> = ({
     setStartAt(newStartDate);
     setEndAt(newEndDate);
   }, [gantt, mousePosition.x, previousMouseX, previousStartAt, previousEndAt]);
-
   const onDragEnd = useCallback(
     () => onMove?.(feature.id, startAt, endAt),
     [onMove, feature.id, startAt, endAt]
   );
-
   const handleLeftDragMove = useCallback(() => {
     const ganttRect = gantt.ref?.current?.getBoundingClientRect();
     const x =
@@ -178,7 +168,6 @@ export const GanttFeatureItem: React.FC<GanttFeatureItemProps> = ({
     const newStartAt = getDateByMousePosition(gantt, x);
     setStartAt(newStartAt);
   }, [gantt, mousePosition.x, scrollX]);
-
   const handleRightDragMove = useCallback(() => {
     const ganttRect = gantt.ref?.current?.getBoundingClientRect();
     const x =
@@ -186,7 +175,6 @@ export const GanttFeatureItem: React.FC<GanttFeatureItemProps> = ({
     const newEndAt = getDateByMousePosition(gantt, x);
     setEndAt(newEndAt);
   }, [gantt, mousePosition.x, scrollX]);
-
   return (
     <div
       className={cn('relative flex w-max min-w-full py-0.5', className)}
@@ -246,7 +234,12 @@ export const GanttFeatureItem: React.FC<GanttFeatureItemProps> = ({
   );
 };
 
-export const GanttFeatureListGroup: React.FC<GanttFeatureListGroupProps> = ({
+export type GanttFeatureListGroupProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export const GanttFeatureListGroup: FC<GanttFeatureListGroupProps> = ({
   children,
   className,
 }) => (
@@ -255,7 +248,14 @@ export const GanttFeatureListGroup: React.FC<GanttFeatureListGroupProps> = ({
   </div>
 );
 
-export const GanttFeatureRow: React.FC<GanttFeatureRowProps> = ({
+export type GanttFeatureRowProps = {
+  features: GanttFeature[];
+  onMove?: (id: string, startAt: Date, endAt: Date | null) => void;
+  children?: (feature: GanttFeature) => ReactNode;
+  className?: string;
+};
+
+export const GanttFeatureRow: FC<GanttFeatureRowProps> = ({
   features,
   onMove,
   children,
@@ -265,7 +265,6 @@ export const GanttFeatureRow: React.FC<GanttFeatureRowProps> = ({
   const sortedFeatures = [...features].sort((a, b) =>
     a.startAt.getTime() - b.startAt.getTime()
   );
-
   // Calculate sub-row positions for overlapping features using a proper algorithm
   const featureWithPositions = [];
   const subRowEndTimes: Date[] = []; // Track when each sub-row becomes free
@@ -279,18 +278,17 @@ export const GanttFeatureRow: React.FC<GanttFeatureRowProps> = ({
     }
 
     // Update the end time for this sub-row
+    const safeEndAt = feature.endAt || new Date(); // Default to current date if null
     if (subRow === subRowEndTimes.length) {
-      subRowEndTimes.push(feature.endAt);
+      subRowEndTimes.push(safeEndAt);
     } else {
-      subRowEndTimes[subRow] = feature.endAt;
+      subRowEndTimes[subRow] = safeEndAt;
     }
 
     featureWithPositions.push({ ...feature, subRow });
   }
-
   const maxSubRows = Math.max(1, subRowEndTimes.length);
   const subRowHeight = 36; // Base row height
-
   return (
     <div
       className={cn('relative', className)}
@@ -322,7 +320,12 @@ export const GanttFeatureRow: React.FC<GanttFeatureRowProps> = ({
   );
 };
 
-export const GanttFeatureList: React.FC<GanttFeatureListProps> = ({
+export type GanttFeatureListProps = {
+  className?: string;
+  children: ReactNode;
+};
+
+export const GanttFeatureList: FC<GanttFeatureListProps> = ({
   className,
   children,
 }) => (

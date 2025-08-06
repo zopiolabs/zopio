@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import InfiniteScroll from '@repo/design-system/ui/infinite-scroll';
+import { InfiniteScroll } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Loader2 } from 'lucide-react';
 import React from 'react';

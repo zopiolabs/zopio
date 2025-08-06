@@ -2,10 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {
-  DisplayCard,
-  DisplayCards,
-} from '@repo/design-system/ui/display-cards';
+import { DisplayCard, DisplayCards } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import {
   AudioLines,

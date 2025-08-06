@@ -15,7 +15,7 @@ import {
   CreditCardName,
   CreditCardNumber,
   CreditCardServiceProvider,
-} from '@repo/design-system/ui/credit-card';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof CreditCard> = {

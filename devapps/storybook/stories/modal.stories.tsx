@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 'use client';
-import { Button } from '@repo/design-system/ui/button';
-import { Input } from '@repo/design-system/ui/input';
-import { Label } from '@repo/design-system/ui/label';
+import { Button } from '@repo/design-system/ui';
+import { Input } from '@repo/design-system/ui';
+import { Label } from '@repo/design-system/ui';
 import {
   Modal,
   ModalBody,
@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalTitle,
   ModalTrigger,
-} from '@repo/design-system/ui/modal';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Modal> = {

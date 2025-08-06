@@ -11,7 +11,7 @@ import {
   SnippetTabsContent,
   SnippetTabsList,
   SnippetTabsTrigger,
-} from '@repo/design-system/ui/snippet';
+} from '@repo/design-system/ui';
 
 /**
  * Snippet is a component that allows you to display and copy code in a tabbed interface.
@@ -34,7 +34,7 @@ const npmInstallCode = 'npm install @repo/design-system';
 const yarnInstallCode = 'yarn add @repo/design-system';
 const pnpmInstallCode = 'pnpm add @repo/design-system';
 
-const reactComponentCode = `import { Button } from '@repo/design-system/ui/button';
+const reactComponentCode = `import { Button } from '@repo/design-system/ui';
 
 export default function Example() {
   return (

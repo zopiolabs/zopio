@@ -16,7 +16,7 @@ import {
   ComboboxList,
   ComboboxSeparator,
   ComboboxTrigger,
-} from '@repo/design-system/ui/combobox';
+} from '@repo/design-system/ui';
 
 /**
  * Autocomplete input and command palette with a list of suggestions.

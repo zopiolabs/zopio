@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Label } from '@repo/design-system/ui/label';
+import { Label } from '@repo/design-system/ui';
 
 /**
  * Renders an accessible label associated with controls.

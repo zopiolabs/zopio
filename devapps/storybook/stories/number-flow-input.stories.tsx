@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { NumberFlowInput } from '@repo/design-system/ui/number-flow-input';
+import { NumberFlowInput } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

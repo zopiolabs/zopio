@@ -15,22 +15,18 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@repo/design-system/ui/avatar';
-import { Badge } from '@repo/design-system/ui/badge';
-import { Button } from '@repo/design-system/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@repo/design-system/ui';
+import { Badge } from '@repo/design-system/ui';
+import { Button } from '@repo/design-system/ui';
 import {
   ExpandableCard,
   ExpandableCardContent,
   ExpandableCardFooter,
   ExpandableCardHeader,
   ExpandableCardTrigger,
-} from '@repo/design-system/ui/expandable-card';
-import { ProjectStatusCard } from '@repo/design-system/ui/project-status-card';
-import { Switch } from '@repo/design-system/ui/switch';
+} from '@repo/design-system/ui';
+import { ProjectStatusCard } from '@repo/design-system/ui';
+import { Switch } from '@repo/design-system/ui';
 
 /**
  * The ExpandableCard component provides a collapsible container that can reveal additional content.

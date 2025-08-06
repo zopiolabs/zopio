@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useEffect, useState } from 'react';
 
-import { ProgressWithValue } from '@repo/design-system/ui/progress-with-value';
+import { ProgressWithValue } from '@repo/design-system/ui';
 
 /**
  * A progress bar that displays the current value in various positions.

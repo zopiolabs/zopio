@@ -10,7 +10,7 @@ import {
   ColorPickerHue,
   ColorPickerOutput,
   ColorPickerSelection,
-} from '@repo/design-system/ui/color-picker';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

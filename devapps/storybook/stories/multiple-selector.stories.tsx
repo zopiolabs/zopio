@@ -2,8 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import MultipleSelector from '@repo/design-system/ui/multiple-selector';
-import type { Option } from '@repo/design-system/ui/multiple-selector';
+import { MultipleSelector, type Option } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

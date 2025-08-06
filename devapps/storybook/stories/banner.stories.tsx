@@ -8,7 +8,7 @@ import {
   BannerClose,
   BannerIcon,
   BannerTitle,
-} from '@repo/design-system/ui/banner';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { InfoIcon } from 'lucide-react';
 

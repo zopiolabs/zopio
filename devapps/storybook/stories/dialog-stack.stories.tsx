@@ -14,7 +14,7 @@ import {
   DialogStackPrevious,
   DialogStackTitle,
   DialogStackTrigger,
-} from '@repo/design-system/ui/dialog-stack';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

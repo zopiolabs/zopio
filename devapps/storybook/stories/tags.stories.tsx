@@ -13,7 +13,7 @@ import {
   TagsList,
   TagsTrigger,
   TagsValue,
-} from '@repo/design-system/ui/tags';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { CheckIcon } from 'lucide-react';
 import { useState } from 'react';

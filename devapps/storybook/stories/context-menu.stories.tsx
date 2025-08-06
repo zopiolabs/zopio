@@ -18,7 +18,7 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@repo/design-system/ui/context-menu';
+} from '@repo/design-system/ui';
 
 /**
  * Displays a menu to the user — such as a set of actions or functions —

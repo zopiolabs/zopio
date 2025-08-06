@@ -4,11 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import {
-  Status,
-  StatusIndicator,
-  StatusLabel,
-} from '@repo/design-system/ui/status';
+import { Status, StatusIndicator, StatusLabel } from '@repo/design-system/ui';
 
 /**
  * Status components are used to display the uptime of a service.

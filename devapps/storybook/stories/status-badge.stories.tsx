@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Card } from '@repo/design-system/ui/card';
-import { StatusBadge } from '@repo/design-system/ui/status-badge';
+import { Card } from '@repo/design-system/ui';
+import { StatusBadge } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import type * as React from 'react';
 import { useState } from 'react';

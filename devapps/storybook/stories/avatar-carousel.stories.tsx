@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { AvatarCarousel } from '@repo/design-system/ui/avatar-carousel';
+import { AvatarCarousel } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof AvatarCarousel> = {

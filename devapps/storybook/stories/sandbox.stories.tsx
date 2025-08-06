@@ -16,7 +16,7 @@ import {
   SandboxTabsContent,
   SandboxTabsList,
   SandboxTabsTrigger,
-} from '@repo/design-system/ui/sandbox';
+} from '@repo/design-system/ui';
 
 /**
  * The sandbox component allows you to preview and test components in a sandboxed environment.

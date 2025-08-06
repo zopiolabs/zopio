@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Card } from '@repo/design-system/ui/card';
-import { Hero } from '@repo/design-system/ui/hero';
+import { Card } from '@repo/design-system/ui';
+import { Hero } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { LucideBook, LucideComponent, LucideSquare } from 'lucide-react';
 

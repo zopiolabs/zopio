@@ -54,6 +54,16 @@
       "import": "./blocks/*.js",
       "default": "./blocks/*.js"
     },
+    "./hooks/use-toast": {
+      "types": "./hooks/use-toast.d.ts",
+      "import": "./hooks/use-toast.js",
+      "default": "./hooks/use-toast.js"
+    },
+    "./hooks/*": {
+      "types": "./hooks/*.d.ts",
+      "import": "./hooks/*.js",
+      "default": "./hooks/*.js"
+    },
     "./postcss.config.mjs": "./postcss.config.mjs",
     "./styles/globals.css": "./styles/globals.css"
   },

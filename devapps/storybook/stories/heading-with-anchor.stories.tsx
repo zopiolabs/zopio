@@ -2,15 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {
-  H1,
-  H2,
-  H3,
-  H4,
-  H5,
-  H6,
-  P,
-} from '@repo/design-system/ui/heading-with-anchor';
+import { H1, H2, H3, H4, H5, H6, P } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof H1> = {

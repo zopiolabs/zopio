@@ -2,14 +2,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 import {
   Cropper,
   ImageCrop,
   ImageCropApply,
   ImageCropContent,
   ImageCropReset,
-} from '@repo/design-system/ui/image-crop';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import Image from 'next/image';
 // SPDX-License-Identifier: MIT

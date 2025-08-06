@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Badge } from '@repo/design-system/ui/badge';
+import { Badge } from '@repo/design-system/ui';
 
 /**
  * Displays a badge or a component that looks like a badge.

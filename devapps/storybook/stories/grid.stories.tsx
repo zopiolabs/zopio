@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Grid } from '@repo/design-system/ui/grid';
+import { Grid } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Grid> = {

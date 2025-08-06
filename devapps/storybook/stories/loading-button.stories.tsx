@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Mail } from 'lucide-react';
 import Link from 'next/link';
 
-import { LoadingButton } from '@repo/design-system/ui/loading-button';
+import { LoadingButton } from '@repo/design-system/ui';
 
 /**
  * A button component with built-in loading state that displays a spinner when loading.

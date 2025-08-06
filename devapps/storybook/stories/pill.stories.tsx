@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { DragEndEvent } from '@repo/design-system/ui/list';
+import type { DragEndEvent } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import {
   ActivityIcon,
@@ -37,7 +37,7 @@ import {
   PillPopoverContent,
   PillPopoverTrigger,
   PillStatus,
-} from '@repo/design-system/ui/pill';
+} from '@repo/design-system/ui';
 
 /**
  * A flexible badge component designed for a variety of use cases including status indicators,

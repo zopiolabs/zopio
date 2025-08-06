@@ -4,9 +4,9 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Button } from '@repo/design-system/ui/button';
-import { Label } from '@repo/design-system/ui/label';
-import { Spinner } from '@repo/design-system/ui/spinner';
+import { Button } from '@repo/design-system/ui';
+import { Label } from '@repo/design-system/ui';
+import { Spinner } from '@repo/design-system/ui';
 
 /**
  * A spinner is a visual indicator that shows progress or activity.

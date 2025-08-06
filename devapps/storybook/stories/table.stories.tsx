@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@repo/design-system/ui/table';
+} from '@repo/design-system/ui';
 
 const invoices = [
   {

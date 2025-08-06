@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { WordReveal } from '@repo/design-system/ui/word-reveal';
+import { WordReveal } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof WordReveal> = {

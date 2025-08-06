@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Button } from '@repo/design-system/ui/button';
-import { Typewriter } from '@repo/design-system/ui/typewriter';
+import { Button } from '@repo/design-system/ui';
+import { Typewriter } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

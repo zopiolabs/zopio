@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { ChatComparisonDemo } from '@repo/design-system/ui/chat-comparison-demo';
+import { ChatComparisonDemo } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 /**

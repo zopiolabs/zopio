@@ -16,8 +16,8 @@ import {
   CalendarYearPicker,
   type Feature,
   type Status,
-} from '@repo/design-system/ui/calendar-view';
-import { Glimpse } from '@repo/design-system/ui/glimpse';
+} from '@repo/design-system/ui';
+import { Glimpse } from '@repo/design-system/ui';
 
 /**
  * The calendar view displays features on a grid calendar.

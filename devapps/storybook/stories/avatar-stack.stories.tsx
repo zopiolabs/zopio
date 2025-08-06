@@ -2,17 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@repo/design-system/ui/avatar';
-import { AvatarStack } from '@repo/design-system/ui/avatar-stack';
+import { Avatar, AvatarFallback, AvatarImage } from '@repo/design-system/ui';
+import { AvatarStack } from '@repo/design-system/ui';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@repo/design-system/ui/popover';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof AvatarStack> = {

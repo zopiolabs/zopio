@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Loader2, Mail } from 'lucide-react';
 
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 
 /**
  * Displays a button or a component that looks like a button.

@@ -4,40 +4,32 @@
 
 'use client';
 
-import { useContext, useId, useState } from 'react';
-import { useAtom } from 'jotai';
-import { useMouse, useThrottle, useWindowScroll } from '@uidotdev/usehooks';
-import { PlusIcon } from 'lucide-react';
-import { formatDate } from 'date-fns';
+import { FC, useContext, useId, useState } from 'react';
 import { cn } from '@repo/design-system/lib/utils';
-
-import { GanttContext, useGanttDragging, useGanttScrollX } from './context';
-import {
-  GanttAddFeatureHelperProps,
-  GanttColumnProps,
-  GanttColumnsProps,
-  GanttCreateMarkerTriggerProps,
-  GanttTimelineProps
-} from './types';
+import { PlusIcon } from 'lucide-react';
+import { useMouse, useThrottle, useWindowScroll } from '@uidotdev/usehooks';
+import { useGanttDragging, useGanttScrollX, GanttContext } from './context';
 import { getDateByMousePosition } from './utils';
 
-export const GanttAddFeatureHelper: React.FC<GanttAddFeatureHelperProps> = ({
+export type GanttAddFeatureHelperProps = {
+  top: number;
+  className?: string;
+};
+
+export const GanttAddFeatureHelper: FC<GanttAddFeatureHelperProps> = ({
   top,
   className,
 }) => {
-  const [dragging] = useGanttDragging();
   const [scrollX] = useGanttScrollX();
   const gantt = useContext(GanttContext);
   const [mousePosition, mouseRef] = useMouse<HTMLDivElement>();
-
   const handleClick = () => {
     const ganttRect = gantt.ref?.current?.getBoundingClientRect();
     const x =
-      mousePosition.x - (ganttRect?.left ?? 0) + (scrollX as number) - gantt.sidebarWidth;
+      mousePosition.x - (ganttRect?.left ?? 0) + scrollX - gantt.sidebarWidth;
     const currentDate = getDateByMousePosition(gantt, x);
     gantt.onAddItem?.(currentDate);
   };
-
   return (
     <div
       className={cn('absolute top-0 w-full px-0.5', className)}
@@ -61,7 +53,12 @@ export const GanttAddFeatureHelper: React.FC<GanttAddFeatureHelperProps> = ({
   );
 };
 
-export const GanttColumn: React.FC<GanttColumnProps> = ({
+export type GanttColumnProps = {
+  index: number;
+  isColumnSecondary?: (item: number) => boolean;
+};
+
+export const GanttColumn: FC<GanttColumnProps> = ({
   index,
   isColumnSecondary,
 }) => {
@@ -70,20 +67,15 @@ export const GanttColumn: React.FC<GanttColumnProps> = ({
   const [mousePosition, mouseRef] = useMouse<HTMLDivElement>();
   const [hovering, setHovering] = useState(false);
   const [windowScroll] = useWindowScroll();
-
   const handleMouseEnter = () => setHovering(true);
   const handleMouseLeave = () => setHovering(false);
-
   const top = useThrottle(
     mousePosition.y -
       (mouseRef.current?.getBoundingClientRect().y ?? 0) -
       (windowScroll.y ?? 0),
     10
   );
-
   return (
-    // biome-ignore lint/a11y/noStaticElementInteractions: "This is a clickable column"
-    // biome-ignore lint/nursery/noNoninteractiveElementInteractions: "This is a clickable column"
     <div
       className={cn(
         'group relative h-full overflow-hidden',
@@ -100,7 +92,12 @@ export const GanttColumn: React.FC<GanttColumnProps> = ({
   );
 };
 
-export const GanttColumns: React.FC<GanttColumnsProps> = ({
+export type GanttColumnsProps = {
+  columns: number;
+  isColumnSecondary?: (item: number) => boolean;
+};
+
+export const GanttColumns: FC<GanttColumnsProps> = ({
   columns,
   isColumnSecondary,
 }) => {
@@ -123,25 +120,26 @@ export const GanttColumns: React.FC<GanttColumnsProps> = ({
   );
 };
 
-export const GanttCreateMarkerTrigger: React.FC<GanttCreateMarkerTriggerProps> = ({
+export type GanttCreateMarkerTriggerProps = {
+  onCreateMarker: (date: Date) => void;
+  className?: string;
+};
+
+export const GanttCreateMarkerTrigger: FC<GanttCreateMarkerTriggerProps> = ({
   onCreateMarker,
   className,
 }) => {
   const gantt = useContext(GanttContext);
   const [mousePosition, mouseRef] = useMouse<HTMLDivElement>();
   const [windowScroll] = useWindowScroll();
-
   const x = useThrottle(
     mousePosition.x -
       (mouseRef.current?.getBoundingClientRect().x ?? 0) -
       (windowScroll.x ?? 0),
     10
   );
-
   const date = getDateByMousePosition(gantt, x);
-
   const handleClick = () => onCreateMarker(date);
-
   return (
     <div
       className={cn(
@@ -162,23 +160,17 @@ export const GanttCreateMarkerTrigger: React.FC<GanttCreateMarkerTriggerProps> =
           <PlusIcon className="text-muted-foreground" size={12} />
         </button>
         <div className="whitespace-nowrap rounded-full border border-border/50 bg-background/90 px-2 py-1 text-foreground text-xs backdrop-blur-lg">
-          {formatDate(date, 'MMM dd, yyyy')}
+          {format(date, 'MMM dd, yyyy')}
         </div>
       </div>
     </div>
   );
 };
 
-export const GanttTimeline: React.FC<GanttTimelineProps> = ({
-  children,
-  className,
-}) => (
-  <div
-    className={cn(
-      'relative flex h-full w-max flex-none overflow-clip',
-      className
-    )}
-  >
-    {children}
-  </div>
-);
+function format(date: Date, arg1: string): any {
+  return new Intl.DateTimeFormat('en-US', {
+    month: arg1.includes('MMM') ? 'short' : undefined,
+    day: arg1.includes('dd') ? '2-digit' : undefined,
+    year: arg1.includes('yyyy') ? 'numeric' : undefined,
+  }).format(date);
+}

@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { NumberFlowMotion } from '@repo/design-system/ui/number-flow-motion';
+import { NumberFlowMotion } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 

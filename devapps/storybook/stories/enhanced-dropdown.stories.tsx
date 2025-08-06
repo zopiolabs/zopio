@@ -31,8 +31,8 @@ import {
 import type * as React from 'react';
 import { useState } from 'react';
 
-import { Badge } from '@repo/design-system/ui/badge';
-import { Button } from '@repo/design-system/ui/button';
+import { Badge } from '@repo/design-system/ui';
+import { Button } from '@repo/design-system/ui';
 import {
   EnhancedDropdown,
   EnhancedDropdownCheckboxItem,
@@ -49,7 +49,7 @@ import {
   EnhancedDropdownSubContent,
   EnhancedDropdownSubTrigger,
   EnhancedDropdownTrigger,
-} from '@repo/design-system/ui/enhanced-dropdown';
+} from '@repo/design-system/ui';
 
 /**
  * An enhanced dropdown menu component that displays a menu to the user with various features

@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { EditorProvider, KiboEditor } from '@repo/design-system/ui/editor';
+import { EditorProvider, KiboEditor } from '@repo/design-system/ui';
 
 /**
  * A rich text editor component with formatting options, slash commands, and more.

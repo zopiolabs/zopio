@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Divider } from '@repo/design-system/ui/divider';
+import { Divider } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Divider> = {

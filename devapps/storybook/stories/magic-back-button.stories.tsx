@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { ArrowLeft, ChevronLeft, Home } from 'lucide-react';
 
-import { MagicBackButton } from '@repo/design-system/ui/magic-back-button';
+import { MagicBackButton } from '@repo/design-system/ui';
 
 /**
  * The Magic Back Button is designed to prevent users from unintentionally leaving your site.

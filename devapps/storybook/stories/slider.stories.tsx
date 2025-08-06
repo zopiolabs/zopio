@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Slider } from '@repo/design-system/ui/slider';
+import { Slider } from '@repo/design-system/ui';
 
 /**
  * An input where the user selects a value from within a given range.

@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Input } from '@repo/design-system/ui/input';
+import { Input } from '@repo/design-system/ui';
 
 /**
  * Displays a form input field or a component that looks like an input field.

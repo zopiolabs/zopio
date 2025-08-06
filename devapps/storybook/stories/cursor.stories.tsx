@@ -8,7 +8,7 @@ import {
   CursorMessage,
   CursorName,
   CursorPointer,
-} from '@repo/design-system/ui/cursor';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 /**

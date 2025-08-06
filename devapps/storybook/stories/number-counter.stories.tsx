@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { NumberCounter } from '@repo/design-system/ui/number-counter';
+import { NumberCounter } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta = {

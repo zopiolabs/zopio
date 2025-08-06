@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { ChatAvatarDemo } from '@repo/design-system/ui/chat-avatar-demo';
+import { ChatAvatarDemo } from '@repo/design-system/ui';
 
 /**
  * Demo component showcasing the enhanced global draggable avatar with chat functionality

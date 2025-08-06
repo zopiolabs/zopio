@@ -2,13 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 import {
   MiniCalendar,
   MiniCalendarDay,
   MiniCalendarDays,
   MiniCalendarNavigation,
-} from '@repo/design-system/ui/mini-calendar';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { addDays, format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';

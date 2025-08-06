@@ -7,7 +7,7 @@ import { addDays } from 'date-fns';
 import type React from 'react';
 import { action } from 'storybook/actions';
 
-import { Calendar } from '@repo/design-system/ui/calendar';
+import { Calendar } from '@repo/design-system/ui';
 
 /**
  * A date field component that allows users to enter and edit date.

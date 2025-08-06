@@ -2,10 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {
-  Blockquote,
-  BlockquoteAuthor,
-} from '@repo/design-system/ui/blockquote';
+import { Blockquote, BlockquoteAuthor } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Blockquote> = {

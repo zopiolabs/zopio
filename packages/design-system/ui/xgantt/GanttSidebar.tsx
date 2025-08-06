@@ -4,35 +4,33 @@
 
 'use client';
 
-import { useContext } from 'react';
-import { formatDistance } from 'date-fns';
-import { addDays, isSameDay } from 'date-fns';
+import { FC, ReactNode, useContext } from 'react';
 import { cn } from '@repo/design-system/lib/utils';
-
+import { formatDistance, addDays, isSameDay } from 'date-fns';
 import { GanttContext } from './context';
-import {
-  GanttSidebarProps,
-  GanttSidebarGroupProps,
-  GanttSidebarItemProps
-} from './types';
+import { GanttFeature } from './types';
 
-export const GanttSidebarItem: React.FC<GanttSidebarItemProps> = ({
+export type GanttSidebarItemProps = {
+  feature: GanttFeature;
+  onSelectItem?: (id: string) => void;
+  className?: string;
+};
+
+export const GanttSidebarItem: FC<GanttSidebarItemProps> = ({
   feature,
   onSelectItem,
   className,
 }) => {
   const gantt = useContext(GanttContext);
-
   const tempEndAt =
     feature.endAt && isSameDay(feature.startAt, feature.endAt)
       ? addDays(feature.endAt, 1)
       : feature.endAt;
-
   const duration = tempEndAt
     ? formatDistance(feature.startAt, tempEndAt)
     : `${formatDistance(feature.startAt, new Date())} so far`;
 
-  const handleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       // Scroll to the feature in the timeline
       gantt.scrollToFeature?.(feature);
@@ -41,7 +39,7 @@ export const GanttSidebarItem: React.FC<GanttSidebarItemProps> = ({
     }
   };
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       // Scroll to the feature in the timeline
       gantt.scrollToFeature?.(feature);
@@ -59,14 +57,12 @@ export const GanttSidebarItem: React.FC<GanttSidebarItemProps> = ({
       key={feature.id}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      // biome-ignore lint/a11y/useSemanticElements: "This is a clickable item"
       role="button"
       style={{
         height: 'var(--gantt-row-height)',
       }}
       tabIndex={0}
     >
-      {/* <Checkbox onCheckedChange={handleCheck} className="shrink-0" /> */}
       <div
         className="pointer-events-none h-2 w-2 shrink-0 rounded-full"
         style={{
@@ -81,26 +77,35 @@ export const GanttSidebarItem: React.FC<GanttSidebarItemProps> = ({
   );
 };
 
-export interface GanttSidebarHeaderProps {
-  children?: React.ReactNode;
-}
+export type GanttSidebarHeaderProps = {
+  children?: ReactNode;
+  className?: string;
+};
 
-export const GanttSidebarHeader: React.FC<GanttSidebarHeaderProps> = ({ children }) => (
+export const GanttSidebarHeader: FC<GanttSidebarHeaderProps> = ({ children, className }) => (
   <div
-    className="sticky top-0 z-10 flex shrink-0 items-end justify-between gap-2.5 border-border/50 border-b bg-backdrop/90 p-2.5 font-medium text-muted-foreground text-xs backdrop-blur-sm"
+    className={cn(
+      "sticky top-0 z-10 flex shrink-0 border-border/50 border-b bg-backdrop/90 backdrop-blur-sm",
+      className
+    )}
     style={{ height: 'var(--gantt-header-height)' }}
   >
     {children || (
-      <>
-        {/* <Checkbox className="shrink-0" /> */}
+      <div className="flex items-end justify-between gap-2.5 p-2.5 font-medium text-muted-foreground text-xs w-full">
         <p className="flex-1 truncate text-left">Issues</p>
         <p className="shrink-0">Duration</p>
-      </>
+      </div>
     )}
   </div>
 );
 
-export const GanttSidebarGroup: React.FC<GanttSidebarGroupProps> = ({
+export type GanttSidebarGroupProps = {
+  children: ReactNode;
+  name: string;
+  className?: string;
+};
+
+export const GanttSidebarGroup: FC<GanttSidebarGroupProps> = ({
   children,
   name,
   className,
@@ -116,7 +121,12 @@ export const GanttSidebarGroup: React.FC<GanttSidebarGroupProps> = ({
   </div>
 );
 
-export const GanttSidebar: React.FC<GanttSidebarProps> = ({
+export type GanttSidebarProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export const GanttSidebar: FC<GanttSidebarProps> = ({
   children,
   className,
 }) => (

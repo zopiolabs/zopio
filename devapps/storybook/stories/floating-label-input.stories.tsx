@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { FloatingLabelInput } from '@repo/design-system/ui/floating-label-input';
+import { FloatingLabelInput } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof FloatingLabelInput> = {

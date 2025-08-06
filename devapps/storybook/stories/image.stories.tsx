@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Image } from '@repo/design-system/ui/image';
+import { Image } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Image> = {

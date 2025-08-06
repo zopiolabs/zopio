@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@repo/design-system/ui/alert-dialog';
+} from '@repo/design-system/ui';
 
 /**
  * A modal dialog that interrupts the user with important content and expects

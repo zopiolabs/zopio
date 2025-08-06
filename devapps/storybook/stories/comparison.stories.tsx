@@ -6,7 +6,7 @@ import {
   Comparison,
   ComparisonHandle,
   ComparisonItem,
-} from '@repo/design-system/ui/comparison';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 

@@ -12,7 +12,7 @@ import {
   KanbanCards,
   KanbanHeader,
   KanbanProvider,
-} from '@repo/design-system/ui/kanban';
+} from '@repo/design-system/ui';
 
 interface Task {
   id: string;

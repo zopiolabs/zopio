@@ -9,7 +9,7 @@ import {
   Announcement,
   AnnouncementTag,
   AnnouncementTitle,
-} from '@repo/design-system/ui/announcement';
+} from '@repo/design-system/ui';
 
 /**
  * A compound badge designed to display an announcement.

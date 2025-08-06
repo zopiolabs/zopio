@@ -13,8 +13,8 @@ import {
   CodeBlockHeader,
   CodeBlockItem,
   CodeBlockTitle,
-} from '@repo/design-system/ui/code-block';
-import type { CodeBlockProps } from '@repo/design-system/ui/code-block';
+} from '@repo/design-system/ui';
+import type { CodeBlockProps } from '@repo/design-system/ui';
 
 /**
  * A component for displaying code with syntax highlighting, line numbers, and copy functionality.

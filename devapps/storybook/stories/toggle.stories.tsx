@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Bold, Italic } from 'lucide-react';
 
-import { Toggle } from '@repo/design-system/ui/toggle';
+import { Toggle } from '@repo/design-system/ui';
 
 /**
  * A two-state button that can be either on or off.

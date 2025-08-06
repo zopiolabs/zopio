@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { LucideCheck, LucideStar } from 'lucide-react';
 
-import { Radio, RadioGroup } from '@repo/design-system/ui/radio';
+import { Radio, RadioGroup } from '@repo/design-system/ui';
 
 /**
  * A radio component that allows users to select a single option from a list.

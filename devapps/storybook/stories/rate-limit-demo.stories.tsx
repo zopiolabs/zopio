@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { RateLimitDemo } from '@repo/design-system/ui/rate-limit-demo';
+import { RateLimitDemo } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { http } from 'msw';
 

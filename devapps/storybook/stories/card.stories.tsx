@@ -12,7 +12,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@repo/design-system/ui/card';
+} from '@repo/design-system/ui';
 
 const notifications = [
   {

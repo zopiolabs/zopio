@@ -12,7 +12,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from '@repo/design-system/ui/navigation-menu';
+} from '@repo/design-system/ui';
 
 /**
  * A collection of links for navigating websites.

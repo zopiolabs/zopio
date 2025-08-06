@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: MIT
  */
-import { ImageZoom } from '@repo/design-system/ui/image-zoom';
+import { ImageZoom } from '@repo/design-system/ui';
 import Image from 'next/image';
 
 const IMAGE_URL =

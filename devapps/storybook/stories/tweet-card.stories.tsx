@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { TweetCard } from '@repo/design-system/ui/tweet-card';
+import { TweetCard } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 /**

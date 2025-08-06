@@ -11,7 +11,7 @@ import {
   InteractiveStepperSeparator,
   InteractiveStepperTitle,
   InteractiveStepperTrigger,
-} from '@repo/design-system/ui/interactive-stepper';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import type { FC } from 'react';
 

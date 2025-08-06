@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { DraggableAvatar } from '@repo/design-system/ui/draggable-avatar';
+import { DraggableAvatar } from '@repo/design-system/ui';
 
 /**
  * A draggable avatar component that can be freely moved around the screen.

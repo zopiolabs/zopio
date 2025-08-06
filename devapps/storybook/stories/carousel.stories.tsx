@@ -10,7 +10,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@repo/design-system/ui/carousel';
+} from '@repo/design-system/ui';
 
 /**
  * A carousel with motion and swipe built using Embla.

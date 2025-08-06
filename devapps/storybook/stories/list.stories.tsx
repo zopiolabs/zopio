@@ -13,7 +13,7 @@ import {
   ListItem,
   ListItems,
   ListProvider,
-} from '@repo/design-system/ui/list';
+} from '@repo/design-system/ui';
 
 type Task = {
   id: string;

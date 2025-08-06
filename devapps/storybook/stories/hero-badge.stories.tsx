@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { HeroBadge } from '@repo/design-system/ui/hero-badge';
+import { HeroBadge } from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { ArrowRight, Check, ExternalLink, Link } from 'lucide-react';
 

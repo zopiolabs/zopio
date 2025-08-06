@@ -9,7 +9,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@repo/design-system/ui/collapsible';
+} from '@repo/design-system/ui';
 
 /**
  * An interactive component which expands/collapses a panel.

@@ -6,10 +6,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Bold, Italic, Underline } from 'lucide-react';
 import type React from 'react';
 
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@repo/design-system/ui/toggle-group';
+import { ToggleGroup, ToggleGroupItem } from '@repo/design-system/ui';
 
 /**
  * A set of two-state buttons that can be toggled on or off.

@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { Switch } from '@repo/design-system/ui/switch';
+import { Switch } from '@repo/design-system/ui';
 
 /**
  * A control that allows the user to toggle between checked and not checked.

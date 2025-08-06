@@ -8,7 +8,7 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@repo/design-system/ui/resizable';
+} from '@repo/design-system/ui';
 
 /**
  * Accessible resizable panel groups and layouts with keyboard support.

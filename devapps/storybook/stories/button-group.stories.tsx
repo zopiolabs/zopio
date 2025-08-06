@@ -5,9 +5,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Mail, Settings, Trash, User } from 'lucide-react';
 
-import { Button } from '@repo/design-system/ui/button';
-import { ButtonGroup } from '@repo/design-system/ui/button-group';
-import { Card } from '@repo/design-system/ui/card';
+import { Button } from '@repo/design-system/ui';
+import { ButtonGroup } from '@repo/design-system/ui';
+import { Card } from '@repo/design-system/ui';
 
 /**
  * ButtonGroup combines multiple buttons into a cohesive group with consistent styling.

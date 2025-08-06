@@ -3,7 +3,7 @@
  */
 
 import { cn } from '@repo/design-system/lib/utils';
-import { Button } from '@repo/design-system/ui/button';
+import { Button } from '@repo/design-system/ui';
 import {
   Flow,
   FlowBackground,
@@ -12,7 +12,7 @@ import {
   FlowPanel,
   type IFlowEdge,
   type IFlowNode,
-} from '@repo/design-system/ui/flow';
+} from '@repo/design-system/ui';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Minus, Pencil, Plus } from 'lucide-react';
 import { type CSSProperties, type MouseEvent, useState } from 'react';

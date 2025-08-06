@@ -10,7 +10,7 @@ import {
   RelativeTimeZoneDate,
   RelativeTimeZoneDisplay,
   RelativeTimeZoneLabel,
-} from '@repo/design-system/ui/relative-time';
+} from '@repo/design-system/ui';
 
 /**
  * A component for displaying time across different time zones.

@@ -20,7 +20,7 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from '@repo/design-system/ui/menubar';
+} from '@repo/design-system/ui';
 
 /**
  * A visually persistent menu common in desktop applications that provides

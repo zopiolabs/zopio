@@ -12,7 +12,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@repo/design-system/ui/pagination';
+} from '@repo/design-system/ui';
 
 /**
  * Pagination with page navigation, next and previous links.

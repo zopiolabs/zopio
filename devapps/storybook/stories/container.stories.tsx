@@ -4,10 +4,7 @@
 
 import type * as nextjs from '@storybook/nextjs';
 
-import {
-  Container,
-  type ContainerSize,
-} from '@repo/design-system/ui/container';
+import { Container, type ContainerSize } from '@repo/design-system/ui';
 
 /**
  * Container component that centers content horizontally with a maximum width.

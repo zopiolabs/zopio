@@ -13,7 +13,7 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from '@repo/design-system/ui/select';
+} from '@repo/design-system/ui';
 
 /**
  * Displays a list of options for the user to pick from—triggered by a button.
