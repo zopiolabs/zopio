@@ -492,9 +492,6 @@ importers:
       '@storybook/addon-links':
         specifier: ^9.0.16
         version: 9.0.16(react@19.1.0)(storybook@9.0.16(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(prettier@3.6.2))
-      '@storybook/addon-onboarding':
-        specifier: ^9.0.16
-        version: 9.0.16(storybook@9.0.16(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(prettier@3.6.2))
       '@storybook/addon-themes':
         specifier: ^9.0.16
         version: 9.0.16(storybook@9.0.16(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(prettier@3.6.2))
@@ -5143,11 +5140,6 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
-
-  '@storybook/addon-onboarding@9.0.16':
-    resolution: {integrity: sha512-69BPJ9fGNGpDAcGvNJ58V5uQOmpHkQMLcgp/ON3NepoCHiSReUzojB6wV8Ag13PUZmvWXVnE14SWKBZp93xTFQ==}
-    peerDependencies:
-      storybook: ^9.0.16
 
   '@storybook/addon-themes@9.0.16':
     resolution: {integrity: sha512-lzUkriN/DqEbokZTQlleob+1Tkuccv+3LLOGlP9hgk45ug3iiPV67Uq8iZapr7lofSJ525QnMB2XktkPReDpYA==}
@@ -16233,10 +16225,6 @@ snapshots:
       storybook: 9.0.16(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(prettier@3.6.2)
     optionalDependencies:
       react: 19.1.0
-
-  '@storybook/addon-onboarding@9.0.16(storybook@9.0.16(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(prettier@3.6.2))':
-    dependencies:
-      storybook: 9.0.16(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(prettier@3.6.2)
 
   '@storybook/addon-themes@9.0.16(storybook@9.0.16(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(prettier@3.6.2))':
     dependencies:
