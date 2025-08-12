@@ -4,7 +4,7 @@
 # Base stage - Setup Node with pnpm
 # ========================================
 FROM node:20-alpine AS base
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat python3 make g++
 RUN corepack enable && corepack prepare pnpm@10.13.1 --activate
 WORKDIR /app
 
@@ -39,6 +39,9 @@ RUN pnpm dlx turbo prune zopio-splash --docker
 # Builder stage - Build the application
 # ========================================
 FROM base AS builder
+
+# Add build dependencies for native modules
+RUN apk add --no-cache python3 make g++
 
 # Copy pruned workspace
 COPY --from=pruner /app/out/json/ .

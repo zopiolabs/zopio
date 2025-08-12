@@ -1,9 +1,12 @@
 # Docker Compose overlay for Traefik reverse proxy
 # Usage: docker compose -f docker-compose.prod.yml -f docker-compose.proxy.yml up -d
 
+name: zopio_image
+
 services:
   # Traefik reverse proxy service
   traefik:
+    container_name: zopio_image_traefik
     image: traefik:v3.1
     restart: always
     command:

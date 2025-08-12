@@ -1,5 +1,8 @@
+name: zopio_image
+
 services:
   db:
+    container_name: zopio_image_db
     image: postgres:16-alpine
     restart: always
     environment:
@@ -27,6 +30,7 @@ services:
 
   # Database migration service (one-shot job)
   migrate:
+    container_name: zopio_image_migrate
     build:
       context: ..
       dockerfile: docker/Dockerfile.migrate
@@ -43,6 +47,7 @@ services:
     command: pnpm --filter=@repo/database exec prisma migrate deploy
 
   web:
+    container_name: zopio_image_web
     build:
       context: ..
       dockerfile: apps/web/Dockerfile
@@ -80,6 +85,7 @@ services:
           memory: 256M
 
   app:
+    container_name: zopio_image_app
     build:
       context: ..
       dockerfile: apps/app/Dockerfile
@@ -117,6 +123,7 @@ services:
           memory: 256M
 
   api:
+    container_name: zopio_image_api
     build:
       context: ..
       dockerfile: apps/api/Dockerfile
@@ -154,6 +161,7 @@ services:
           memory: 256M
 
   zopio-splash:
+    container_name: zopio_image_splash
     build:
       context: ..
       dockerfile: websites/zopio-splash/Dockerfile
@@ -189,6 +197,7 @@ services:
 
   # Redis cache service (optional via profile)
   redis:
+    container_name: zopio_image_redis
     image: redis:7-alpine
     restart: always
     ports:

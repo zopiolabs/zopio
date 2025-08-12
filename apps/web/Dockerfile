@@ -4,7 +4,7 @@
 # Base stage - Setup Node with pnpm
 # ========================================
 FROM node:20-alpine AS base
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat python3 make g++
 RUN corepack enable && corepack prepare pnpm@10.13.1 --activate
 WORKDIR /app
 
@@ -25,7 +25,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 
 # Generate Prisma client
-RUN pnpm --filter=@repo/database exec prisma generate
+RUN cd packages/database && npx prisma generate --no-hints --schema=./prisma/schema.prisma
 
 EXPOSE 3001
 CMD ["pnpm", "--filter=web", "dev"]
@@ -43,6 +43,9 @@ RUN pnpm dlx turbo prune web --docker
 # ========================================
 FROM base AS builder
 
+# Add build dependencies for native modules
+RUN apk add --no-cache python3 make g++
+
 # Copy pruned workspace
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
@@ -54,7 +57,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY --from=pruner /app/out/full/ .
 
 # Generate Prisma client with linux-musl binary target
-RUN pnpm --filter=@repo/database exec prisma generate
+RUN cd packages/database && npx prisma generate --no-hints --schema=./prisma/schema.prisma
 
 # Build arguments for optional remote caching
 ARG TURBO_TEAM

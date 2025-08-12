@@ -1,7 +1,10 @@
 # Docker Compose v2 configuration (no version key required)
+name: zopio_image
+
 services:
   # Core database service (always enabled)
   db:
+    container_name: zopio_image_db_dev
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
@@ -20,6 +23,7 @@ services:
 
   # Database migration service (profile: migrate)
   migrate:
+    container_name: zopio_image_migrate_dev
     build:
       context: ..
       dockerfile: docker/Dockerfile.migrate
@@ -40,6 +44,7 @@ services:
     command: pnpm migrate
 
   web:
+    container_name: zopio_image_web_dev
     build:
       context: ..
       dockerfile: apps/web/Dockerfile
@@ -67,6 +72,7 @@ services:
     command: pnpm --filter=web dev
 
   app:
+    container_name: zopio_image_app_dev
     build:
       context: ..
       dockerfile: apps/app/Dockerfile
@@ -94,6 +100,7 @@ services:
     command: pnpm --filter=app dev
 
   api:
+    container_name: zopio_image_api_dev
     build:
       context: ..
       dockerfile: apps/api/Dockerfile
