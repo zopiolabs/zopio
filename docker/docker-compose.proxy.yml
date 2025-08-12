@@ -42,7 +42,7 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./letsencrypt:/letsencrypt"
+      - "letsencrypt:/letsencrypt"
       - "./certs:/certs:ro"  # For custom certificates if not using Let's Encrypt
     networks:
       - zopio-network
@@ -52,7 +52,7 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=admin:$$2y$$10$$..." # Generate with htpasswd
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$$2y$$10$$CHANGE_ME_USE_HTPASSWD" # Generate with: htpasswd -nbB admin 'yourpassword' | sed -e 's/\$/$$$$$/g'
     deploy:
       resources:
         limits:
@@ -66,6 +66,7 @@ services:
   app:
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=zopio-network"
       # HTTP router
       - "traefik.http.routers.app.rule=Host(`app.localhost`)"
       - "traefik.http.routers.app.entrypoints=web"
@@ -80,6 +81,7 @@ services:
   web:
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=zopio-network"
       # HTTP router
       - "traefik.http.routers.web.rule=Host(`web.localhost`)"
       - "traefik.http.routers.web.entrypoints=web"
@@ -94,6 +96,7 @@ services:
   api:
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=zopio-network"
       # HTTP router
       - "traefik.http.routers.api.rule=Host(`api.localhost`)"
       - "traefik.http.routers.api.entrypoints=web"
@@ -108,6 +111,7 @@ services:
   zopio-splash:
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=zopio-network"
       # HTTP router
       - "traefik.http.routers.splash.rule=Host(`splash.localhost`)"
       - "traefik.http.routers.splash.entrypoints=web"

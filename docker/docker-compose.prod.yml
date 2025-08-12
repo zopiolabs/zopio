@@ -2,13 +2,10 @@ name: zopio_image
 
 services:
   db:
-    container_name: zopio_image_db
     image: postgres:16-alpine
     restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-zopio}
+    env_file:
+      - prod.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -30,7 +27,6 @@ services:
 
   # Database migration service (one-shot job)
   migrate:
-    container_name: zopio_image_migrate
     build:
       context: ..
       dockerfile: docker/Dockerfile.migrate
@@ -44,10 +40,12 @@ services:
         condition: service_healthy
     networks:
       - zopio-network
+    profiles:
+      - migrate
+    restart: "no"
     command: pnpm --filter=@repo/database exec prisma migrate deploy
 
   web:
-    container_name: zopio_image_web
     build:
       context: ..
       dockerfile: apps/web/Dockerfile
@@ -85,7 +83,6 @@ services:
           memory: 256M
 
   app:
-    container_name: zopio_image_app
     build:
       context: ..
       dockerfile: apps/app/Dockerfile
@@ -123,7 +120,6 @@ services:
           memory: 256M
 
   api:
-    container_name: zopio_image_api
     build:
       context: ..
       dockerfile: apps/api/Dockerfile
@@ -161,7 +157,6 @@ services:
           memory: 256M
 
   zopio-splash:
-    container_name: zopio_image_splash
     build:
       context: ..
       dockerfile: websites/zopio-splash/Dockerfile
@@ -197,11 +192,10 @@ services:
 
   # Redis cache service (optional via profile)
   redis:
-    container_name: zopio_image_redis
     image: redis:7-alpine
     restart: always
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
     profiles:
@@ -225,6 +219,7 @@ services:
 
 networks:
   zopio-network:
+    name: zopio-network
     driver: bridge
 
 volumes:

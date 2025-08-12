@@ -48,13 +48,26 @@ cp docker/prod.env.example docker/prod.env
 2. Build and start services:
 ```bash
 cd docker
-docker compose -f docker-compose.prod.yml up -d
+# Pass env file explicitly for compose-time variable interpolation
+docker compose --env-file prod.env -f docker-compose.prod.yml up -d
 ```
 
 3. Run database migrations:
 ```bash
-docker compose -f docker-compose.prod.yml run --rm migrate
+docker compose --env-file prod.env -f docker-compose.prod.yml --profile migrate up migrate
 ```
+
+#### With Traefik Proxy
+
+To deploy with Traefik reverse proxy for SSL/TLS and domain routing:
+```bash
+docker compose --env-file prod.env -f docker-compose.prod.yml -f docker-compose.proxy.yml up -d
+```
+
+**Note on Environment Variables**: 
+- `--env-file` flag: Used for compose-time variable interpolation (e.g., `${VAR}` in compose files)
+- `env_file` in services: Passes variables to containers at runtime
+- The `db` service now uses `env_file` to avoid empty password warnings during compose interpolation
 
 ## Service Architecture
 
@@ -171,22 +184,25 @@ docker compose -f docker-compose.dev.yml down -v
 
 ```bash
 # Build images
-docker compose -f docker-compose.prod.yml build
+docker compose --env-file prod.env -f docker-compose.prod.yml build
 
 # Start services (detached)
-docker compose -f docker-compose.prod.yml up -d
+docker compose --env-file prod.env -f docker-compose.prod.yml up -d
 
 # View logs
-docker compose -f docker-compose.prod.yml logs -f
+docker compose --env-file prod.env -f docker-compose.prod.yml logs -f
 
-# Scale services
-docker compose -f docker-compose.prod.yml up -d --scale api=3
+# Scale services (now possible without container_name conflicts)
+docker compose --env-file prod.env -f docker-compose.prod.yml up -d --scale api=3
 
 # Update single service
-docker compose -f docker-compose.prod.yml up -d --no-deps app
+docker compose --env-file prod.env -f docker-compose.prod.yml up -d --no-deps app
 
 # Backup database
-docker compose -f docker-compose.prod.yml exec db pg_dump -U postgres zopio > backup.sql
+docker compose --env-file prod.env -f docker-compose.prod.yml exec db pg_dump -U postgres zopio > backup.sql
+
+# Run migrations (using profile)
+docker compose --env-file prod.env -f docker-compose.prod.yml --profile migrate up migrate
 ```
 
 ## Environment Variables

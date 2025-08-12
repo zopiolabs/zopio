@@ -128,6 +128,7 @@ services:
     command: pnpm --filter=api dev
 
   zopio-splash:
+    container_name: zopio_image_splash_dev
     build:
       context: ..
       dockerfile: websites/zopio-splash/Dockerfile
