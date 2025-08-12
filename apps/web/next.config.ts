@@ -12,6 +12,9 @@ import type { NextConfig } from 'next';
 // Initialize the base Next.js configuration with wrappers
 let nextConfig: NextConfig = withToolbar(withLogging(config));
 
+// Enable standalone output for Docker deployment
+nextConfig.output = 'standalone';
+
 // Add remote patterns for images
 nextConfig.images?.remotePatterns?.push({
   protocol: 'https',

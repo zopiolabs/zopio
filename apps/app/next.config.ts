@@ -11,6 +11,9 @@ import type { NextConfig } from 'next';
 // Initialize the base Next.js configuration with wrappers
 let nextConfig: NextConfig = withToolbar(withLogging(config));
 
+// Enable standalone output for Docker deployment
+nextConfig.output = 'standalone';
+
 // Define path aliases dynamically for Webpack
 const aliasMap: Record<string, string> = {
   '@repo/design-system': 'packages/design-system',

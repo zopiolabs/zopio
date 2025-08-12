@@ -1,0 +1,247 @@
+# Docker Compose v2 configuration (no version key required)
+services:
+  # Core database service (always enabled)
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: zopio_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Database migration service (profile: migrate)
+  migrate:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.migrate
+      target: development
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - pnpm_store:/pnpm/store
+    env_file:
+      - dev.env
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - migrate
+    command: pnpm migrate
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+      target: development
+      args:
+        APP_NAME: web
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - /app/apps/web/node_modules
+      - /app/apps/web/.next
+      - pnpm_store:/pnpm/store
+    ports:
+      - "3001:3001"
+    env_file:
+      - dev.env
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - CHOKIDAR_USEPOLLING=1
+      - WATCHPACK_POLLING=true
+    depends_on:
+      db:
+        condition: service_healthy
+    command: pnpm --filter=web dev
+
+  app:
+    build:
+      context: ..
+      dockerfile: apps/app/Dockerfile
+      target: development
+      args:
+        APP_NAME: app
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - /app/apps/app/node_modules
+      - /app/apps/app/.next
+      - pnpm_store:/pnpm/store
+    ports:
+      - "3000:3000"
+    env_file:
+      - dev.env
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - CHOKIDAR_USEPOLLING=1
+      - WATCHPACK_POLLING=true
+    depends_on:
+      db:
+        condition: service_healthy
+    command: pnpm --filter=app dev
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+      target: development
+      args:
+        APP_NAME: api
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - /app/apps/api/node_modules
+      - /app/apps/api/.next
+      - pnpm_store:/pnpm/store
+    ports:
+      - "3002:3002"
+    env_file:
+      - dev.env
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - CHOKIDAR_USEPOLLING=1
+      - WATCHPACK_POLLING=true
+    depends_on:
+      db:
+        condition: service_healthy
+    command: pnpm --filter=api dev
+
+  zopio-splash:
+    build:
+      context: ..
+      dockerfile: websites/zopio-splash/Dockerfile
+      target: development
+      args:
+        APP_NAME: zopio-splash
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - /app/websites/zopio-splash/node_modules
+      - /app/websites/zopio-splash/.next
+      - pnpm_store:/pnpm/store
+    ports:
+      - "7007:7007"
+    env_file:
+      - dev.env
+    environment:
+      - NODE_ENV=development
+      - PORT=7007
+      - CHOKIDAR_USEPOLLING=1
+      - WATCHPACK_POLLING=true
+    profiles:
+      - marketing
+    command: pnpm --filter=zopio-splash dev
+
+  # Optional development services with profiles
+
+  # Prisma Studio for database exploration (profile: dbstudio)
+  dbstudio:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.migrate
+      target: development
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - pnpm_store:/pnpm/store
+    ports:
+      - "5555:5555"
+    env_file:
+      - dev.env
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - dbstudio
+    command: pnpm --filter=@repo/database exec prisma studio
+
+  # Storybook for component development (profile: storybook)
+  storybook:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.storybook
+      target: development
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - pnpm_store:/pnpm/store
+    ports:
+      - "6006:6006"
+    env_file:
+      - dev.env
+    environment:
+      - NODE_ENV=development
+    profiles:
+      - storybook
+    command: pnpm --filter=@repo/design-system storybook
+
+  # Mintlify documentation server (profile: docs)
+  docs:
+    image: mintlify/mintlify:latest
+    volumes:
+      - ../docs:/app
+    ports:
+      - "3030:3004"
+    profiles:
+      - docs
+    command: npm run dev
+
+  # Mailpit for email testing (profile: mailpit)
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    profiles:
+      - mailpit
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  # Redis cache service (profile: redis)
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    profiles:
+      - redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Stripe CLI for webhook forwarding (profile: stripe-cli)
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    environment:
+      STRIPE_API_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_DEVICE_NAME: zopio-dev
+    profiles:
+      - stripe-cli
+    command: listen --forward-to http://api:3002/webhooks/payments --skip-verify
+
+volumes:
+  postgres_data:
+  pnpm_store:
+  redis_data:

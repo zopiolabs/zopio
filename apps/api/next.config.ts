@@ -9,6 +9,9 @@ import type { NextConfig } from 'next';
 
 let nextConfig: NextConfig = withLogging(config);
 
+// Enable standalone output for Docker deployment
+nextConfig.output = 'standalone';
+
 // Check for Vercel environment using process.env instead of env object
 if (process.env.VERCEL === '1') {
   nextConfig = withSentry(nextConfig);

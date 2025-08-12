@@ -1,0 +1,121 @@
+# Docker Compose overlay for Traefik reverse proxy
+# Usage: docker compose -f docker-compose.prod.yml -f docker-compose.proxy.yml up -d
+
+services:
+  # Traefik reverse proxy service
+  traefik:
+    image: traefik:v3.1
+    restart: always
+    command:
+      # Enable Docker provider
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=zopio-network"
+      
+      # API and Dashboard (disable in production)
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      
+      # HTTP to HTTPS redirect
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      
+      # Let's Encrypt configuration (uncomment for production)
+      # - "--certificatesresolvers.le.acme.email=your-email@example.com"
+      # - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      # - "--certificatesresolvers.le.acme.tlschallenge=true"
+      
+      # Logging
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+      - "./certs:/certs:ro"  # For custom certificates if not using Let's Encrypt
+    networks:
+      - zopio-network
+    labels:
+      - "traefik.enable=true"
+      # Dashboard (secured, only for admin access)
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$$2y$$10$$..." # Generate with htpasswd
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+  # Add labels to existing services for Traefik routing
+  app:
+    labels:
+      - "traefik.enable=true"
+      # HTTP router
+      - "traefik.http.routers.app.rule=Host(`app.localhost`)"
+      - "traefik.http.routers.app.entrypoints=web"
+      - "traefik.http.services.app.loadbalancer.server.port=3000"
+      # HTTPS router (for production with real domain)
+      # - "traefik.http.routers.app-secure.rule=Host(`app.yourdomain.com`)"
+      # - "traefik.http.routers.app-secure.entrypoints=websecure"
+      # - "traefik.http.routers.app-secure.tls=true"
+      # - "traefik.http.routers.app-secure.tls.certresolver=le"
+      # - "traefik.http.services.app-secure.loadbalancer.server.port=3000"
+
+  web:
+    labels:
+      - "traefik.enable=true"
+      # HTTP router
+      - "traefik.http.routers.web.rule=Host(`web.localhost`)"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.services.web.loadbalancer.server.port=3001"
+      # HTTPS router (for production with real domain)
+      # - "traefik.http.routers.web-secure.rule=Host(`web.yourdomain.com`)"
+      # - "traefik.http.routers.web-secure.entrypoints=websecure"
+      # - "traefik.http.routers.web-secure.tls=true"
+      # - "traefik.http.routers.web-secure.tls.certresolver=le"
+      # - "traefik.http.services.web-secure.loadbalancer.server.port=3001"
+
+  api:
+    labels:
+      - "traefik.enable=true"
+      # HTTP router
+      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.services.api.loadbalancer.server.port=3002"
+      # HTTPS router (for production with real domain)
+      # - "traefik.http.routers.api-secure.rule=Host(`api.yourdomain.com`)"
+      # - "traefik.http.routers.api-secure.entrypoints=websecure"
+      # - "traefik.http.routers.api-secure.tls=true"
+      # - "traefik.http.routers.api-secure.tls.certresolver=le"
+      # - "traefik.http.services.api-secure.loadbalancer.server.port=3002"
+
+  zopio-splash:
+    labels:
+      - "traefik.enable=true"
+      # HTTP router
+      - "traefik.http.routers.splash.rule=Host(`splash.localhost`)"
+      - "traefik.http.routers.splash.entrypoints=web"
+      - "traefik.http.services.splash.loadbalancer.server.port=7007"
+      # HTTPS router (for production with real domain)
+      # - "traefik.http.routers.splash-secure.rule=Host(`splash.yourdomain.com`)"
+      # - "traefik.http.routers.splash-secure.entrypoints=websecure"
+      # - "traefik.http.routers.splash-secure.tls=true"
+      # - "traefik.http.routers.splash-secure.tls.certresolver=le"
+      # - "traefik.http.services.splash-secure.loadbalancer.server.port=7007"
+
+volumes:
+  letsencrypt:
+    driver: local

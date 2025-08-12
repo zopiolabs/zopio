@@ -1,0 +1,28 @@
+# syntax=docker/dockerfile:1
+
+# ========================================
+# Base stage - Setup Node with pnpm
+# ========================================
+FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat
+RUN corepack enable && corepack prepare pnpm@10.13.1 --activate
+WORKDIR /app
+
+# ========================================
+# Development stage - For migrations
+# ========================================
+FROM base AS development
+ENV NODE_ENV=development
+
+# Copy workspace files
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY turbo.json ./
+
+# Install all dependencies for development
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+# Copy all source code
+COPY . .
+
+# Default command (can be overridden)
+CMD ["sh", "-c", "echo 'Ready for migration commands'"]

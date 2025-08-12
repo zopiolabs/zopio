@@ -1,0 +1,223 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-zopio}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - zopio-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # Database migration service (one-shot job)
+  migrate:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.migrate
+      target: development
+    env_file:
+      - prod.env
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - zopio-network
+    command: pnpm --filter=@repo/database exec prisma migrate deploy
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+      args:
+        APP_NAME: web
+        TURBO_TEAM: ${TURBO_TEAM:-}
+        TURBO_TOKEN: ${TURBO_TOKEN:-}
+    image: zopio/web:latest
+    restart: always
+    ports:
+      - "3001:3001"
+    env_file:
+      - prod.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - zopio-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  app:
+    build:
+      context: ..
+      dockerfile: apps/app/Dockerfile
+      args:
+        APP_NAME: app
+        TURBO_TEAM: ${TURBO_TEAM:-}
+        TURBO_TOKEN: ${TURBO_TOKEN:-}
+    image: zopio/app:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - prod.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - zopio-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+      args:
+        APP_NAME: api
+        TURBO_TEAM: ${TURBO_TEAM:-}
+        TURBO_TOKEN: ${TURBO_TOKEN:-}
+    image: zopio/api:latest
+    restart: always
+    ports:
+      - "3002:3002"
+    env_file:
+      - prod.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - zopio-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3002/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  zopio-splash:
+    build:
+      context: ..
+      dockerfile: websites/zopio-splash/Dockerfile
+      args:
+        APP_NAME: zopio-splash
+        TURBO_TEAM: ${TURBO_TEAM:-}
+        TURBO_TOKEN: ${TURBO_TOKEN:-}
+    image: zopio/zopio-splash:latest
+    restart: always
+    ports:
+      - "7007:7007"
+    env_file:
+      - prod.env
+    environment:
+      - NODE_ENV=production
+      - PORT=7007
+    networks:
+      - zopio-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:7007', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  # Redis cache service (optional via profile)
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    profiles:
+      - redis
+    networks:
+      - zopio-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+networks:
+  zopio-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
