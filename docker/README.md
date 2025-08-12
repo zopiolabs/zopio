@@ -109,10 +109,10 @@
 ```mermaid
 graph LR
     A["📦 Install Docker"] --> B["📥 Get Code"] --> C["🚀 Run Everything"] --> D["✅ Success!"]
-    style A fill:#e3f2fd
-    style B fill:#f3e5f5
-    style C fill:#e8f5e9
-    style D fill:#c8e6c9
+    style A fill:#1565C0,stroke:#0D47A1,stroke-width:2px,color:#fff
+    style B fill:#6A1B9A,stroke:#4A148C,stroke-width:2px,color:#fff
+    style C fill:#2E7D32,stroke:#1B5E20,stroke-width:2px,color:#fff
+    style D fill:#388E3C,stroke:#2E7D32,stroke-width:2px,color:#fff
 ```
 
 </div>
@@ -333,12 +333,12 @@ graph TB
     
     DBSTUDIO -.-> DB
     
-    style APP fill:#e1f5fe
-    style WEB fill:#f3e5f5
-    style API fill:#e8f5e9
-    style SPLASH fill:#fff3e0
-    style DB fill:#fce4ec
-    style NETWORK fill:#f5f5f5
+    style APP fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
+    style WEB fill:#7B1FA2,stroke:#4A148C,stroke-width:2px,color:#fff
+    style API fill:#388E3C,stroke:#1B5E20,stroke-width:2px,color:#fff
+    style SPLASH fill:#F57C00,stroke:#E65100,stroke-width:2px,color:#fff
+    style DB fill:#C62828,stroke:#B71C1C,stroke-width:2px,color:#fff
+    style NETWORK fill:#455A64,stroke:#263238,stroke-width:2px,color:#fff
 ```
 
 ### Production Architecture with Traefik
@@ -372,11 +372,11 @@ graph TB
     APP_PROD --> DB_PROD
     API_PROD --> DB_PROD
     
-    style TRAEFIK fill:#ffebee
-    style WEB_PROD fill:#e8eaf6
-    style APP_PROD fill:#e1f5fe
-    style API_PROD fill:#e8f5e9
-    style DB_PROD fill:#fce4ec
+    style TRAEFIK fill:#D32F2F,stroke:#B71C1C,stroke-width:2px,color:#fff
+    style WEB_PROD fill:#7B1FA2,stroke:#4A148C,stroke-width:2px,color:#fff
+    style APP_PROD fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
+    style API_PROD fill:#388E3C,stroke:#1B5E20,stroke-width:2px,color:#fff
+    style DB_PROD fill:#C62828,stroke:#B71C1C,stroke-width:2px,color:#fff
 ```
 
 ## 🛠️ Development Features
