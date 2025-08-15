@@ -3,14 +3,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import {
-  Calendar,
-  Download,
-  Filter,
-  Plus,
-  Settings,
-  Users,
-} from 'lucide-react';
+import { Calendar, Download, Filter, Plus, Settings } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@repo/design-system/ui/button';
@@ -370,23 +363,21 @@ export const SoftwareDevelopment: Story = {
         >
           <KanbanHeader>
             <div>
-              <h3 className="font-semibold">Web Application Development</h3>
+              <h3 className="font-semibold text-lg">
+                Web Application Development
+              </h3>
               <p className="text-muted-foreground text-sm">
                 Sprint 1 - February 2024
               </p>
             </div>
             <KanbanControls>
-              <Button className="flex items-center gap-2 rounded bg-primary px-3 py-1 text-primary-foreground text-sm hover:bg-primary/90">
-                <Plus className="h-3 w-3" />
+              <Button className="flex items-center gap-2 rounded bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90">
+                <Plus className="h-4 w-4" />
                 New Task
               </Button>
-              <Button className="flex items-center gap-2 rounded border px-3 py-1 text-sm hover:bg-muted">
-                <Filter className="h-3 w-3" />
+              <Button className="flex items-center gap-2 rounded border px-4 py-2 font-medium text-sm hover:bg-muted">
+                <Filter className="h-4 w-4" />
                 Filter
-              </Button>
-              <Button className="flex items-center gap-2 rounded border px-3 py-1 text-sm hover:bg-muted">
-                <Users className="h-3 w-3" />
-                Team
               </Button>
             </KanbanControls>
           </KanbanHeader>

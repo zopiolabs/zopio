@@ -7,27 +7,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@repo/design-system/lib/utils';
-// Note: @hello-pangea/dnd would be used for drag and drop functionality
-// For now, we'll implement a basic version without drag and drop
-// import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
-
-type DropResult = {
-  destination: { droppableId: string; index: number } | null;
-  source: { droppableId: string; index: number };
-  draggableId: string;
-};
-
-type DraggableProvided = {
-  innerRef: React.Ref<any>;
-  draggableProps: React.HTMLAttributes<any>;
-  dragHandleProps: React.HTMLAttributes<any> | null;
-};
-
-type DroppableProvided = {
-  innerRef: React.Ref<any>;
-  droppableProps: React.HTMLAttributes<any>;
-  placeholder: React.ReactElement | null;
-};
+import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { Plus, MoreHorizontal, X } from 'lucide-react';
 
 // Kanban variants
@@ -256,10 +236,9 @@ const Kanban = React.forwardRef<HTMLDivElement, KanbanProps>(
           className={cn(kanbanVariants({ variant, size }), className)}
           {...props}
         >
-          {/* DragDropContext would wrap this in a real implementation */}
-          <div onDrop={(e) => e.preventDefault()}>
+          <DragDropContext onDragEnd={handleDragEnd}>
             {children || <KanbanBoard />}
-          </div>
+          </DragDropContext>
         </div>
       </KanbanContext.Provider>
     );
@@ -319,20 +298,42 @@ const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>(
         {...props}
       >
         <KanbanColumnHeader column={column} />
-        <div 
-          data-droppable-id={column.id}
-          className="flex-1 p-2 min-h-[200px] transition-colors"
-        >
-          {column.cards.map((card, index) => (
+        <Droppable droppableId={column.id} isDropDisabled={readonly}>
+          {(provided, snapshot) => (
             <div
-              key={card.id}
-              className="cursor-grab active:cursor-grabbing"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={cn(
+                "flex-1 p-2 min-h-[200px] transition-colors",
+                snapshot.isDraggingOver && "bg-muted/70"
+              )}
             >
-              <KanbanCard card={card} />
+              {column.cards.map((card, index) => (
+                <Draggable
+                  key={card.id}
+                  draggableId={card.id}
+                  index={index}
+                  isDragDisabled={readonly}
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={cn(
+                        snapshot.isDragging && "rotate-3 shadow-lg"
+                      )}
+                    >
+                      <KanbanCard card={card} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              {!readonly && <KanbanAddCard columnId={column.id} />}
             </div>
-          ))}
-          {!readonly && <KanbanAddCard columnId={column.id} />}
-        </div>
+          )}
+        </Droppable>
       </div>
     );
   }
