@@ -23,6 +23,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.56.4",
+    "reactflow": "^11.11.4",
     "recharts": "^2.15.3",
     "sonner": "^2.0.3",
     "zod": "^3.25.28"
@@ -31,6 +32,7 @@
     "@chromatic-com/storybook": "^4.0.1",
     "@repo/typescript-config": "workspace:*",
     "@storybook/addon-a11y": "^9.0.16",
+    "@storybook/addon-actions": "^9.0.8",
     "@storybook/addon-docs": "^9.0.16",
     "@storybook/addon-links": "^9.0.16",
     "@storybook/addon-onboarding": "^9.0.16",
