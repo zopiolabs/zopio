@@ -1,3 +1,7 @@
+/**
+ * SPDX-License-Identifier: MIT
+ */
+
 import { Calendar } from '@repo/design-system/ui/calendar';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 

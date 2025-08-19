@@ -1,3 +1,7 @@
+/**
+ * SPDX-License-Identifier: MIT
+ */
+
 "use client"
 import { cn } from "@repo/design-system/lib/utils"
 import { type HTMLAttributes, type ReactNode, createContext, useContext, useEffect, useState } from "react"

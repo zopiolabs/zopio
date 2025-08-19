@@ -1,3 +1,7 @@
+/**
+ * SPDX-License-Identifier: MIT
+ */
+
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import {
   CreditCard,
