@@ -1,102 +1,166 @@
-/**
- * SPDX-License-Identifier: MIT
- */
+"use client"
 
-'use client';
+import { useState } from "react"
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react"
+import { Button } from "@repo/design-system/ui/button"
 
-import type * as React from 'react';
-import { DayPicker } from 'react-day-picker';
-
-import { cn } from '@repo/design-system/lib/utils';
-import { buttonVariants } from '@repo/design-system/ui/button';
-
-function Calendar({
-  className,
-  classNames,
-  showOutsideDays = true,
-  ...props
-}: React.ComponentProps<typeof DayPicker>) {
-  return (
-    <DayPicker
-      showOutsideDays={showOutsideDays}
-      className={cn('p-3', className)}
-      classNames={{
-        months: 'flex flex-col sm:flex-row gap-2',
-        month: 'flex flex-col gap-4',
-        caption: 'flex justify-center pt-1 relative items-center w-full',
-        caption_label: 'text-sm font-medium',
-        nav: 'flex items-center gap-1',
-        nav_button: cn(
-          buttonVariants({ variant: 'outline' }),
-          'size-7 bg-transparent p-0 opacity-50 hover:opacity-100'
-        ),
-        nav_button_previous: 'absolute left-1',
-        nav_button_next: 'absolute right-1',
-        table: 'w-full border-collapse space-x-1',
-        head_row: 'flex',
-        head_cell:
-          'text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]',
-        row: 'flex w-full mt-2',
-        cell: cn(
-          'relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md',
-          props.mode === 'range'
-            ? '[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md'
-            : '[&:has([aria-selected])]:rounded-md'
-        ),
-        day: cn(
-          buttonVariants({ variant: 'ghost' }),
-          'size-8 p-0 font-normal aria-selected:opacity-100'
-        ),
-        day_range_start:
-          'day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground',
-        day_range_end:
-          'day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground',
-        day_selected:
-          'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
-        day_today: 'bg-accent text-accent-foreground',
-        day_outside:
-          'day-outside text-muted-foreground aria-selected:text-muted-foreground',
-        day_disabled: 'text-muted-foreground opacity-50',
-        day_range_middle:
-          'aria-selected:bg-accent aria-selected:text-accent-foreground',
-        day_hidden: 'invisible',
-        ...classNames,
-      }}
-      components={{
-        IconLeft: ({ className, ...props }) => (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={cn('size-4', className)}
-            {...props}
-          >
-            <path d="m15 18-6-6 6-6" />
-          </svg>
-        ),
-        IconRight: ({ className, ...props }) => (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={cn('size-4', className)}
-            {...props}
-          >
-            <path d="m9 18 6-6-6-6" />
-          </svg>
-        ),
-      }}
-      {...props}
-    />
-  );
+interface CalendarProps {
+  selectedDate?: Date
+  onDateSelect?: (date: Date) => void
 }
 
-export { Calendar };
+export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
+  const [currentDate, setCurrentDate] = useState(selectedDate || new Date())
+
+  const months = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağu",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık",
+  ]
+
+  const weekDays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+
+  const year = currentDate.getFullYear()
+  const month = currentDate.getMonth()
+
+  // Get first day of the month and how many days in the month
+  const firstDayOfMonth = new Date(year, month, 1)
+  const lastDayOfMonth = new Date(year, month + 1, 0)
+  const firstDayWeekday = firstDayOfMonth.getDay()
+  const daysInMonth = lastDayOfMonth.getDate()
+
+  // Get previous month's last days
+  const prevMonth = new Date(year, month - 1, 0)
+  const daysInPrevMonth = prevMonth.getDate()
+
+  // Generate calendar days
+  const calendarDays = []
+
+  // Previous month's days
+  for (let i = firstDayWeekday - 1; i >= 0; i--) {
+    calendarDays.push({
+      day: daysInPrevMonth - i,
+      isCurrentMonth: false,
+      isPrevMonth: true,
+      date: new Date(year, month - 1, daysInPrevMonth - i),
+    })
+  }
+
+  // Current month's days
+  for (let day = 1; day <= daysInMonth; day++) {
+    calendarDays.push({
+      day,
+      isCurrentMonth: true,
+      isPrevMonth: false,
+      date: new Date(year, month, day),
+    })
+  }
+
+  // Next month's days to fill the grid
+  const remainingCells = 42 - calendarDays.length
+  for (let day = 1; day <= remainingCells; day++) {
+    calendarDays.push({
+      day,
+      isCurrentMonth: false,
+      isPrevMonth: false,
+      date: new Date(year, month + 1, day),
+    })
+  }
+
+  const navigateMonth = (direction: "prev" | "next") => {
+    const newDate = new Date(currentDate)
+    if (direction === "prev") {
+      newDate.setMonth(month - 1)
+    } else {
+      newDate.setMonth(month + 1)
+    }
+    setCurrentDate(newDate)
+  }
+
+  const isSelected = (date: Date) => {
+    if (!selectedDate) return false
+    return date.toDateString() === selectedDate.toDateString()
+  }
+
+  const handleDateClick = (date: Date) => {
+    onDateSelect?.(date)
+  }
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 w-fit">
+      {/* Header with navigation */}
+      <div className="flex items-center justify-between mb-6">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigateMonth("prev")}
+          className="p-2 hover:bg-gray-100 rounded-lg"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
+
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="bg-gray-50 border-gray-200 hover:bg-gray-100 rounded-lg px-4 py-2 text-sm font-medium"
+          >
+            {months[month]}
+            <ChevronDown className="w-4 h-4 ml-1" />
+          </Button>
+
+          <Button
+            variant="outline"
+            className="bg-gray-50 border-gray-200 hover:bg-gray-100 rounded-lg px-4 py-2 text-sm font-medium"
+          >
+            {year}
+            <ChevronDown className="w-4 h-4 ml-1" />
+          </Button>
+        </div>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigateMonth("next")}
+          className="p-2 hover:bg-gray-100 rounded-lg"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
+
+      {/* Week days header */}
+      <div className="grid grid-cols-7 gap-1 mb-2">
+        {weekDays.map((day) => (
+          <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+            {day}
+          </div>
+        ))}
+      </div>
+
+      {/* Calendar grid */}
+      <div className="grid grid-cols-7 gap-1">
+        {calendarDays.slice(0, 42).map((calendarDay, index) => (
+          <button
+            key={index}
+            onClick={() => handleDateClick(calendarDay.date)}
+            className={`
+              w-10 h-10 text-sm rounded-lg transition-colors hover:bg-gray-100
+              ${calendarDay.isCurrentMonth ? "text-gray-900 font-medium" : "text-gray-400"}
+              ${isSelected(calendarDay.date) ? "bg-gray-900 text-white hover:bg-gray-800" : ""}
+            `}
+          >
+            {calendarDay.day}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}

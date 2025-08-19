@@ -380,7 +380,7 @@ export const WithHeaders: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="w-96">
-      <ChoiceboxGroup type="radio" disabled>
+      <ChoiceboxGroup type="radio" disabled defaultValue="option1">
         <Choicebox
           value="option1"
           title="Disabled Option 1"

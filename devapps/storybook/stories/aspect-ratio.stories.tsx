@@ -22,6 +22,8 @@ const meta: Meta<typeof AspectRatio> = {
         alt="Photo by Alvaro Pinot"
         fill
         className="rounded-md object-cover"
+        unoptimized
+        priority
       />
     </AspectRatio>
   ),

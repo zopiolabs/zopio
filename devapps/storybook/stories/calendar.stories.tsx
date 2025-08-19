@@ -1,86 +1,57 @@
-/**
- * SPDX-License-Identifier: MIT
- */
-
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { addDays } from 'date-fns';
-import type React from 'react';
-import { action } from 'storybook/actions';
-
 import { Calendar } from '@repo/design-system/ui/calendar';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
-/**
- * A date field component that allows users to enter and edit date.
- */
 const meta: Meta<typeof Calendar> = {
   title: 'ui/Calendar',
   component: Calendar,
-  tags: ['autodocs'],
-  argTypes: {},
-  args: {
-    mode: 'single',
-    selected: new Date(),
-    onSelect: action('onDayClick'),
-    className: 'rounded-md border w-fit',
-  },
   parameters: {
     layout: 'centered',
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    selectedDate: {
+      control: 'date',
+      description: 'The currently selected date',
+    },
+    onDateSelect: {
+      action: 'date-selected',
+      description: 'Callback fired when a date is selected',
+    },
   },
 };
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-type Story = StoryObj<React.ComponentProps<typeof Calendar>>;
+// Default calendar
+export const Default: Story = {
+  args: {},
+};
 
-/**
- * The default form of the calendar.
- */
-export const Default: Story = { args: { mode: 'single' } };
-
-/**
- * Use the `multiple` mode to select multiple dates.
- */
-export const Multiple: Story = {
+// Calendar with selected date
+export const WithSelectedDate: Story = {
   args: {
-    min: 1,
-    selected: [new Date(), addDays(new Date(), 2), addDays(new Date(), 8)],
-    mode: 'multiple',
+    selectedDate: new Date(2025, 7, 19), // August 19, 2025
   },
 };
 
-/**
- * Use the `range` mode to select a range of dates.
- */
-export const Range: Story = {
+// Calendar with today's date selected
+export const WithTodaySelected: Story = {
   args: {
-    selected: {
-      from: new Date(),
-      to: addDays(new Date(), 7),
-    },
-    mode: 'range',
+    selectedDate: new Date(),
   },
 };
 
-/**
- * Use the `disabled` prop to disable specific dates.
- */
-export const Disabled: Story = {
+// Calendar showing different month (January 2025)
+export const DifferentMonth: Story = {
   args: {
-    disabled: [
-      addDays(new Date(), 1),
-      addDays(new Date(), 2),
-      addDays(new Date(), 3),
-      addDays(new Date(), 5),
-    ],
+    selectedDate: new Date(2025, 0, 15), // January 15, 2025
   },
 };
 
-/**
- * Use the `numberOfMonths` prop to display multiple months.
- */
-export const MultipleMonths: Story = {
+// Calendar showing December (to show year transition)
+export const DecemberMonth: Story = {
   args: {
-    numberOfMonths: 2,
-    showOutsideDays: false,
+    selectedDate: new Date(2024, 11, 25), // December 25, 2024
   },
 };
