@@ -113,26 +113,26 @@ const DisplayCards = React.forwardRef<HTMLDivElement, DisplayCardsProps>(
     },
     ref
   ) => {
-    const containerVariants = {
-      hidden: { opacity: 0 },
-      visible: {
-        opacity: 1,
-        transition: {
-          staggerChildren: 0.1,
-        },
-      },
-    };
-
+    // Use React state to disable animations in Storybook to prevent AbortError
+    const [isMounted, setIsMounted] = React.useState(false);
+    
+    React.useEffect(() => {
+      // Enable animations only after component is mounted
+      setIsMounted(true);
+      
+      // Cleanup function
+      return () => {
+        setIsMounted(false);
+      };
+    }, []);
+    
+    // Simple animation variants
     const cardVariants = {
-      hidden: { opacity: 0, y: 20 },
-      visible: {
+      initial: { opacity: 0 },
+      animate: { 
         opacity: 1,
-        y: 0,
-        transition: {
-          duration: 0.5,
-          ease: "easeOut" as const,
-        },
-      },
+        transition: { duration: 0.3 }
+      }
     };
 
     const handleCardClick = (card: DisplayCard) => {
@@ -144,26 +144,24 @@ const DisplayCards = React.forwardRef<HTMLDivElement, DisplayCardsProps>(
     };
 
     return (
-      <motion.div
+      <div
         ref={ref}
         className={cn(displayCardsVariants({ variant, size }), className)}
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        {...(props as any)}
+        {...props}
       >
         {cards.map((card, index) => (
           <motion.div
-            key={card.id || index}
-            variants={cardVariants}
+            key={`${card.id || 'card'}-${index}`}
+            initial={isMounted ? { opacity: 0 } : false}
+            animate={isMounted ? { opacity: 1 } : false}
+            transition={{ duration: 0.3 }}
             className={cn(
               displayCardVariants({ variant: cardVariant, hover: cardHover }),
               card.href || onCardClick ? "cursor-pointer" : ""
             )}
             onClick={() => handleCardClick(card)}
-            whileHover={cardHover === "scale" ? { scale: 1.05 } : undefined}
-            whileTap={{ scale: 0.98 }}
+            whileHover={isMounted && cardHover === "scale" ? { scale: 1.05 } : undefined}
+            whileTap={isMounted ? { scale: 0.98 } : undefined}
           >
             {card.image && (
               <div className="mb-4 overflow-hidden rounded-md">
@@ -203,7 +201,7 @@ const DisplayCards = React.forwardRef<HTMLDivElement, DisplayCardsProps>(
             </div>
           </motion.div>
         ))}
-      </motion.div>
+      </div>
     );
   }
 );

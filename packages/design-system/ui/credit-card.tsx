@@ -179,16 +179,22 @@ export const CreditCardFront = ({ className, safeArea = 20, children, ...props }
 
 export type CreditCardServiceProviderProps = HTMLAttributes<HTMLDivElement> & {
   type?: keyof typeof PaymentIcons
+  showIcon?: boolean
 }
 
 export const CreditCardServiceProvider = ({
   className,
   children,
   type = "Visa",
+  showIcon = false,
   ...props
 }: CreditCardServiceProviderProps) => {
   if (children) {
     return <div className={cn("absolute right-0 bottom-0", "max-h-1/3 max-w-1/3", className)}>{children}</div>
+  }
+  
+  if (!showIcon) {
+    return null
   }
 
   const IconComponent = PaymentIcons[type] || PaymentIcons.Visa

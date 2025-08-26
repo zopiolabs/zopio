@@ -436,11 +436,43 @@ const DeckInfo = React.forwardRef<HTMLDivElement, DeckInfoProps>(
 
 DeckInfo.displayName = 'DeckInfo';
 
+// Standalone Deck Info component (can be used outside of Deck context)
+export interface StandaloneDeckInfoProps extends React.HTMLAttributes<HTMLDivElement> {
+  currentIndex: number;
+  totalCards: number;
+  swipeDirection?: 'left' | 'right' | null;
+}
+
+const StandaloneDeckInfo = React.forwardRef<HTMLDivElement, StandaloneDeckInfoProps>(
+  ({ className, children, currentIndex, totalCards, swipeDirection, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn('text-center text-sm text-muted-foreground', className)}
+        {...props}
+      >
+        <div>
+          Current Index: {currentIndex} | Total Cards: {totalCards}
+        </div>
+        {swipeDirection && (
+          <div>
+            Next Direction: {swipeDirection}
+          </div>
+        )}
+        {children}
+      </div>
+    );
+  }
+);
+
+StandaloneDeckInfo.displayName = 'StandaloneDeckInfo';
+
 export {
   Deck,
   DeckControls,
   DeckCard,
   DeckInfo,
+  StandaloneDeckInfo,
   deckVariants,
   deckCardVariants,
 };

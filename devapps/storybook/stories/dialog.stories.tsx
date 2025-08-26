@@ -39,13 +39,8 @@ const meta: Meta<typeof Dialog> = {
           <button type="button" className="hover:underline">
             Cancel
           </button>
-          <DialogClose>
-            <button
-              type="button"
-              className="rounded bg-primary px-4 py-2 text-primary-foreground"
-            >
-              Continue
-            </button>
+          <DialogClose className="rounded bg-primary px-4 py-2 text-primary-foreground">
+            Continue
           </DialogClose>
         </DialogFooter>
       </DialogContent>

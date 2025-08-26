@@ -8,7 +8,12 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 import { Button } from '@repo/design-system/ui/button';
-import { Deck, DeckCard, DeckInfo, useDeck } from '@repo/design-system/ui/deck';
+import {
+  Deck,
+  DeckCard,
+  StandaloneDeckInfo,
+  useDeck,
+} from '@repo/design-system/ui/deck';
 
 /**
  * A Tinder-like swipeable card stack component with smooth animations and drag support.
@@ -59,7 +64,7 @@ const profileCards = [
     location: 'San Francisco, CA',
     bio: 'Adventure seeker, coffee enthusiast, and dog lover. Always up for hiking or trying new restaurants!',
     image:
-      'https://images.unsplash.com/photo-1494790108755-2616c88c6d3d?w=400&h=600&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face',
     interests: ['Photography', 'Travel', 'Yoga'],
   },
   {
@@ -180,6 +185,8 @@ const ProfileCard = ({ profile }: { profile: (typeof profileCards)[0] }) => (
         className="h-2/3 w-full object-cover"
         width={400}
         height={600}
+        unoptimized
+        priority
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -221,6 +228,7 @@ const ProductCard = ({ product }: { product: (typeof productCards)[0] }) => (
         className="h-48 w-full object-cover"
         width={400}
         height={300}
+        unoptimized
       />
 
       <div className="flex-1 p-6">
@@ -370,7 +378,10 @@ export const Controlled: Story = {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <DeckInfo />
+          <StandaloneDeckInfo
+            currentIndex={currentIndex}
+            totalCards={simpleCards.length}
+          />
           <div className="mt-2">
             <Button
               onClick={resetDeck}
@@ -502,6 +513,7 @@ export const Interactive: Story = {
   },
 };
 
+// Original component that must be used within Deck context
 const DeckContextInfo = () => {
   const { currentIndex, totalCards, swipeDirection, isAnimating } = useDeck();
 
