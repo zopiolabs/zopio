@@ -173,8 +173,8 @@ export const Default: Story = {
  */
 export const Variants: Story = {
   render: () => (
-    <div className="space-y-6">
-      <div>
+    <div className="flex flex-col gap-24">
+      <div className="">
         <h4 className="mb-2 font-medium text-sm">Default</h4>
         <div className="h-64 w-full">
           <Gantt variant="default" tasks={sampleTasks.slice(0, 3)}>
@@ -212,7 +212,7 @@ export const Variants: Story = {
  */
 export const TimeScales: Story = {
   render: () => (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-48">
       <div>
         <h4 className="mb-2 font-medium text-sm">Monthly View</h4>
         <div className="h-48 w-full">
