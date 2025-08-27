@@ -248,7 +248,7 @@ export const Variants: Story = {
  */
 export const Sizes: Story = {
   render: () => (
-    <div className="space-y-6">
+    <div className="flex gap-16">
       <div>
         <h4 className="mb-2 font-medium text-sm">Small</h4>
         <div className="h-48 w-80">
