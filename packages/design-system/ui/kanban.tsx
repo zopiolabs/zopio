@@ -7,12 +7,11 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@repo/design-system/lib/utils';
-import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { Plus, MoreHorizontal, X } from 'lucide-react';
 
 // Kanban variants
 const kanbanVariants = cva(
-  'flex gap-4 p-4 overflow-x-auto',
+  'flex flex-col w-full gap-4 p-4 overflow-x-auto',
   {
     variants: {
       variant: {
@@ -114,6 +113,10 @@ interface KanbanContextType {
   readonly?: boolean;
   variant?: 'default' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
+  draggedCard?: KanbanCard | null;
+  setDraggedCard: React.Dispatch<React.SetStateAction<KanbanCard | null>>;
+  draggedFromColumn?: string | null;
+  setDraggedFromColumn: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const KanbanContext = React.createContext<KanbanContextType | undefined>(undefined);
@@ -127,7 +130,7 @@ export const useKanban = () => {
 };
 
 // Main Kanban component
-export interface KanbanProps 
+export interface KanbanProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof kanbanVariants> {
   data: KanbanData;
@@ -143,10 +146,10 @@ export interface KanbanProps
 }
 
 const Kanban = React.forwardRef<HTMLDivElement, KanbanProps>(
-  ({ 
-    className, 
-    variant, 
-    size, 
+  ({
+    className,
+    variant,
+    size,
     data: initialData,
     onCardMove,
     onCardAdd,
@@ -157,53 +160,48 @@ const Kanban = React.forwardRef<HTMLDivElement, KanbanProps>(
     onColumnDelete,
     readonly = false,
     children,
-    ...props 
+    ...props
   }, ref) => {
     const [data, setData] = React.useState<KanbanData>(initialData);
+
+    const [draggedCard, setDraggedCard] = React.useState<KanbanCard | null>(null);
+    const [draggedFromColumn, setDraggedFromColumn] = React.useState<string | null>(null);
 
     React.useEffect(() => {
       setData(initialData);
     }, [initialData]);
 
-    const handleDragEnd = (result: DropResult) => {
+    const handleCardMove = (cardId: string, sourceColumnId: string, destinationColumnId: string, destinationIndex: number) => {
       if (readonly) return;
-      
-      const { destination, source, draggableId } = result;
 
-      if (!destination) return;
-
-      if (
-        destination.droppableId === source.droppableId &&
-        destination.index === source.index
-      ) {
-        return;
-      }
-
-      const sourceColumn = data.columns.find(col => col.id === source.droppableId);
-      const destColumn = data.columns.find(col => col.id === destination.droppableId);
+      const sourceColumn = data.columns.find(col => col.id === sourceColumnId);
+      const destColumn = data.columns.find(col => col.id === destinationColumnId);
 
       if (!sourceColumn || !destColumn) return;
 
       const sourceCards = Array.from(sourceColumn.cards);
-      const destCards = source.droppableId === destination.droppableId 
-        ? sourceCards 
+      const destCards = sourceColumnId === destinationColumnId
+        ? sourceCards
         : Array.from(destColumn.cards);
 
-      const [movedCard] = sourceCards.splice(source.index, 1);
+      const cardIndex = sourceCards.findIndex(card => card.id === cardId);
+      if (cardIndex === -1) return;
 
-      if (source.droppableId === destination.droppableId) {
-        sourceCards.splice(destination.index, 0, movedCard);
+      const [movedCard] = sourceCards.splice(cardIndex, 1);
+
+      if (sourceColumnId === destinationColumnId) {
+        sourceCards.splice(destinationIndex, 0, movedCard);
       } else {
-        destCards.splice(destination.index, 0, movedCard);
+        destCards.splice(destinationIndex, 0, movedCard);
       }
 
       const newData = {
         ...data,
         columns: data.columns.map(col => {
-          if (col.id === source.droppableId) {
+          if (col.id === sourceColumnId) {
             return { ...col, cards: sourceCards };
           }
-          if (col.id === destination.droppableId) {
+          if (col.id === destinationColumnId) {
             return { ...col, cards: destCards };
           }
           return col;
@@ -211,13 +209,13 @@ const Kanban = React.forwardRef<HTMLDivElement, KanbanProps>(
       };
 
       setData(newData);
-      onCardMove?.(draggableId, source.droppableId, destination.droppableId, destination.index);
+      onCardMove?.(cardId, sourceColumnId, destinationColumnId, destinationIndex);
     };
 
     const contextValue: KanbanContextType = {
       data,
       setData,
-      onCardMove,
+      onCardMove: handleCardMove,
       onCardAdd,
       onCardEdit,
       onCardDelete,
@@ -227,6 +225,10 @@ const Kanban = React.forwardRef<HTMLDivElement, KanbanProps>(
       readonly,
       variant: variant || 'default',
       size: size || 'md',
+      draggedCard,
+      setDraggedCard,
+      draggedFromColumn,
+      setDraggedFromColumn,
     };
 
     return (
@@ -236,9 +238,7 @@ const Kanban = React.forwardRef<HTMLDivElement, KanbanProps>(
           className={cn(kanbanVariants({ variant, size }), className)}
           {...props}
         >
-          <DragDropContext onDragEnd={handleDragEnd}>
-            {children || <KanbanBoard />}
-          </DragDropContext>
+          {children || <KanbanBoard />}
         </div>
       </KanbanContext.Provider>
     );
@@ -289,7 +289,46 @@ export interface KanbanColumnProps extends React.HTMLAttributes<HTMLDivElement> 
 
 const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>(
   ({ className, column, ...props }, ref) => {
-    const { variant, size, readonly } = useKanban();
+    const { variant, size, readonly, draggedCard, setDraggedCard, draggedFromColumn, setDraggedFromColumn, onCardMove } = useKanban();
+    const [isDragOver, setIsDragOver] = React.useState(false);
+
+    const handleDragOver = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
+
+      if (!draggedCard || !draggedFromColumn || readonly) return;
+
+      const dropY = e.clientY;
+      const columnElement = e.currentTarget as HTMLElement;
+      const cardElements = Array.from(columnElement.querySelectorAll('[data-card-id]'));
+
+      let insertIndex = column.cards.length;
+
+      for (let i = 0; i < cardElements.length; i++) {
+        const cardElement = cardElements[i] as HTMLElement;
+        const rect = cardElement.getBoundingClientRect();
+        const cardMiddle = rect.top + rect.height / 2;
+
+        if (dropY < cardMiddle) {
+          insertIndex = i;
+          break;
+        }
+      }
+
+      onCardMove?.(draggedCard.id, draggedFromColumn, column.id, insertIndex);
+      setDraggedCard(null);
+      setDraggedFromColumn(null);
+    };
 
     return (
       <div
@@ -298,42 +337,20 @@ const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>(
         {...props}
       >
         <KanbanColumnHeader column={column} />
-        <Droppable droppableId={column.id} isDropDisabled={readonly}>
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className={cn(
-                "flex-1 p-2 min-h-[200px] transition-colors",
-                snapshot.isDraggingOver && "bg-muted/70"
-              )}
-            >
-              {column.cards.map((card, index) => (
-                <Draggable
-                  key={card.id}
-                  draggableId={card.id}
-                  index={index}
-                  isDragDisabled={readonly}
-                >
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={cn(
-                        snapshot.isDragging && "rotate-3 shadow-lg"
-                      )}
-                    >
-                      <KanbanCard card={card} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-              {!readonly && <KanbanAddCard columnId={column.id} />}
-            </div>
+        <div
+          className={cn(
+            "flex-1 p-2 min-h-[200px] transition-colors",
+            isDragOver && "bg-muted/70"
           )}
-        </Droppable>
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {column.cards.map((card, index) => (
+            <KanbanCard key={card.id} card={card} columnId={column.id} />
+          ))}
+          {!readonly && <KanbanAddCard columnId={column.id} />}
+        </div>
       </div>
     );
   }
@@ -413,11 +430,13 @@ export interface KanbanCardProps extends React.HTMLAttributes<HTMLDivElement> {
     dueDate?: Date;
     color?: string;
   };
+  columnId: string;
 }
 
 const KanbanCard = React.forwardRef<HTMLDivElement, KanbanCardProps>(
-  ({ className, card, ...props }, ref) => {
-    const { variant, size, readonly, onCardEdit, onCardDelete } = useKanban();
+  ({ className, card, columnId, ...props }, ref) => {
+    const { variant, size, readonly, onCardEdit, onCardDelete, draggedCard, setDraggedCard, setDraggedFromColumn } = useKanban();
+    const [isDragging, setIsDragging] = React.useState(false);
 
     const priorityColors = {
       low: 'bg-green-100 text-green-800',
@@ -425,10 +444,39 @@ const KanbanCard = React.forwardRef<HTMLDivElement, KanbanCardProps>(
       high: 'bg-red-100 text-red-800',
     };
 
+    const handleDragStart = (e: React.DragEvent) => {
+      if (readonly) {
+        e.preventDefault();
+        return;
+      }
+
+      setDraggedCard(card);
+      setDraggedFromColumn(columnId);
+      setIsDragging(true);
+
+      // Set drag data for accessibility
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', card.id);
+    };
+
+    const handleDragEnd = () => {
+      setIsDragging(false);
+    };
+
     return (
       <div
         ref={ref}
-        className={cn(cardVariants({ variant, size }), className)}
+        className={cn(
+          cardVariants({ variant, size }),
+          'group',
+          isDragging && 'opacity-50 rotate-3 shadow-lg',
+          draggedCard?.id === card.id && 'opacity-50',
+          className
+        )}
+        draggable={!readonly}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        data-card-id={card.id}
         {...props}
       >
         <div className="flex items-start justify-between gap-2">
@@ -443,7 +491,7 @@ const KanbanCard = React.forwardRef<HTMLDivElement, KanbanCardProps>(
           {!readonly && (
             <button
               className="opacity-0 group-hover:opacity-100 p-1 hover:bg-muted rounded transition-opacity"
-              onClick={() => onCardDelete?.(card.id, '')}
+              onClick={() => onCardDelete?.(card.id, columnId)}
             >
               <X className="h-3 w-3" />
             </button>
@@ -635,7 +683,7 @@ const KanbanHeader = React.forwardRef<HTMLDivElement, KanbanHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex items-center justify-between p-4 border-b', className)}
+        className={cn('flex items-start justify-between p-4 border-b', className)}
         {...props}
       >
         {children}

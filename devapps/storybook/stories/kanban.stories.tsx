@@ -259,10 +259,10 @@ export const Variants: Story = {
  */
 export const Sizes: Story = {
   render: () => (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-20">
       <div>
         <h4 className="mb-2 font-medium text-sm">Small</h4>
-        <div className="h-48 w-full">
+        <div className="h-full w-full">
           <Kanban size="sm" data={simpleKanbanData}>
             <KanbanBoard />
           </Kanban>
@@ -271,7 +271,7 @@ export const Sizes: Story = {
 
       <div>
         <h4 className="mb-2 font-medium text-sm">Medium</h4>
-        <div className="h-56 w-full">
+        <div className="h-full w-full">
           <Kanban size="md" data={simpleKanbanData}>
             <KanbanBoard />
           </Kanban>
@@ -280,7 +280,7 @@ export const Sizes: Story = {
 
       <div>
         <h4 className="mb-2 font-medium text-sm">Large</h4>
-        <div className="h-64 w-full">
+        <div className="h-full w-full">
           <Kanban size="lg" data={simpleKanbanData}>
             <KanbanBoard />
           </Kanban>
