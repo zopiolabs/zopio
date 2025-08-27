@@ -38,10 +38,8 @@ const meta: Meta<typeof Drawer> = {
           >
             Submit
           </button>
-          <DrawerClose>
-            <button type="button" className="hover:underline">
-              Cancel
-            </button>
+          <DrawerClose type="button" className="hover:underline">
+            Cancel
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

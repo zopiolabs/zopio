@@ -20,9 +20,9 @@ const dropzoneVariants = cva(
         success: "border-green-500 bg-green-50 dark:bg-green-950",
       },
       size: {
-        sm: "h-32 p-4",
-        md: "h-48 p-6",
-        lg: "h-64 p-8",
+        sm: "h-full p-4",
+        md: "h-full p-6",
+        lg: "h-full p-8",
       },
     },
     defaultVariants: {
@@ -167,13 +167,13 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
     const removeFile = React.useCallback(
       (index: number) => {
         const updatedFiles = files.filter((_, i) => i !== index);
-        
+
         // Revoke preview URL to prevent memory leaks
         const fileToRemove = files[index];
         if (fileToRemove?.preview) {
           URL.revokeObjectURL(fileToRemove.preview);
         }
-        
+
         setFiles(updatedFiles);
         onFilesChange?.(updatedFiles);
       },
@@ -187,7 +187,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
           URL.revokeObjectURL(file.preview);
         }
       });
-      
+
       setFiles([]);
       setError(undefined);
       onFilesChange?.([]);
@@ -313,7 +313,7 @@ interface DropzoneContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 const DropzoneContent = React.forwardRef<HTMLDivElement, DropzoneContentProps>(
   ({ className, children, ...props }, ref) => {
     const context = React.useContext(DropzoneContext);
-    
+
     if (!context) {
       throw new Error("DropzoneContent must be used within a Dropzone");
     }
@@ -395,7 +395,7 @@ interface DropzoneErrorProps extends React.HTMLAttributes<HTMLDivElement> {}
 const DropzoneError = React.forwardRef<HTMLDivElement, DropzoneErrorProps>(
   ({ className, children, ...props }, ref) => {
     const context = React.useContext(DropzoneContext);
-    
+
     if (!context) {
       throw new Error("DropzoneError must be used within a Dropzone");
     }
@@ -421,7 +421,7 @@ interface DropzoneFileListProps extends React.HTMLAttributes<HTMLDivElement> {}
 const DropzoneFileList = React.forwardRef<HTMLDivElement, DropzoneFileListProps>(
   ({ className, ...props }, ref) => {
     const context = React.useContext(DropzoneContext);
-    
+
     if (!context) {
       throw new Error("DropzoneFileList must be used within a Dropzone");
     }
@@ -449,7 +449,7 @@ interface DropzoneFileItemProps extends React.HTMLAttributes<HTMLDivElement> {
 const DropzoneFileItem = React.forwardRef<HTMLDivElement, DropzoneFileItemProps>(
   ({ className, file, index, ...props }, ref) => {
     const context = React.useContext(DropzoneContext);
-    
+
     if (!context) {
       throw new Error("DropzoneFileItem must be used within a Dropzone");
     }
@@ -487,7 +487,7 @@ const DropzoneFileItem = React.forwardRef<HTMLDivElement, DropzoneFileItemProps>
             {getFileIcon(file)}
           </div>
         )}
-        
+
         <div className="flex-1 min-w-0">
           <div className="truncate text-sm font-medium">{file.name}</div>
           <div className="text-xs text-muted-foreground">
@@ -497,7 +497,7 @@ const DropzoneFileItem = React.forwardRef<HTMLDivElement, DropzoneFileItemProps>
             <div className="text-xs text-destructive">{file.error}</div>
           )}
         </div>
-        
+
         <button
           type="button"
           onClick={(e) => {
@@ -518,11 +518,11 @@ DropzoneFileItem.displayName = "DropzoneFileItem";
 // Utility function to format file sizes
 function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
+
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 

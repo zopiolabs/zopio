@@ -450,10 +450,79 @@ const EditorContent = React.forwardRef<HTMLDivElement, EditorContentProps>(
     }
 
     const { content, setContent, addToHistory } = context;
+    const contentRef = React.useRef<string>(content);
+    const selectionRef = React.useRef<{start: number; end: number} | null>(null);
+
+    // Save selection position before update
+    const saveSelection = () => {
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const preCaretRange = range.cloneRange();
+        const editorElement = (typeof ref === 'object' && ref?.current) ? ref.current : document.body;
+        preCaretRange.selectNodeContents(editorElement);
+        preCaretRange.setEnd(range.startContainer, range.startOffset);
+        const start = preCaretRange.toString().length;
+        
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        const end = preCaretRange.toString().length;
+        
+        selectionRef.current = { start, end };
+      }
+    };
+
+    // Restore selection position after update
+    const restoreSelection = () => {
+      const editorElement = typeof ref === 'object' && ref?.current ? ref.current : null;
+      if (!selectionRef.current || !editorElement) return;
+      
+      const selection = window.getSelection();
+      if (!selection) return;
+      
+      const range = document.createRange();
+      let charCount = 0;
+      let foundStart = false;
+      let foundEnd = false;
+      
+      const traverse = (node: Node) => {
+        if (foundStart && foundEnd) return;
+        
+        if (node.nodeType === Node.TEXT_NODE) {
+          const nextCharCount = charCount + (node.textContent?.length || 0);
+          const currentSelection = selectionRef.current;
+          
+          if (currentSelection && !foundStart && currentSelection.start >= charCount && currentSelection.start <= nextCharCount) {
+            range.setStart(node, currentSelection.start - charCount);
+            foundStart = true;
+          }
+          
+          if (currentSelection && !foundEnd && currentSelection.end >= charCount && currentSelection.end <= nextCharCount) {
+            range.setEnd(node, currentSelection.end - charCount);
+            foundEnd = true;
+          }
+          
+          charCount = nextCharCount;
+        } else {
+          for (let i = 0; i < node.childNodes.length; i++) {
+            traverse(node.childNodes[i]);
+          }
+        }
+      };
+      
+      traverse(editorElement);
+      
+      if (foundStart && foundEnd) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    };
 
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+      saveSelection();
       const newContent = e.currentTarget.textContent || '';
+      contentRef.current = newContent;
       setContent(newContent);
+      // We'll restore selection in useEffect
     };
 
     const handleBlur = () => {
@@ -462,9 +531,17 @@ const EditorContent = React.forwardRef<HTMLDivElement, EditorContentProps>(
 
     const handlePaste = (e: React.ClipboardEvent) => {
       e.preventDefault();
+      saveSelection();
       const text = e.clipboardData.getData('text/plain');
       document.execCommand('insertText', false, text);
     };
+
+    // Effect to restore cursor position after content update
+    React.useEffect(() => {
+      if (contentRef.current === content && selectionRef.current) {
+        restoreSelection();
+      }
+    }, [content]);
 
     return (
       <div
@@ -600,7 +677,14 @@ const insertAtCursor = (text: string) => {
   if (selection && selection.rangeCount > 0) {
     const range = selection.getRangeAt(0);
     range.deleteContents();
-    range.insertNode(document.createTextNode(text));
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+    
+    // Move cursor to end of inserted text
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 };
 

@@ -271,7 +271,7 @@ export const CustomEmpty: Story = {
     const [_files, setFiles] = useState<DropzoneFile[]>([]);
 
     return (
-      <div className="w-96">
+      <div className="flex h-full w-full">
         <Dropzone onFilesChange={setFiles}>
           <DropzoneContent>
             <DropzoneEmpty>
