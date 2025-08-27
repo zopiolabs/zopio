@@ -33,8 +33,6 @@ const meta: Meta<typeof InputOTP> = {
         <InputOTPSlot index={1} />
         <InputOTPSlot index={2} />
         <InputOTPSlot index={3} />
-        <InputOTPSlot index={4} />
-        <InputOTPSlot index={5} />
       </InputOTPGroup>
     </InputOTP>
   ),
@@ -58,6 +56,45 @@ export const Default: Story = { args: { maxLength: 4 } };
 export const SeparatedGroup: Story = {
   render: (args) => (
     <InputOTP {...args} maxLength={4} render={undefined}>
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+      </InputOTPGroup>
+      <InputOTPSeparator />
+      <InputOTPGroup>
+        <InputOTPSlot index={2} />
+        <InputOTPSlot index={3} />
+      </InputOTPGroup>
+    </InputOTP>
+  ),
+};
+
+/**
+ * 6-factor verification with 6 input slots.
+ */
+export const SixFactorVerification: Story = {
+  args: { maxLength: 6 },
+  render: (args) => (
+    <InputOTP {...args} maxLength={6} render={undefined}>
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
+      </InputOTPGroup>
+    </InputOTP>
+  ),
+};
+
+/**
+ * 6-factor verification with separated groups (3-3).
+ */
+export const SixFactorSeparated: Story = {
+  args: { maxLength: 6 },
+  render: (args) => (
+    <InputOTP {...args} maxLength={6} render={undefined}>
       <InputOTPGroup>
         <InputOTPSlot index={0} />
         <InputOTPSlot index={1} />
