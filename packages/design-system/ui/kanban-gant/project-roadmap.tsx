@@ -253,7 +253,7 @@ export function ProjectRoadmap({
                 value={newTask.category}
                 onValueChange={(value) => setNewTask((prev) => ({ ...prev, category: value }))}
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -270,7 +270,7 @@ export function ProjectRoadmap({
                 value={newTask.status}
                 onValueChange={(value: Task["status"]) => setNewTask((prev) => ({ ...prev, status: value }))}
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -286,7 +286,7 @@ export function ProjectRoadmap({
                   setNewTask((prev) => ({ ...prev, priority: value }))
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

@@ -5,11 +5,11 @@
 "use client"
 
 import { Button } from "../button"
-import { CalendarIcon, BarChart3, Menu, X } from "lucide-react"
+import { CalendarIcon, Menu, X } from "lucide-react"
 
 interface HeaderProps {
-  viewMode: "calendar" | "timeline"
-  onViewModeChange: (mode: "calendar" | "timeline") => void
+  viewMode: "calendar"
+  onViewModeChange: (mode: "calendar") => void
   sidebarOpen: boolean
   onSidebarToggle: () => void
 }
@@ -30,22 +30,12 @@ export function Header({ viewMode, onViewModeChange, sidebarOpen, onSidebarToggl
 
         <div className="flex gap-2">
           <Button
-            variant={viewMode === "calendar" ? "default" : "outline"}
+            variant="default"
             size="sm"
-            onClick={() => onViewModeChange("calendar")}
             className="shadow-sm"
           >
             <CalendarIcon className="h-4 w-4 mr-2" />
             Calendar
-          </Button>
-          <Button
-            variant={viewMode === "timeline" ? "default" : "outline"}
-            size="sm"
-            onClick={() => onViewModeChange("timeline")}
-            className="shadow-sm"
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Timeline
           </Button>
         </div>
       </div>

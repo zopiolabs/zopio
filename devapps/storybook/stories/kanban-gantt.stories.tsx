@@ -16,14 +16,14 @@ const meta: Meta<typeof KanbanGantt> = {
     docs: {
       description: {
         component:
-          'A comprehensive project management component combining Kanban board functionality with Gantt chart timeline visualization. Features drag-and-drop task management, calendar and timeline views, and detailed task editing capabilities.',
+          'A comprehensive project management component combining Kanban board functionality with Gantt chart visualization. Features drag-and-drop task management, calendar view, and detailed task editing capabilities.',
       },
     },
   },
   argTypes: {
     defaultViewMode: {
       control: { type: 'radio' },
-      options: ['calendar', 'timeline'],
+      options: ['calendar'],
       description: 'Initial view mode for the component',
     },
     defaultSidebarOpen: {
@@ -111,13 +111,6 @@ export const Default: Story = {
   },
 };
 
-export const TimelineView: Story = {
-  args: {
-    defaultViewMode: 'timeline',
-    defaultSidebarOpen: true,
-  },
-};
-
 export const ClosedSidebar: Story = {
   args: {
     defaultViewMode: 'calendar',
@@ -144,7 +137,7 @@ export const CustomTasks: Story = {
 export const MinimalSetup: Story = {
   args: {
     initialTasks: minimalTasks,
-    defaultViewMode: 'timeline',
+    defaultViewMode: 'calendar',
     defaultSidebarOpen: true,
   },
   parameters: {
@@ -174,7 +167,7 @@ export const EmptyState: Story = {
 
 export const CompactView: Story = {
   args: {
-    defaultViewMode: 'timeline',
+    defaultViewMode: 'calendar',
     defaultSidebarOpen: false,
     className: 'max-w-4xl mx-auto',
   },

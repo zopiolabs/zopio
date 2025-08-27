@@ -10,7 +10,6 @@ import { Button } from "../button"
 import { Edit, Save, X, XIcon } from "lucide-react"
 import { ProjectRoadmap } from "./project-roadmap"
 import { Calendar } from "./calendar-kg"
-import { Timeline } from "./timeline-kg"
 import { Badge } from "../badge"
 import { Input } from "../input"
 import { Textarea } from "../textarea"
@@ -32,7 +31,7 @@ export interface Task {
 
 interface KanbanGanttProps {
   initialTasks?: Task[]
-  defaultViewMode?: "calendar" | "timeline"
+  defaultViewMode?: "calendar"
   defaultSidebarOpen?: boolean
   className?: string
 }
@@ -122,7 +121,7 @@ export function KanbanGantt({
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [viewMode, setViewMode] = useState<"calendar" | "timeline">(defaultViewMode)
+  const [viewMode, setViewMode] = useState<"calendar">(defaultViewMode)
   const [isEditing, setIsEditing] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
 
@@ -210,17 +209,13 @@ export function KanbanGantt({
         <div
           className={`flex-1 transition-all duration-300 ease-in-out ${sidebarOpen ? "ml-80" : "ml-0"} ${selectedTask ? "mr-80" : "mr-0"}`}
         >
-          {viewMode === "calendar" ? (
-            <Calendar
-              tasks={tasks}
-              selectedTask={selectedTask}
-              onTaskClick={setSelectedTask}
-              selectedDate={selectedDate}
-              onDateClick={setSelectedDate}
-            />
-          ) : (
-            <Timeline tasks={tasks} selectedTask={selectedTask} onTaskClick={setSelectedTask} />
-          )}
+          <Calendar
+            tasks={tasks}
+            selectedTask={selectedTask}
+            onTaskClick={setSelectedTask}
+            selectedDate={selectedDate}
+            onDateClick={setSelectedDate}
+          />
         </div>
 
         {selectedTask && (
