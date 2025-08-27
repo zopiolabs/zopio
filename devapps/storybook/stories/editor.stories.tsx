@@ -88,29 +88,60 @@ export const Default: Story = {
  * Different editor sizes.
  */
 export const Sizes: Story = {
-  render: () => (
-    <div className="w-full max-w-2xl space-y-6">
-      <div>
-        <h4 className="mb-2 font-medium text-sm">Small</h4>
-        <Editor size="sm" placeholder="Small editor..." showWordCount />
-      </div>
+  render: () => {
+    const [smallContent, setSmallContent] = useState('');
+    const [mediumContent, setMediumContent] = useState('');
+    const [largeContent, setLargeContent] = useState('');
+    const [xlContent, setXlContent] = useState('');
 
-      <div>
-        <h4 className="mb-2 font-medium text-sm">Medium</h4>
-        <Editor size="md" placeholder="Medium editor..." showWordCount />
-      </div>
+    return (
+      <div className="w-full max-w-2xl space-y-6">
+        <div>
+          <h4 className="mb-2 font-medium text-sm">Small</h4>
+          <Editor
+            size="sm"
+            placeholder="Small editor..."
+            showWordCount
+            value={smallContent}
+            onChange={setSmallContent}
+          />
+        </div>
 
-      <div>
-        <h4 className="mb-2 font-medium text-sm">Large</h4>
-        <Editor size="lg" placeholder="Large editor..." showWordCount />
-      </div>
+        <div>
+          <h4 className="mb-2 font-medium text-sm">Medium</h4>
+          <Editor
+            size="md"
+            placeholder="Medium editor..."
+            showWordCount
+            value={mediumContent}
+            onChange={setMediumContent}
+          />
+        </div>
 
-      <div>
-        <h4 className="mb-2 font-medium text-sm">Extra Large</h4>
-        <Editor size="xl" placeholder="Extra large editor..." showWordCount />
+        <div>
+          <h4 className="mb-2 font-medium text-sm">Large</h4>
+          <Editor
+            size="lg"
+            placeholder="Large editor..."
+            showWordCount
+            value={largeContent}
+            onChange={setLargeContent}
+          />
+        </div>
+
+        <div>
+          <h4 className="mb-2 font-medium text-sm">Extra Large</h4>
+          <Editor
+            size="xl"
+            placeholder="Extra large editor..."
+            showWordCount
+            value={xlContent}
+            onChange={setXlContent}
+          />
+        </div>
       </div>
-    </div>
-  ),
+    );
+  },
 };
 
 /**
