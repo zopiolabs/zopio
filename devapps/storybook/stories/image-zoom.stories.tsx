@@ -302,6 +302,8 @@ export const ImageGallery: Story = {
                 className="h-full w-full object-cover"
                 width={100}
                 height={100}
+                unoptimized
+                priority
               />
             </Button>
           ))}

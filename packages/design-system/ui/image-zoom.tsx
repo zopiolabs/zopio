@@ -198,19 +198,6 @@ const ImageZoomCanvas = React.forwardRef<HTMLDivElement, ImageZoomCanvasProps>(
       zoomStep,
     } = context;
 
-    // Handle wheel zoom
-    const handleWheel = React.useCallback(
-      (e: React.WheelEvent) => {
-        if (!wheelZoom) return;
-        
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-        const newZoom = zoom + delta;
-        setZoom(newZoom);
-      },
-      [wheelZoom, zoom, zoomStep, setZoom]
-    );
-
     // Handle double click zoom
     const handleDoubleClick = React.useCallback(
       (e: React.MouseEvent) => {
@@ -274,6 +261,27 @@ const ImageZoomCanvas = React.forwardRef<HTMLDivElement, ImageZoomCanvasProps>(
       }
     }, [isDragging, handleMouseMove, handleMouseUp]);
 
+    // Handle wheel zoom
+    React.useEffect(() => {
+      const currentCanvas = canvasRef.current;
+      if (!currentCanvas || !wheelZoom) return;
+      
+      const handleWheelEvent = (e: WheelEvent) => {
+        if (!wheelZoom) return;
+        
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
+        const newZoom = zoom + delta;
+        setZoom(newZoom);
+      };
+      
+      currentCanvas.addEventListener('wheel', handleWheelEvent, { passive: false });
+      
+      return () => {
+        currentCanvas.removeEventListener('wheel', handleWheelEvent);
+      };
+    }, [wheelZoom, zoom, zoomStep, setZoom]);
+
     // Calculate transform
     const transform = `translate(${position.x}px, ${position.y}px) scale(${zoom}) rotate(${rotation}deg)`;
 
@@ -287,7 +295,6 @@ const ImageZoomCanvas = React.forwardRef<HTMLDivElement, ImageZoomCanvasProps>(
           isFullscreen && "fixed inset-0 z-50 h-screen bg-black",
           className
         )}
-        onWheel={handleWheel}
         onDoubleClick={handleDoubleClick}
         onMouseDown={handleMouseDown}
         {...props}
