@@ -256,20 +256,67 @@ export interface ListGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const ListGroup = React.forwardRef<HTMLDivElement, ListGroupProps>(
   ({ className, group, ...props }, ref) => {
-    const { variant, size, readonly } = useList();
+    const { variant, size, readonly, onItemMove, data } = useList();
+    const [isDragOver, setIsDragOver] = React.useState(false);
+
+    const handleDragOver = (e: React.DragEvent) => {
+      if (readonly) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      setIsDragOver(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+      // Only set isDragOver to false if we're leaving the group container
+      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+        setIsDragOver(false);
+      }
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+      if (readonly) return;
+      e.preventDefault();
+      setIsDragOver(false);
+      
+      try {
+        const dragData = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const { itemId: draggedItemId, sourceGroupId } = dragData;
+        
+        // Drop at the end of the group
+        onItemMove?.(draggedItemId, sourceGroupId, group.id, group.items.length);
+      } catch (error) {
+        console.error('Failed to parse drag data:', error);
+      }
+    };
 
     return (
       <div
         ref={ref}
-        className={cn(listGroupVariants({ variant, size }), className)}
+        className={cn(
+          listGroupVariants({ variant, size }),
+          isDragOver && !readonly && 'ring-2 ring-primary ring-opacity-50',
+          className
+        )}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
         {...props}
       >
         <ListGroupHeader group={group} />
         {!group.collapsed && (
           <div className="space-y-2">
-            {group.items.map((item, index) => (
-              <ListItem key={item.id} item={item} groupId={group.id} />
-            ))}
+            {group.items.length === 0 && !readonly ? (
+              <div className={cn(
+                'p-8 border-2 border-dashed border-muted-foreground/25 rounded-lg text-center text-muted-foreground',
+                isDragOver && 'border-primary bg-primary/5'
+              )}>
+                Drop items here
+              </div>
+            ) : (
+              group.items.map((item, index) => (
+                <ListItem key={item.id} item={item} groupId={group.id} />
+              ))
+            )}
             {!readonly && <ListAddItem groupId={group.id} />}
           </div>
         )}
@@ -369,7 +416,9 @@ export interface ListItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
   ({ className, item, groupId, ...props }, ref) => {
-    const { variant, size, readonly, onItemEdit, onItemDelete, onItemToggle } = useList();
+    const { variant, size, readonly, onItemEdit, onItemDelete, onItemToggle, onItemMove, data } = useList();
+    const [isDragging, setIsDragging] = React.useState(false);
+    const [dragOverPosition, setDragOverPosition] = React.useState<'top' | 'bottom' | null>(null);
 
     const priorityColors = {
       low: 'bg-green-100 text-green-800',
@@ -377,9 +426,65 @@ const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
       high: 'bg-red-100 text-red-800',
     };
 
+    const handleDragStart = (e: React.DragEvent) => {
+      if (readonly) return;
+      setIsDragging(true);
+      e.dataTransfer.setData('text/plain', JSON.stringify({ itemId: item.id, sourceGroupId: groupId }));
+      e.dataTransfer.effectAllowed = 'move';
+    };
+
+    const handleDragEnd = () => {
+      setIsDragging(false);
+      setDragOverPosition(null);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+      if (readonly) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      
+      const rect = e.currentTarget.getBoundingClientRect();
+      const midpoint = rect.top + rect.height / 2;
+      setDragOverPosition(e.clientY < midpoint ? 'top' : 'bottom');
+    };
+
+    const handleDragLeave = () => {
+      setDragOverPosition(null);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+      if (readonly) return;
+      e.preventDefault();
+      setDragOverPosition(null);
+      
+      try {
+        const dragData = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const { itemId: draggedItemId, sourceGroupId } = dragData;
+        
+        if (draggedItemId === item.id) return; // Can't drop on itself
+        
+        // Find the current group and item index
+        const currentGroup = data.groups.find(g => g.id === groupId);
+        if (!currentGroup) return;
+        
+        const currentItemIndex = currentGroup.items.findIndex(i => i.id === item.id);
+        const targetIndex = dragOverPosition === 'top' ? currentItemIndex : currentItemIndex + 1;
+        
+        onItemMove?.(draggedItemId, sourceGroupId, groupId, targetIndex);
+      } catch (error) {
+        console.error('Failed to parse drag data:', error);
+      }
+    };
+
     return (
       <div
         ref={ref}
+        draggable={!readonly}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
         className={cn(
           listItemVariants({ 
             variant, 
@@ -387,6 +492,10 @@ const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
             priority: item.priority || 'none' 
           }),
           item.completed && 'opacity-60',
+          isDragging && 'opacity-50 transform rotate-2',
+          dragOverPosition === 'top' && 'border-t-2 border-t-primary',
+          dragOverPosition === 'bottom' && 'border-b-2 border-b-primary',
+          'relative group',
           className
         )}
         {...props}

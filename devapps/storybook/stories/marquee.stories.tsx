@@ -290,7 +290,7 @@ export const LogoShowcase: Story = {
       <div className="mb-4 text-center">
         <h3 className="font-semibold text-lg">Trusted by leading companies</h3>
       </div>
-      <Marquee speed={40} pauseOnHover={false}>
+      <Marquee speed={15} pauseOnHover={false}>
         {companies.map((company, index) => (
           <div
             key={index}

@@ -2,181 +2,131 @@
  * SPDX-License-Identifier: MIT
  */
 
-"use client";
+"use client"
 
-import * as React from "react";
-import { motion, useSpring, useTransform } from "framer-motion";
-import { type VariantProps, cva } from "class-variance-authority";
+import { useEffect, useRef, useState } from "react"
+import { cn } from "@repo/design-system/lib/utils"
 
-import { cn } from "@repo/design-system/lib/utils";
-
-const numberFlowVariants = cva(
-  "inline-block tabular-nums",
-  {
-    variants: {
-      variant: {
-        default: "text-foreground",
-        muted: "text-muted-foreground",
-        accent: "text-accent-foreground",
-        destructive: "text-destructive",
-        success: "text-green-600 dark:text-green-400",
-      },
-      size: {
-        sm: "text-sm",
-        default: "text-base",
-        lg: "text-lg",
-        xl: "text-xl",
-        "2xl": "text-2xl",
-        "3xl": "text-3xl",
-      },
-      weight: {
-        normal: "font-normal",
-        medium: "font-medium",
-        semibold: "font-semibold",
-        bold: "font-bold",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-      weight: "normal",
-    },
-  }
-);
-
-export interface NumberFlowProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof numberFlowVariants> {
-  value: number;
-  format?: Intl.NumberFormatOptions;
-  locale?: string;
-  transformTiming?: {
-    duration?: number;
-    easing?: string;
-  };
-  trend?: "up" | "down" | "neutral";
-  continuous?: boolean;
-  willChange?: boolean;
-  prefix?: string;
-  suffix?: string;
+interface NumberFlowProps {
+  value: number
+  duration?: number
+  format?: "default" | "currency" | "percentage" | "compact"
+  currency?: string
+  locale?: string
+  className?: string
+  prefix?: string
+  suffix?: string
+  decimalPlaces?: number
+  easing?: "linear" | "ease-out" | "ease-in-out"
 }
 
-const NumberFlow = React.forwardRef<HTMLSpanElement, NumberFlowProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      weight,
-      value,
-      format,
-      locale = "en-US",
-      transformTiming = { duration: 750, easing: "ease-out" },
-      trend,
-      continuous = false,
-      willChange = false,
-      prefix = "",
-      suffix = "",
-      ...props
-    },
-    ref
-  ) => {
-    const [displayValue, setDisplayValue] = React.useState(value);
-    const springValue = useSpring(value, {
-      stiffness: 100,
-      damping: 30,
-      mass: 1,
-    });
+export function NumberFlow({
+  value,
+  duration = 1000,
+  format = "default",
+  currency = "USD",
+  locale = "en-US",
+  className,
+  prefix = "",
+  suffix = "",
+  decimalPlaces,
+  easing = "ease-out",
+}: NumberFlowProps) {
+  const [displayValue, setDisplayValue] = useState(0)
+  const animationRef = useRef<number | undefined>(undefined)
+  const startTimeRef = useRef<number | undefined>(undefined)
+  const startValueRef = useRef<number>(0)
 
-    // Format number using Intl.NumberFormat
-    const formatNumber = React.useCallback(
-      (num: number) => {
-        try {
-          const formatter = new Intl.NumberFormat(locale, format);
-          return formatter.format(num);
-        } catch {
-          return num.toString();
-        }
-      },
-      [locale, format]
-    );
+  const formatNumber = (num: number): string => {
+    let formatted: string
 
-    // Update spring value when value changes
-    React.useEffect(() => {
-      springValue.set(value);
-    }, [value, springValue]);
+    switch (format) {
+      case "currency":
+        formatted = new Intl.NumberFormat(locale, {
+          style: "currency",
+          currency,
+          minimumFractionDigits: decimalPlaces ?? 2,
+          maximumFractionDigits: decimalPlaces ?? 2,
+        }).format(num)
+        break
+      case "percentage":
+        formatted = new Intl.NumberFormat(locale, {
+          style: "percent",
+          minimumFractionDigits: decimalPlaces ?? 1,
+          maximumFractionDigits: decimalPlaces ?? 1,
+        }).format(num / 100)
+        break
+      case "compact":
+        formatted = new Intl.NumberFormat(locale, {
+          notation: "compact",
+          compactDisplay: "short",
+          minimumFractionDigits: decimalPlaces ?? 0,
+          maximumFractionDigits: decimalPlaces ?? 1,
+        }).format(num)
+        break
+      default:
+        formatted = new Intl.NumberFormat(locale, {
+          minimumFractionDigits: decimalPlaces ?? 0,
+          maximumFractionDigits: decimalPlaces ?? 2,
+        }).format(num)
+    }
 
-    // Transform spring value to display value
-    const transformedValue = useTransform(springValue, (latest) => {
-      if (continuous) {
-        return formatNumber(latest);
-      }
-      // For discrete updates, round to nearest integer for counting effect
-      const rounded = Math.round(latest);
-      return formatNumber(rounded);
-    });
-
-    // Update display value from transformed value
-    React.useEffect(() => {
-      const unsubscribe = transformedValue.on("change", (latest) => {
-        setDisplayValue(latest as any);
-      });
-      return unsubscribe;
-    }, [transformedValue]);
-
-    // Determine trend color classes
-    const getTrendClasses = () => {
-      switch (trend) {
-        case "up":
-          return "text-green-600 dark:text-green-400";
-        case "down":
-          return "text-red-600 dark:text-red-400";
-        case "neutral":
-        default:
-          return "";
-      }
-    };
-
-    // Check for reduced motion preference
-    const prefersReducedMotion = React.useMemo(() => {
-      if (typeof window === "undefined") return false;
-      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    }, []);
-
-    return (
-      <motion.span
-        ref={ref}
-        className={cn(
-          numberFlowVariants({ variant, size, weight }),
-          getTrendClasses(),
-          className
-        )}
-        style={{
-          willChange: willChange ? "transform" : "auto",
-        }}
-        initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8 }}
-        animate={prefersReducedMotion ? false : { opacity: 1, scale: 1 }}
-        transition={
-          prefersReducedMotion
-            ? { duration: 0 }
-            : {
-                duration: (transformTiming.duration || 750) / 1000,
-                ease: "easeOut",
-              }
-        }
-        role="status"
-        aria-live="polite"
-        aria-label={`${prefix}${formatNumber(value)}${suffix}`}
-        {...(props as any)}
-      >
-        {prefix}
-        {prefersReducedMotion ? formatNumber(value) : displayValue}
-        {suffix}
-      </motion.span>
-    );
+    return `${prefix}${formatted}${suffix}`
   }
-);
 
-NumberFlow.displayName = "NumberFlow";
+  const getEasingFunction = (t: number): number => {
+    switch (easing) {
+      case "linear":
+        return t
+      case "ease-out":
+        return 1 - Math.pow(1 - t, 3)
+      case "ease-in-out":
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+      default:
+        return t
+    }
+  }
 
-export { NumberFlow, numberFlowVariants };
+  const animate = (timestamp: number) => {
+    if (!startTimeRef.current) {
+      startTimeRef.current = timestamp
+    }
+
+    const elapsed = timestamp - startTimeRef.current
+    const progress = Math.min(elapsed / duration, 1)
+    const easedProgress = getEasingFunction(progress)
+
+    const currentValue = startValueRef.current + (value - startValueRef.current) * easedProgress
+    setDisplayValue(currentValue)
+
+    if (progress < 1) {
+      animationRef.current = requestAnimationFrame(animate)
+    }
+  }
+
+  useEffect(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+    }
+
+    startTimeRef.current = undefined
+    startValueRef.current = displayValue
+    animationRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [value, duration, easing])
+
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [])
+
+  return <span className={cn("font-mono tabular-nums", className)}>{formatNumber(displayValue)}</span>
+}

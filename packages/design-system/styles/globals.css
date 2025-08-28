@@ -122,6 +122,10 @@
   --radius-xl: calc(var(--radius) + 4px);
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-marquee-left: marquee-left var(--duration) linear infinite;
+  --animate-marquee-right: marquee-right var(--duration) linear infinite;
+  --animate-marquee-up: marquee-up var(--duration) linear infinite;
+  --animate-marquee-down: marquee-down var(--duration) linear infinite;
 
   @keyframes accordion-down {
     from {

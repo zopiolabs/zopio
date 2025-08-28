@@ -5,7 +5,6 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
 import { Check, Sparkles } from "lucide-react";
 import { type VariantProps, cva } from "class-variance-authority";
 
@@ -95,17 +94,9 @@ const PricingSection = React.forwardRef<HTMLDivElement, PricingSectionProps>(
     ref
   ) => {
     const [isYearly, setIsYearly] = React.useState(false);
-    const [confettiTriggered, setConfettiTriggered] = React.useState(false);
 
     const handleToggleChange = (checked: boolean) => {
       setIsYearly(checked);
-      
-      // Trigger confetti effect when switching to yearly
-      if (checked && !confettiTriggered) {
-        setConfettiTriggered(true);
-        // Reset confetti state after animation
-        setTimeout(() => setConfettiTriggered(false), 3000);
-      }
     };
 
     const formatPrice = (price: number): string => {
@@ -130,46 +121,24 @@ const PricingSection = React.forwardRef<HTMLDivElement, PricingSectionProps>(
     };
 
     return (
-      <motion.div
+      <div
         ref={ref}
         className={cn(pricingSectionVariants({ variant }), className)}
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
         {...props}
       >
         <div className="mx-auto max-w-7xl">
           {/* Header */}
           <div className="text-center space-y-4 mb-12">
-            <motion.h2 
-              className="text-3xl font-bold tracking-tight sm:text-4xl"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {title}
-            </motion.h2>
-            <motion.p 
-              className="text-lg text-muted-foreground max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {subtitle}
-            </motion.p>
+            </p>
             
             {/* Yearly Toggle */}
             {showYearlyToggle && (
-              <motion.div 
-                className="flex items-center justify-center gap-3 mt-8"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
+              <div className="flex items-center justify-center gap-3 mt-8">
                 <Label htmlFor="yearly-toggle" className="text-sm font-medium">
                   Monthly
                 </Label>
@@ -184,21 +153,16 @@ const PricingSection = React.forwardRef<HTMLDivElement, PricingSectionProps>(
                     Save {yearlyDiscount}%
                   </Badge>
                 </Label>
-              </motion.div>
+              </div>
             )}
           </div>
 
           {/* Pricing Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {plans.map((plan, index) => (
-              <motion.div
+              <div
                 key={plan.name}
-                className={cn(pricingCardVariants({ popular: plan.popular }))}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 * index, duration: 0.5 }}
-                whileHover={{ y: -5 }}
+                className={cn(pricingCardVariants({ popular: plan.popular }), "hover:-translate-y-1 transition-transform duration-200")}
               >
                 {/* Popular Badge */}
                 {plan.popular && (
@@ -222,7 +186,7 @@ const PricingSection = React.forwardRef<HTMLDivElement, PricingSectionProps>(
                     <div className="flex items-baseline gap-1">
                       <NumberFlow
                         value={getEffectivePrice(plan)}
-                        format={{ style: 'currency', currency: 'USD' }}
+                        format="currency"
                         className="text-3xl font-bold"
                       />
                       <span className="text-muted-foreground">
@@ -239,13 +203,9 @@ const PricingSection = React.forwardRef<HTMLDivElement, PricingSectionProps>(
                   {/* Features */}
                   <div className="space-y-3">
                     {plan.features.map((feature, featureIndex) => (
-                      <motion.div
+                      <div
                         key={featureIndex}
                         className="flex items-start gap-3"
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 * featureIndex }}
                       >
                         <Check 
                           className={cn(
@@ -265,7 +225,7 @@ const PricingSection = React.forwardRef<HTMLDivElement, PricingSectionProps>(
                         >
                           {feature.text}
                         </span>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
 
@@ -279,57 +239,19 @@ const PricingSection = React.forwardRef<HTMLDivElement, PricingSectionProps>(
                     {plan.buttonText}
                   </Button>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 
           {/* Additional Info */}
-          <motion.div 
-            className="text-center mt-12"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-          >
+          <div className="text-center mt-12">
             <p className="text-sm text-muted-foreground">
               All plans include access to our platform, lead generation tools, and dedicated support.
             </p>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Confetti Effect */}
-        {confettiTriggered && (
-          <motion.div
-            className="fixed inset-0 pointer-events-none z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Simple confetti-like animation */}
-            {Array.from({ length: 20 }).map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-2 h-2 bg-primary rounded-full"
-                initial={{
-                  x: "50vw",
-                  y: "50vh",
-                  scale: 0,
-                }}
-                animate={{
-                  x: `${50 + (Math.random() - 0.5) * 100}vw`,
-                  y: `${50 + (Math.random() - 0.5) * 100}vh`,
-                  scale: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  delay: i * 0.1,
-                  ease: "easeOut",
-                }}
-              />
-            ))}
-          </motion.div>
-        )}
-      </motion.div>
+      </div>
     );
   }
 );

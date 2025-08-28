@@ -111,6 +111,7 @@ const Listbox = React.forwardRef<HTMLDivElement, ListboxProps>(
       onSelectionChange,
       topContent,
       bottomContent,
+      isVirtualized,
       children,
       ...props
     },

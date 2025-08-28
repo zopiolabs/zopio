@@ -44,7 +44,7 @@ const Marquee = React.forwardRef<HTMLDivElement, MarqueeProps>(
       className,
       children,
       direction = "left",
-      speed = 50,
+      speed = 4.23,
       gap = 16,
       fade = true,
       reverse = false,

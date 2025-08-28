@@ -217,13 +217,66 @@ const simpleListData: ListData = {
  * Basic List with default settings.
  */
 export const Default: Story = {
-  render: () => (
-    <div className="h-96 w-full overflow-auto">
-      <List data={sampleListData}>
-        <ListContainer />
-      </List>
-    </div>
-  ),
+  render: () => {
+    const [listData, setListData] = useState<ListData>(sampleListData);
+
+    const handleItemMove = (
+      itemId: string,
+      sourceGroupId: string,
+      destinationGroupId: string,
+      destinationIndex: number
+    ) => {
+      setListData((prev) => {
+        // Find the item to move
+        let itemToMove: ListItemType | null = null;
+        const newGroups = prev.groups.map((group) => {
+          if (group.id === sourceGroupId) {
+            const itemIndex = group.items.findIndex(
+              (item) => item.id === itemId
+            );
+            if (itemIndex !== -1) {
+              itemToMove = group.items[itemIndex];
+              return {
+                ...group,
+                items: group.items.filter((item) => item.id !== itemId),
+              };
+            }
+          }
+          return group;
+        });
+
+        // Add the item to the destination group
+        if (itemToMove) {
+          const updatedGroups = newGroups.map((group) => {
+            if (group.id === destinationGroupId) {
+              const newItems = [...group.items];
+              newItems.splice(destinationIndex, 0, itemToMove as ListItemType);
+              return {
+                ...group,
+                items: newItems,
+              };
+            }
+            return group;
+          });
+
+          return {
+            ...prev,
+            groups: updatedGroups,
+          };
+        }
+
+        return prev;
+      });
+    };
+
+    return (
+      <div className="h-full w-full overflow-auto">
+        <List data={listData} onItemMove={handleItemMove}>
+          <ListContainer />
+        </List>
+      </div>
+    );
+  },
 };
 
 /**
@@ -303,7 +356,7 @@ export const Sizes: Story = {
  */
 export const ReadOnly: Story = {
   render: () => (
-    <div className="h-96 w-full overflow-auto">
+    <div className="h-full w-full overflow-auto">
       <List data={sampleListData} readonly>
         <ListHeader>
           <h3 className="font-semibold">Project Tasks (Read-Only)</h3>
@@ -320,7 +373,7 @@ export const ReadOnly: Story = {
  */
 export const Simple: Story = {
   render: () => (
-    <div className="h-64 w-full overflow-auto">
+    <div className="h-full w-full overflow-auto">
       <List data={simpleListData}>
         <ListContainer />
       </List>
@@ -379,7 +432,7 @@ export const TaskManagement: Story = {
     );
 
     return (
-      <div className="h-96 w-full overflow-auto">
+      <div className="h-full w-full overflow-auto">
         <List
           data={listData}
           onItemAdd={handleItemAdd}
@@ -502,7 +555,7 @@ export const BugTracking: Story = {
     };
 
     return (
-      <div className="h-96 w-full overflow-auto">
+      <div className="h-full w-full overflow-auto">
         <List data={bugListData}>
           <ListHeader>
             <div>
@@ -639,7 +692,7 @@ export const FeatureDevelopment: Story = {
     };
 
     return (
-      <div className="h-96 w-full overflow-auto">
+      <div className="h-full w-full overflow-auto">
         <List data={featureListData}>
           <ListHeader>
             <div>
@@ -746,7 +799,7 @@ export const ContentCreation: Story = {
     };
 
     return (
-      <div className="h-96 w-full overflow-auto">
+      <div className="h-full w-full overflow-auto">
         <List data={contentListData}>
           <ListHeader>
             <div>
@@ -860,7 +913,7 @@ export const CollapsibleGroups: Story = {
     };
 
     return (
-      <div className="h-96 w-full overflow-auto">
+      <div className="h-full w-full overflow-auto">
         <List data={collapsibleData}>
           <ListHeader>
             <h3 className="font-semibold">Task List with Collapsible Groups</h3>
@@ -939,7 +992,7 @@ const ListInfo = () => {
 export const WithContext: Story = {
   render: () => (
     <div className="space-y-4">
-      <div className="h-64 w-full overflow-auto">
+      <div className="h-full w-full overflow-auto">
         <List data={simpleListData}>
           <ListContainer />
           <ListInfo />
