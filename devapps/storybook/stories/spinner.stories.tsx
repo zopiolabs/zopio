@@ -143,13 +143,13 @@ export const CenteredLoading: Story = {
 export const InlineSpinner: Story = {
   render: () => (
     <div className="space-y-4">
-      <p className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-2 text-sm">
         Fetching data <Spinner size="sm" />
-      </p>
-      <p className="flex items-center gap-2 text-sm">
+      </div>
+      <div className="flex items-center gap-2 text-sm">
         <Spinner size="sm" variant="success" />
         Data loaded successfully
-      </p>
+      </div>
     </div>
   ),
 };

@@ -56,11 +56,11 @@ const imageStories = [
   {
     id: '1',
     type: 'image' as const,
-    src: 'https://images.unsplash.com/photo-1494790108755-2616c88c6d3d?w=400&h=600&fit=crop',
+    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     author: {
       name: 'Sarah Johnson',
       avatar:
-        'https://images.unsplash.com/photo-1494790108755-2616c88c6d3d?w=100&h=100&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     },
     title: 'Beautiful sunset',
     timestamp: new Date('2024-01-15T18:30:00'),
@@ -82,11 +82,11 @@ const imageStories = [
   {
     id: '3',
     type: 'image' as const,
-    src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop',
+    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     author: {
       name: 'Emma Wilson',
       avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     },
     title: 'City lights',
     timestamp: new Date('2024-01-14T22:45:00'),
@@ -95,11 +95,11 @@ const imageStories = [
   {
     id: '4',
     type: 'image' as const,
-    src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=600&fit=crop',
+    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     author: {
       name: 'Alex Rodriguez',
       avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     },
     title: 'Mountain adventure',
     timestamp: new Date('2024-01-14T14:20:00'),
@@ -108,11 +108,11 @@ const imageStories = [
   {
     id: '5',
     type: 'image' as const,
-    src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop',
+    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     author: {
       name: 'Lisa Park',
       avatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     },
     title: 'Beach day',
     timestamp: new Date('2024-01-13T16:00:00'),
@@ -128,7 +128,7 @@ const avatarStories = [
     author: {
       name: 'John Doe',
       avatar:
-        'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     },
     timestamp: new Date('2024-01-15T12:30:00'),
     viewed: false,
@@ -140,7 +140,7 @@ const avatarStories = [
     author: {
       name: 'Jane Smith',
       avatar:
-        'https://images.unsplash.com/photo-1494790108755-2616c88c6d3d?w=100&h=100&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     },
     timestamp: new Date('2024-01-15T10:15:00'),
     viewed: true,
@@ -152,7 +152,7 @@ const avatarStories = [
     author: {
       name: 'Bob Johnson',
       avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
     },
     timestamp: new Date('2024-01-14T18:45:00'),
     viewed: false,

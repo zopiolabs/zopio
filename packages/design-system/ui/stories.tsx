@@ -77,7 +77,7 @@ interface StoryItem {
   timestamp?: Date;
 }
 
-interface StoriesProps 
+interface StoriesProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof storiesVariants> {
   stories: StoryItem[];
@@ -110,10 +110,10 @@ export const useStories = () => {
 
 // Main Stories component
 const Stories = React.forwardRef<HTMLDivElement, StoriesProps>(
-  ({ 
-    className, 
-    variant, 
-    size, 
+  ({
+    className,
+    variant,
+    size,
     aspectRatio,
     stories,
     onStoryClick,
@@ -122,32 +122,51 @@ const Stories = React.forwardRef<HTMLDivElement, StoriesProps>(
     autoPlay = false,
     loop = true,
     children,
-    ...props 
+    ...props
   }, ref) => {
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const [isPlaying, setIsPlaying] = React.useState(autoPlay);
     const [isMuted, setIsMuted] = React.useState(false);
     const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
-    const scrollToStory = (index: number) => {
+    // Add global error handler for unhandled promise rejections
+    React.useEffect(() => {
+      const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+        if (event.reason?.name === 'AbortError') {
+          event.preventDefault();
+        }
+      };
+
+      window.addEventListener('unhandledrejection', handleUnhandledRejection);
+      return () => {
+        window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      };
+    }, []);
+
+    const scrollToStory = React.useCallback((index: number) => {
       if (scrollContainerRef.current) {
         const container = scrollContainerRef.current;
         const storyWidth = container.children[0]?.clientWidth || 0;
         const gap = 16; // Default gap
         const scrollPosition = index * (storyWidth + gap);
         
-        container.scrollTo({
-          left: scrollPosition,
-          behavior: 'smooth'
-        });
+        try {
+          container.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+          });
+        } catch (error) {
+          // Handle scroll interruption gracefully
+          console.warn('Scroll operation failed:', error);
+        }
       }
-    };
+    }, []);
 
     const handleStoryClick = (story: StoryItem, index: number) => {
       setCurrentIndex(index);
       scrollToStory(index);
       onStoryClick?.(story, index);
-      
+
       if (!story.viewed) {
         onStoryView?.(story, index);
       }
@@ -199,7 +218,7 @@ const Stories = React.forwardRef<HTMLDivElement, StoriesProps>(
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
-              
+
               <button
                 onClick={handleNext}
                 className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
@@ -212,7 +231,7 @@ const Stories = React.forwardRef<HTMLDivElement, StoriesProps>(
 
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-2"
+            className="flex gap-4 overflow-x-auto scrollbar-hide p-2"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {stories.map((story, index) => (
@@ -251,14 +270,25 @@ const StoryItem = React.forwardRef<HTMLDivElement, StoryItemProps>(
   ({ story, index, size, aspectRatio, onClick, isActive }, ref) => {
     const [imageLoaded, setImageLoaded] = React.useState(false);
     const [hasError, setHasError] = React.useState(false);
+    const isMountedRef = React.useRef(true);
 
-    const handleImageLoad = () => {
-      setImageLoaded(true);
-    };
+    React.useEffect(() => {
+      return () => {
+        isMountedRef.current = false;
+      };
+    }, []);
 
-    const handleImageError = () => {
-      setHasError(true);
-    };
+    const handleImageLoad = React.useCallback(() => {
+      if (isMountedRef.current) {
+        setImageLoaded(true);
+      }
+    }, []);
+
+    const handleImageError = React.useCallback(() => {
+      if (isMountedRef.current) {
+        setHasError(true);
+      }
+    }, []);
 
     return (
       <div
@@ -284,15 +314,15 @@ const StoryItem = React.forwardRef<HTMLDivElement, StoryItemProps>(
         ) : story.type === 'video' ? (
           <StoryVideo story={story} />
         ) : (
-          <StoryImage 
-            story={story} 
+          <StoryImage
+            story={story}
             onLoad={handleImageLoad}
             onError={handleImageError}
             loaded={imageLoaded}
             hasError={hasError}
           />
         )}
-        
+
         <StoryOverlay story={story} />
       </div>
     );
@@ -316,7 +346,7 @@ const StoryAvatar = React.forwardRef<HTMLDivElement, { story: StoryItem }>(
             className="w-full h-full object-cover rounded-full"
           />
         </div>
-        
+
         {!story.viewed && (
           <div className="absolute inset-0 rounded-full border-2 border-gradient-to-r from-pink-500 to-purple-500" />
         )}
@@ -338,6 +368,26 @@ interface StoryImageProps {
 
 const StoryImage = React.forwardRef<HTMLDivElement, StoryImageProps>(
   ({ story, onLoad, onError, loaded, hasError }, ref) => {
+    const isMountedRef = React.useRef(true);
+
+    React.useEffect(() => {
+      return () => {
+        isMountedRef.current = false;
+      };
+    }, []);
+
+    const handleLoad = React.useCallback(() => {
+      if (isMountedRef.current) {
+        onLoad();
+      }
+    }, [onLoad]);
+
+    const handleError = React.useCallback(() => {
+      if (isMountedRef.current) {
+        onError();
+      }
+    }, [onError]);
+
     if (hasError) {
       return (
         <div
@@ -361,8 +411,8 @@ const StoryImage = React.forwardRef<HTMLDivElement, StoryImageProps>(
             'w-full h-full object-cover transition-opacity duration-300',
             loaded ? 'opacity-100' : 'opacity-0'
           )}
-          onLoad={onLoad}
-          onError={onError}
+          onLoad={handleLoad}
+          onError={handleError}
         />
       </div>
     );
@@ -376,19 +426,46 @@ const StoryVideo = React.forwardRef<HTMLDivElement, { story: StoryItem }>(
   ({ story }, ref) => {
     const { isPlaying, isMuted } = useStories();
     const videoRef = React.useRef<HTMLVideoElement>(null);
+    const isMountedRef = React.useRef(true);
 
     React.useEffect(() => {
-      if (videoRef.current) {
-        if (isPlaying) {
-          videoRef.current.play();
-        } else {
-          videoRef.current.pause();
+      return () => {
+        isMountedRef.current = false;
+      };
+    }, []);
+
+    React.useEffect(() => {
+      if (videoRef.current && isMountedRef.current) {
+        const video = videoRef.current;
+        
+        const handlePlay = async () => {
+          try {
+            await video.play();
+          } catch (error: any) {
+            // Silently handle all video play errors including AbortError
+            if (isMountedRef.current && error.name !== 'AbortError') {
+              console.warn('Video play failed:', error);
+            }
+          }
+        };
+
+        try {
+          if (isPlaying) {
+            handlePlay();
+          } else {
+            video.pause();
+          }
+        } catch (error) {
+          // Handle any synchronous errors
+          if (isMountedRef.current) {
+            console.warn('Video control failed:', error);
+          }
         }
       }
     }, [isPlaying]);
 
     React.useEffect(() => {
-      if (videoRef.current) {
+      if (videoRef.current && isMountedRef.current) {
         videoRef.current.muted = isMuted;
       }
     }, [isMuted]);
@@ -402,8 +479,14 @@ const StoryVideo = React.forwardRef<HTMLDivElement, { story: StoryItem }>(
           loop
           muted={isMuted}
           playsInline
+          onError={(e) => {
+            // Silently handle video errors
+            if (isMountedRef.current) {
+              console.warn('Video error:', e);
+            }
+          }}
         />
-        
+
         <div className="absolute top-2 right-2 flex gap-1">
           <div className="p-1 bg-black/50 rounded-full">
             <Play className="h-3 w-3 text-white" />
@@ -442,7 +525,7 @@ const StoryOverlay = React.forwardRef<HTMLDivElement, { story: StoryItem }>(
               )}
             </div>
           </div>
-          
+
           {story.timestamp && (
             <p className="text-white/60 text-xs mt-1">
               {story.timestamp.toLocaleDateString()}
@@ -486,7 +569,7 @@ const StoriesControls = React.forwardRef<HTMLDivElement, StoriesControlsProps>(
             <Play className="h-4 w-4" />
           )}
         </button>
-        
+
         <button
           onClick={() => setIsMuted(!isMuted)}
           className="p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
@@ -498,7 +581,7 @@ const StoriesControls = React.forwardRef<HTMLDivElement, StoriesControlsProps>(
             <Volume2 className="h-4 w-4" />
           )}
         </button>
-        
+
         {children}
       </div>
     );
