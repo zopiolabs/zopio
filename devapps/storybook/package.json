@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.19.9",
     "@dnd-kit/core": "^6.3.1",
     "@emotion/is-prop-valid": "^1.3.1",
     "@hookform/resolvers": "^5.1.1",
