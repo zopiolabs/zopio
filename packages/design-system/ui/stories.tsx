@@ -40,7 +40,7 @@ const storiesVariants = cva(
 );
 
 const storyItemVariants = cva(
-  'relative flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  'relative flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 m-2 p-2',
   {
     variants: {
       size: {
@@ -149,7 +149,7 @@ const Stories = React.forwardRef<HTMLDivElement, StoriesProps>(
         const storyWidth = container.children[0]?.clientWidth || 0;
         const gap = 16; // Default gap
         const scrollPosition = index * (storyWidth + gap);
-        
+
         try {
           container.scrollTo({
             left: scrollPosition,
@@ -344,6 +344,8 @@ const StoryAvatar = React.forwardRef<HTMLDivElement, { story: StoryItem }>(
             src={story.author.avatar}
             alt={story.author.name}
             className="w-full h-full object-cover rounded-full"
+            crossOrigin="anonymous"
+            loading="lazy"
           />
         </div>
 
@@ -392,9 +394,10 @@ const StoryImage = React.forwardRef<HTMLDivElement, StoryImageProps>(
       return (
         <div
           ref={ref}
-          className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground"
+          className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 text-muted-foreground"
         >
-          Failed to load
+          <div className="w-8 h-8 mb-2 rounded-full bg-gray-300" />
+          <span className="text-xs">Image unavailable</span>
         </div>
       );
     }
@@ -413,6 +416,8 @@ const StoryImage = React.forwardRef<HTMLDivElement, StoryImageProps>(
           )}
           onLoad={handleLoad}
           onError={handleError}
+          crossOrigin="anonymous"
+          loading="lazy"
         />
       </div>
     );
@@ -437,7 +442,7 @@ const StoryVideo = React.forwardRef<HTMLDivElement, { story: StoryItem }>(
     React.useEffect(() => {
       if (videoRef.current && isMountedRef.current) {
         const video = videoRef.current;
-        
+
         const handlePlay = async () => {
           try {
             await video.play();
@@ -513,6 +518,8 @@ const StoryOverlay = React.forwardRef<HTMLDivElement, { story: StoryItem }>(
               src={story.author.avatar}
               alt={story.author.name}
               className="w-6 h-6 rounded-full border border-white/20"
+              crossOrigin="anonymous"
+              loading="lazy"
             />
             <div className="flex-1 min-w-0">
               <p className="text-white text-xs font-medium truncate">
