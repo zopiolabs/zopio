@@ -15,6 +15,12 @@ const meta: Meta<typeof WordReveal> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: 200,
+      },
+    },
   },
   argTypes: {
     variant: {

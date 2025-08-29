@@ -26,7 +26,7 @@ const tickerVariants = cva(
 );
 
 interface TickerProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof tickerVariants> {
   symbol: string;
   price: number;
@@ -40,7 +40,7 @@ interface TickerProps
   iconAlt?: string;
 }
 
-const Ticker = React.forwardRef<HTMLDivElement, TickerProps>(
+const Ticker = React.forwardRef<HTMLSpanElement, TickerProps>(
   (
     {
       className,
@@ -94,7 +94,7 @@ const Ticker = React.forwardRef<HTMLDivElement, TickerProps>(
     const changeColor = isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
 
     return (
-      <div
+      <span
         ref={ref}
         className={cn(tickerVariants({ size, className }))}
         {...props}
@@ -124,7 +124,7 @@ const Ticker = React.forwardRef<HTMLDivElement, TickerProps>(
             positive={isPositive}
           />
         )}
-      </div>
+      </span>
     );
   }
 );
@@ -132,7 +132,7 @@ const Ticker = React.forwardRef<HTMLDivElement, TickerProps>(
 Ticker.displayName = "Ticker";
 
 // Ticker Icon component
-interface TickerIconProps extends React.HTMLAttributes<HTMLDivElement> {
+interface TickerIconProps extends React.HTMLAttributes<HTMLSpanElement> {
   src?: string;
   alt?: string;
   symbol: string;
@@ -141,13 +141,13 @@ interface TickerIconProps extends React.HTMLAttributes<HTMLDivElement> {
   error?: boolean;
 }
 
-const TickerIcon = React.forwardRef<HTMLDivElement, TickerIconProps>(
+const TickerIcon = React.forwardRef<HTMLSpanElement, TickerIconProps>(
   ({ className, src, alt, symbol, show, onError, error, ...props }, ref) => {
     if (!show) return null;
 
     if (!src || error) {
       return (
-        <div
+        <span
           ref={ref}
           className={cn(
             "flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground",
@@ -156,19 +156,19 @@ const TickerIcon = React.forwardRef<HTMLDivElement, TickerIconProps>(
           {...props}
         >
           {symbol.slice(0, 2).toUpperCase()}
-        </div>
+        </span>
       );
     }
 
     return (
-      <div ref={ref} className={cn("flex-shrink-0", className)} {...props}>
+      <span ref={ref} className={cn("flex-shrink-0", className)} {...props}>
         <img
           src={src}
           alt={alt || symbol}
           className="h-6 w-6 rounded-full"
           onError={onError}
         />
-      </div>
+      </span>
     );
   }
 );

@@ -470,7 +470,7 @@ export const Composable: Story = {
             </div>
             <div className="mt-1 flex items-center gap-2">
               <TickerPrice currency="USD" locale="en-US">
-                175.41
+                {175.41}
               </TickerPrice>
               <TickerChange
                 value={2.13}
@@ -490,7 +490,7 @@ export const Composable: Story = {
         <div className="flex items-center gap-2">
           <TickerSymbol>MSFT</TickerSymbol>
           <TickerPrice currency="USD" locale="en-US">
-            378.85
+            {378.85}
           </TickerPrice>
         </div>
       </div>

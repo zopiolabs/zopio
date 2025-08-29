@@ -5,6 +5,7 @@
 'use client';
 
 import type * as React from 'react';
+import { useState } from 'react';
 
 import { cn } from '@repo/design-system/lib/utils';
 
@@ -56,14 +57,59 @@ function TableFooter({ className, ...props }: React.ComponentProps<'tfoot'>) {
   );
 }
 
-function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
+interface TableRowProps extends React.ComponentProps<'tr'> {
+  draggable?: boolean;
+  onDragStart?: (e: React.DragEvent<HTMLTableRowElement>) => void;
+  onDragOver?: (e: React.DragEvent<HTMLTableRowElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLTableRowElement>) => void;
+  onDragEnd?: (e: React.DragEvent<HTMLTableRowElement>) => void;
+  isDragOver?: boolean;
+}
+
+function TableRow({ 
+  className, 
+  draggable = false,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
+  isDragOver = false,
+  ...props 
+}: TableRowProps) {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDragStart = (e: React.DragEvent<HTMLTableRowElement>) => {
+    setIsDragging(true);
+    onDragStart?.(e);
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLTableRowElement>) => {
+    setIsDragging(false);
+    onDragEnd?.(e);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>) => {
+    if (draggable) {
+      e.preventDefault();
+    }
+    onDragOver?.(e);
+  };
+
   return (
     <tr
       data-slot="table-row"
       className={cn(
         'border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
+        draggable && 'cursor-move',
+        isDragging && 'opacity-50',
+        isDragOver && 'bg-muted/70',
         className
       )}
+      draggable={draggable}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={onDrop}
+      onDragEnd={handleDragEnd}
       {...props}
     />
   );

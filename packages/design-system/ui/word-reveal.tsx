@@ -73,22 +73,40 @@ const WordReveal = React.forwardRef<HTMLDivElement, WordRevealProps>(
     },
     ref
   ) => {
+    const [isMounted, setIsMounted] = React.useState(false);
+    const animationRef = React.useRef<HTMLDivElement>(null);
     const words = text.split(" ");
 
+    // Ensure component is mounted before animating
+    React.useEffect(() => {
+      setIsMounted(true);
+      return () => {
+        setIsMounted(false);
+        // Cancel any pending animations
+        if (animationRef.current) {
+          const element = animationRef.current;
+          element.getAnimations?.().forEach(animation => {
+            animation.cancel();
+          });
+        }
+      };
+    }, []);
+
     // Container animation variants
-    const containerVariants = {
+    const containerVariants = React.useMemo(() => ({
       hidden: { opacity: 0 },
       visible: {
         opacity: 1,
         transition: {
           staggerChildren: stagger,
           delayChildren: delay,
+          when: "beforeChildren",
         },
       },
-    };
+    }), [stagger, delay]);
 
     // Word animation variants
-    const wordVariants = {
+    const wordVariants = React.useMemo(() => ({
       hidden: {
         opacity: 0,
         y: 20,
@@ -99,12 +117,13 @@ const WordReveal = React.forwardRef<HTMLDivElement, WordRevealProps>(
         y: 0,
         filter: "blur(0px)",
       },
-    };
+    }), [blur]);
 
-    const transition = {
+    const transition = React.useMemo(() => ({
       duration,
       ease: "easeOut" as const,
-    };
+      type: "tween" as const,
+    }), [duration]);
 
     // Check for reduced motion preference
     const prefersReducedMotion = React.useMemo(() => {
@@ -112,8 +131,8 @@ const WordReveal = React.forwardRef<HTMLDivElement, WordRevealProps>(
       return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }, []);
 
-    // If reduced motion is preferred, show text immediately
-    if (prefersReducedMotion) {
+    // If reduced motion is preferred or not mounted, show text immediately
+    if (prefersReducedMotion || !isMounted) {
       return (
         <div
           ref={ref}
@@ -127,12 +146,22 @@ const WordReveal = React.forwardRef<HTMLDivElement, WordRevealProps>(
 
     return (
       <motion.div
-        ref={ref}
+        ref={(node) => {
+          animationRef.current = node;
+          if (typeof ref === 'function') {
+            ref(node);
+          } else if (ref) {
+            ref.current = node;
+          }
+        }}
         className={cn(wordRevealVariants({ variant, size, weight }), className)}
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once, margin: "-50px" }}
+        viewport={{ once, margin: "-50px", amount: 0.1 }}
+        onAnimationComplete={() => {
+          // Animation completed successfully
+        }}
         {...(props as any)}
       >
         {words.map((word, index) => (
@@ -141,6 +170,7 @@ const WordReveal = React.forwardRef<HTMLDivElement, WordRevealProps>(
             variants={wordVariants}
             transition={transition}
             className="inline-block mr-1 last:mr-0"
+            style={{ willChange: "transform, opacity, filter" }}
           >
             {word}
           </motion.span>

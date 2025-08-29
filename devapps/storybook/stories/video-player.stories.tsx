@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Download, Heart, MessageCircle, Share } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { cn } from '@repo/design-system/lib/utils';
 import { Button } from '@repo/design-system/ui/button';
@@ -85,23 +85,25 @@ const samplePoster =
  */
 export const Default: Story = {
   render: () => (
-    <VideoPlayer src={sampleVideo} poster={samplePoster}>
-      <VideoPlayerControls>
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-4">
-            <VideoPlayerPlayButton />
-            <VideoPlayerTime />
+    <div className="w-full max-w-2xl">
+      <VideoPlayer src={sampleVideo} poster={samplePoster} className="w-full">
+        <VideoPlayerControls>
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-4">
+              <VideoPlayerPlayButton />
+              <VideoPlayerTime />
+            </div>
+            <div className="flex items-center gap-4">
+              <VideoPlayerVolume />
+              <VideoPlayerFullscreen />
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <VideoPlayerVolume />
-            <VideoPlayerFullscreen />
+          <div className="px-4 pb-4">
+            <VideoPlayerProgress />
           </div>
-        </div>
-        <div className="px-4 pb-4">
-          <VideoPlayerProgress />
-        </div>
-      </VideoPlayerControls>
-    </VideoPlayer>
+        </VideoPlayerControls>
+      </VideoPlayer>
+    </div>
   ),
 };
 
@@ -251,11 +253,18 @@ export const Variants: Story = {
  */
 export const NoCustomControls: Story = {
   render: () => (
-    <VideoPlayer src={sampleVideo} poster={samplePoster} controls={false}>
-      <VideoPlayerControls position="overlay">
-        <VideoPlayerPlayButton />
-      </VideoPlayerControls>
-    </VideoPlayer>
+    <div className="w-full max-w-2xl">
+      <VideoPlayer
+        src={sampleVideo}
+        poster={samplePoster}
+        controls={false}
+        className="w-full"
+      >
+        <VideoPlayerControls position="overlay">
+          <VideoPlayerPlayButton />
+        </VideoPlayerControls>
+      </VideoPlayer>
+    </div>
   ),
 };
 
@@ -264,23 +273,32 @@ export const NoCustomControls: Story = {
  */
 export const AutoPlay: Story = {
   render: () => (
-    <VideoPlayer src={sampleVideo} poster={samplePoster} autoPlay muted loop>
-      <VideoPlayerControls>
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-4">
-            <VideoPlayerPlayButton />
-            <VideoPlayerTime />
+    <div className="w-full max-w-2xl">
+      <VideoPlayer
+        src={sampleVideo}
+        poster={samplePoster}
+        autoPlay
+        muted
+        loop
+        className="w-full"
+      >
+        <VideoPlayerControls>
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-4">
+              <VideoPlayerPlayButton />
+              <VideoPlayerTime />
+            </div>
+            <div className="flex items-center gap-4">
+              <VideoPlayerVolume />
+              <VideoPlayerFullscreen />
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <VideoPlayerVolume />
-            <VideoPlayerFullscreen />
+          <div className="px-4 pb-4">
+            <VideoPlayerProgress />
           </div>
-        </div>
-        <div className="px-4 pb-4">
-          <VideoPlayerProgress />
-        </div>
-      </VideoPlayerControls>
-    </VideoPlayer>
+        </VideoPlayerControls>
+      </VideoPlayer>
+    </div>
   ),
 };
 
@@ -289,26 +307,28 @@ export const AutoPlay: Story = {
  */
 export const WithSettings: Story = {
   render: () => (
-    <VideoPlayer src={sampleVideo} poster={samplePoster}>
-      <VideoPlayerControls>
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-4">
-            <VideoPlayerPlayButton />
-            <VideoPlayerTime />
+    <div className="w-full max-w-2xl">
+      <VideoPlayer src={sampleVideo} poster={samplePoster} className="w-full">
+        <VideoPlayerControls>
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-4">
+              <VideoPlayerPlayButton />
+              <VideoPlayerTime />
+            </div>
+            <div className="flex items-center gap-4">
+              <VideoPlayerVolume />
+              <VideoPlayerSettings>
+                <VideoPlayerPlaybackRate />
+              </VideoPlayerSettings>
+              <VideoPlayerFullscreen />
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <VideoPlayerVolume />
-            <VideoPlayerSettings>
-              <VideoPlayerPlaybackRate />
-            </VideoPlayerSettings>
-            <VideoPlayerFullscreen />
+          <div className="px-4 pb-4">
+            <VideoPlayerProgress />
           </div>
-        </div>
-        <div className="px-4 pb-4">
-          <VideoPlayerProgress />
-        </div>
-      </VideoPlayerControls>
-    </VideoPlayer>
+        </VideoPlayerControls>
+      </VideoPlayer>
+    </div>
   ),
 };
 
@@ -319,8 +339,8 @@ export const EducationalVideo: Story = {
   render: () => (
     <div className="w-full max-w-4xl space-y-4">
       <div className="rounded-lg bg-card p-6">
-        <div className="mb-4 flex items-start justify-between">
-          <div>
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
             <h2 className="mb-2 font-bold text-xl">
               Introduction to React Hooks
             </h2>
@@ -329,7 +349,7 @@ export const EducationalVideo: Story = {
               tutorial.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:shrink-0">
             <span className="rounded bg-primary/10 px-2 py-1 text-primary text-sm">
               Lesson 1
             </span>
@@ -337,7 +357,12 @@ export const EducationalVideo: Story = {
           </div>
         </div>
 
-        <VideoPlayer size="lg" src={sampleVideo} poster={samplePoster}>
+        <VideoPlayer
+          size="lg"
+          src={sampleVideo}
+          poster={samplePoster}
+          className="w-full"
+        >
           <VideoPlayerControls>
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-4">
@@ -358,8 +383,8 @@ export const EducationalVideo: Story = {
           </VideoPlayerControls>
         </VideoPlayer>
 
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
             <Button className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground">
               <Heart className="h-4 w-4" />
               Like
@@ -397,6 +422,7 @@ export const ProductDemo: Story = {
           variant="minimal"
           src={sampleVideo}
           poster={samplePoster}
+          className="w-full"
         >
           <VideoPlayerControls>
             <div className="flex items-center justify-between p-4">
@@ -424,8 +450,8 @@ export const ProductDemo: Story = {
             they can improve your workflow.
           </p>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               <span className="text-muted-foreground text-sm">
                 Duration: 5:42
               </span>
@@ -455,21 +481,56 @@ export const ProductDemo: Story = {
 export const PlaylistPlayer: Story = {
   render: () => {
     const [currentVideo, setCurrentVideo] = useState(0);
+    const videoPlayerRef = React.useRef<HTMLDivElement>(null);
 
     const playlist = [
-      { title: 'Introduction', duration: '2:30', src: sampleVideo },
-      { title: 'Getting Started', duration: '5:15', src: sampleVideo },
-      { title: 'Advanced Features', duration: '8:45', src: sampleVideo },
-      { title: 'Best Practices', duration: '6:20', src: sampleVideo },
+      {
+        title: 'Introduction',
+        duration: '2:30',
+        src: sampleVideo,
+        startTime: 150,
+      }, // 2:30 in seconds
+      {
+        title: 'Getting Started',
+        duration: '5:15',
+        src: sampleVideo,
+        startTime: 315,
+      }, // 5:15 in seconds
+      {
+        title: 'Advanced Features',
+        duration: '8:45',
+        src: sampleVideo,
+        startTime: 525,
+      }, // 8:45 in seconds
+      {
+        title: 'Best Practices',
+        duration: '6:20',
+        src: sampleVideo,
+        startTime: 380,
+      }, // 6:20 in seconds
     ];
 
+    const handleVideoSelect = (index: number) => {
+      setCurrentVideo(index);
+
+      // Seek to the start time after a short delay to ensure video is loaded
+      setTimeout(() => {
+        const videoElement = videoPlayerRef.current?.querySelector('video');
+        if (videoElement && playlist[index].startTime > 0) {
+          videoElement.currentTime = playlist[index].startTime;
+        }
+      }, 100);
+    };
+
     return (
-      <div className="flex w-full max-w-5xl gap-6">
-        <div className="flex-1">
+      <div className="flex w-full max-w-5xl flex-col gap-6 md:flex-row">
+        <div className="min-w-0 flex-1">
           <VideoPlayer
+            ref={videoPlayerRef}
             size="lg"
             src={playlist[currentVideo].src}
             poster={samplePoster}
+            className="w-full"
           >
             <VideoPlayerControls>
               <div className="flex items-center justify-between p-4">
@@ -501,13 +562,14 @@ export const PlaylistPlayer: Story = {
           </div>
         </div>
 
-        <div className="w-80">
+        <div className="w-full md:w-80 md:shrink-0">
           <h4 className="mb-3 font-semibold">Playlist</h4>
           <div className="space-y-2">
             {playlist.map((video, index) => (
-              <Button
+              <button
                 key={index}
-                onClick={() => setCurrentVideo(index)}
+                type="button"
+                onClick={() => handleVideoSelect(index)}
                 className={cn(
                   'w-full rounded-lg border p-3 text-left transition-colors',
                   currentVideo === index
@@ -516,17 +578,17 @@ export const PlaylistPlayer: Story = {
                 )}
               >
                 <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">{video.title}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate font-medium">{video.title}</div>
                     <div className="text-muted-foreground text-sm">
                       {index + 1}. {video.duration}
                     </div>
                   </div>
                   {currentVideo === index && (
-                    <div className="h-2 w-2 rounded-full bg-primary" />
+                    <div className="ml-2 h-2 w-2 shrink-0 rounded-full bg-primary" />
                   )}
                 </div>
-              </Button>
+              </button>
             ))}
           </div>
         </div>
@@ -541,7 +603,12 @@ export const PlaylistPlayer: Story = {
 export const LiveStream: Story = {
   render: () => (
     <div className="w-full max-w-4xl space-y-4">
-      <VideoPlayer size="lg" src={sampleVideo} poster={samplePoster}>
+      <VideoPlayer
+        size="lg"
+        src={sampleVideo}
+        poster={samplePoster}
+        className="w-full"
+      >
         <div className="absolute top-4 left-4">
           <div className="flex items-center gap-2 rounded-full bg-red-600 px-3 py-1 font-medium text-sm text-white">
             <div className="h-2 w-2 animate-pulse rounded-full bg-white" />
@@ -564,20 +631,20 @@ export const LiveStream: Story = {
       </VideoPlayer>
 
       <div className="rounded-lg bg-card p-6">
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
             <h3 className="mb-2 font-semibold text-lg">Weekly Tech Talk</h3>
             <p className="mb-4 text-muted-foreground">
               Join us for our weekly discussion about the latest in web
               development and React.
             </p>
-            <div className="flex items-center gap-4 text-muted-foreground text-sm">
+            <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm sm:gap-4">
               <span>Started 15 minutes ago</span>
               <span>•</span>
               <span>1,234 viewers</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:shrink-0">
             <Button className="rounded bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
               Follow
             </Button>
@@ -596,30 +663,32 @@ export const LiveStream: Story = {
  */
 export const CustomOverlay: Story = {
   render: () => (
-    <VideoPlayer src={sampleVideo} poster={samplePoster}>
-      <VideoPlayerControls position="overlay">
-        <div className="flex flex-col items-center gap-4">
-          <VideoPlayerPlayButton className="h-16 w-16" />
-          <div className="text-center text-white">
-            <h3 className="mb-1 font-semibold text-lg">Click to Play</h3>
-            <p className="text-sm opacity-80">High-quality video content</p>
+    <div className="w-full max-w-2xl">
+      <VideoPlayer src={sampleVideo} poster={samplePoster} className="w-full">
+        <VideoPlayerControls position="overlay">
+          <div className="flex flex-col items-center gap-4">
+            <VideoPlayerPlayButton className="h-16 w-16" />
+            <div className="text-center text-white">
+              <h3 className="mb-1 font-semibold text-lg">Click to Play</h3>
+              <p className="text-sm opacity-80">High-quality video content</p>
+            </div>
           </div>
-        </div>
-      </VideoPlayerControls>
+        </VideoPlayerControls>
 
-      <VideoPlayerControls position="bottom">
-        <div className="flex items-center justify-between p-4">
-          <VideoPlayerTime />
-          <div className="flex items-center gap-4">
-            <VideoPlayerVolume />
-            <VideoPlayerFullscreen />
+        <VideoPlayerControls position="bottom">
+          <div className="flex items-center justify-between p-4">
+            <VideoPlayerTime />
+            <div className="flex items-center gap-4">
+              <VideoPlayerVolume />
+              <VideoPlayerFullscreen />
+            </div>
           </div>
-        </div>
-        <div className="px-4 pb-4">
-          <VideoPlayerProgress />
-        </div>
-      </VideoPlayerControls>
-    </VideoPlayer>
+          <div className="px-4 pb-4">
+            <VideoPlayerProgress />
+          </div>
+        </VideoPlayerControls>
+      </VideoPlayer>
+    </div>
   ),
 };
 
@@ -679,7 +748,7 @@ const VideoPlayerInfo = () => {
 export const WithContext: Story = {
   render: () => (
     <div className="w-full max-w-2xl space-y-4">
-      <VideoPlayer src={sampleVideo} poster={samplePoster}>
+      <VideoPlayer src={sampleVideo} poster={samplePoster} className="w-full">
         <VideoPlayerControls>
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-4">

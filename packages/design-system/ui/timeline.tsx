@@ -75,6 +75,13 @@ const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(
   ) => {
     const [showAll, setShowAll] = React.useState(false);
     const [visibleItems] = React.useState(initialCount);
+    const [isMounted, setIsMounted] = React.useState(false);
+
+    // Ensure component is mounted before showing animations
+    React.useEffect(() => {
+      setIsMounted(true);
+      return () => setIsMounted(false);
+    }, []);
 
     // Sort items by date (newest first)
     const sortedItems = React.useMemo(() => {
@@ -122,6 +129,14 @@ const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(
           ease, // tuple satisfies Easing type
         },
       },
+      exit: {
+        opacity: 0,
+        x: -20,
+        scale: 0.95,
+        transition: {
+          duration: animationDuration * 0.5,
+        },
+      },
     };
 
     return (
@@ -131,20 +146,23 @@ const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(
         {...props}
       >
         <motion.div
-          variants={showAnimation ? containerVariants : undefined}
-          initial={showAnimation ? "hidden" : undefined}
-          animate={showAnimation ? "visible" : undefined}
+          variants={showAnimation && isMounted ? containerVariants : undefined}
+          initial={showAnimation && isMounted ? "hidden" : undefined}
+          animate={showAnimation && isMounted ? "visible" : undefined}
           className="space-y-8"
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {displayedItems.map((item, index) => {
               const isLast = index === displayedItems.length - 1;
+              const itemKey = `timeline-item-${item.date}-${item.title.replace(/\s+/g, '-').toLowerCase()}`;
 
               return (
                 <motion.div
-                  key={`${item.date}-${item.title}-${index}`}
+                  key={itemKey}
                   variants={showAnimation ? itemVariants : undefined}
-                  layout
+                  initial={showAnimation ? "hidden" : undefined}
+                  animate={showAnimation ? "visible" : undefined}
+                  exit={showAnimation ? "exit" : undefined}
                   className="group relative flex gap-4"
                 >
                   {/* Timeline line */}
@@ -227,7 +245,7 @@ const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(
           <motion.div
             initial={showAnimation ? { opacity: 0, y: 10 } : undefined}
             animate={showAnimation ? { opacity: 1, y: 0 } : undefined}
-            transition={showAnimation ? { delay: 0.2 } : undefined}
+            transition={showAnimation ? { delay: 0.2, duration: animationDuration } : undefined}
             className="flex justify-center pt-4"
           >
             <Button
