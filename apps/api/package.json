@@ -28,8 +28,8 @@
     "@t3-oss/env-nextjs": "^0.13.4",
     "@trigger.dev/sdk": "^2.2.0",
     "next": "15.3.3",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "svix": "^1.66.0",
     "vitest": "^3.1.4",
     "zod": "^3.25.28"
@@ -37,8 +37,8 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "24.0.13",
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6",
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
     "@vitejs/plugin-react": "^4.6.0",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
