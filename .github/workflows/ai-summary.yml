@@ -50,7 +50,7 @@ jobs:
       # The ID is used to reference the output in subsequent steps
       - name: Run AI inference
         id: inference
-        uses: actions/ai-inference@v1
+        uses: actions/ai-inference@v2
         with:
           # Prompt instructs the AI to focus on key points and ignore minor details
           # This ensures the summary is brief but captures the essential information
