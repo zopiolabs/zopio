@@ -174,7 +174,7 @@ jobs:
       - name: Validate PR title format
         # Only run on PR events (not on branch creation)
         if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
-        uses: amannn/action-semantic-pull-request@v5
+        uses: amannn/action-semantic-pull-request@v6
         id: semantic  # ID used to reference this step in later steps if needed
         env:
           # Token for GitHub API access to comment on PRs
