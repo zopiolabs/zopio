@@ -107,7 +107,7 @@ jobs:
     steps:
     # Step 1: Check out the repository code for analysis
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     # Step 2: Initialize the CodeQL analysis engine
     # This sets up the CodeQL database and prepares for code scanning
@@ -142,7 +142,7 @@ jobs:
     steps:
       # Step 1: Check out the repository code for scanning
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Run Trivy scanner to identify vulnerabilities in dependencies
       # Trivy is a comprehensive vulnerability scanner that can detect issues in
@@ -176,7 +176,7 @@ jobs:
       # Complete git history is required to detect secrets that may have been
       # committed in the past and still pose a security risk
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0  # Full history needed for accurate secret detection across all commits
           # No need for --unshallow as fetch-depth: 0 already gets the complete history
@@ -205,7 +205,7 @@ jobs:
     steps:
       # Step 1: Check out the repository code
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Build the Docker image for scanning if a Dockerfile exists
       # This creates a local image that will be analyzed for vulnerabilities

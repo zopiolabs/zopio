@@ -46,7 +46,7 @@ jobs:
       # Step 1: Check out the repository code
       # This gets the latest code from the main branch
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Fetch complete git history for accurate versioning
       # Auto requires full history to determine the correct version bump

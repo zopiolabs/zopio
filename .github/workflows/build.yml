@@ -42,7 +42,7 @@ jobs:
       # This step clones the repository code to the GitHub Actions runner
       # We set fetch-depth: 0 to get the complete history for versioning tools
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0  # Fetch all history for all branches and tags
 

@@ -43,7 +43,7 @@ jobs:
       # This is required to access repository files and configuration
       # though for this workflow we don't directly use repository content
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Generate AI summary using GitHub's AI inference API
       # This step processes the issue title and body to create a concise summary

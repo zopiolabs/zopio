@@ -112,7 +112,7 @@ jobs:
       # Step 1: Check out the repository to access CODEOWNERS file
       # We need the full repository content to properly analyze ownership rules
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0  # Full history to ensure we have all necessary files
 
