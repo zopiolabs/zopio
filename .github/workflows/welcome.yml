@@ -44,7 +44,7 @@ jobs:
       # Use GitHub's official first-interaction action
       # This action automatically detects if this is the user's first contribution
       # and only posts the welcome message for genuine first-time contributors
-      - uses: actions/first-interaction@v1
+      - uses: actions/first-interaction@v3
         with:
           # Authentication token to post comments on issues and PRs
           # Using GITHUB_TOKEN to avoid rate limiting and permission issues
