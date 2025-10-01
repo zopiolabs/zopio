@@ -61,7 +61,7 @@ jobs:
       # Step 1: Assign the PR to the person who created it
       # This ensures the author remains responsible for addressing feedback
       - name: Assign PR to author
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -120,7 +120,7 @@ jobs:
       # This step parses the CODEOWNERS file and matches it against changed files
       # to determine the appropriate reviewers for the PR
       - name: Assign reviewers based on CODEOWNERS
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           # Authentication token to access PR data and assign reviewers
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -303,7 +303,7 @@ jobs:
       # This provides transparency about the automated assignment process
       # and helps contributors understand who will be reviewing their code
       - name: Add reviewer assignment comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           # Authentication token to post comments on the PR
           github-token: ${{ secrets.GITHUB_TOKEN }}
