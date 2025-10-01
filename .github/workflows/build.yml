@@ -61,7 +61,7 @@ jobs:
       # Step 4: Set up Node.js environment with caching
       # Using Node.js 20 for modern features and performance
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: pnpm  # Enable built-in caching for pnpm
