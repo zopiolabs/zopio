@@ -67,7 +67,7 @@ jobs:
         # Run this check for PRs and when new branches are created
         # This provides early feedback on branch naming issues
         if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target' || github.event_name == 'create'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const branchName = context.payload.pull_request?.head?.ref || context.ref.replace('refs/heads/', '');
@@ -233,7 +233,7 @@ jobs:
       - name: Check for breaking changes documentation
         # Only run on PR events (not on branch creation)
         if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const title = context.payload.pull_request.title;
@@ -277,7 +277,7 @@ jobs:
       - name: Check PR size
         # Only run on PR events (not on branch creation)
         if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { data: pullRequest } = await github.rest.pulls.get({
@@ -362,7 +362,7 @@ jobs:
       - name: Add validation summary
         # Only run this step if a previous step has failed and we're processing a PR
         if: failure() && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target')
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const validTypes = ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'revert', 'release'];
