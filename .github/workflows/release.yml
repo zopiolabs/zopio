@@ -57,7 +57,7 @@ jobs:
       # Step 3: Set up Node.js environment
       # Using the latest LTS version for compatibility and performance
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
 
       # Step 4: Set up pnpm package manager
       # Using pnpm for faster, more efficient dependency management
