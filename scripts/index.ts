@@ -6,6 +6,7 @@
 
 import { Command } from 'commander';
 import { initialize } from './initialize.js';
+import { projectSetup } from './project-setup.js';
 import { update } from './update.js';
 
 // @ts-expect-error: Command is imported as a type but used as a value
@@ -21,6 +22,13 @@ program
   )
   .option('--disable-git', 'Disable git initialization')
   .action(initialize);
+
+program
+  .command('project:setup')
+  .description(
+    'Run interactive project setup for this Zopio monorepo'
+  )
+  .action(projectSetup);
 
 program
   .command('update')
