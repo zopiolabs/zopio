@@ -15,6 +15,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit"
   },
