@@ -1,0 +1,74 @@
+{
+  "category": "Tools",
+  "name": "Project Setup MCP",
+  "definition": "MCP server for interactive Zopio project setup and bootstrapping in the monorepo",
+  "importCode": "import { createProjectSetupServer, ProjectSetupMCPServer } from '@repo/project-setup-mcp';",
+  "modules": [
+    {
+      "category": "Server",
+      "name": "Setup Server",
+      "definition": "MCP server that orchestrates the project setup workflow",
+      "importCode": "import { createProjectSetupServer, ProjectSetupMCPServer } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "Session Schema",
+      "definition": "Schema for setup session resources tracking interview state",
+      "importCode": "import { setupSessionSchema, SessionStatus, SetupSession } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "Profile Schema",
+      "definition": "Schema for project profile resources with metadata and configuration",
+      "importCode": "import { projectProfileSchema, ProjectProfile, TargetUserType, TenancyModel } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "Plan Schema",
+      "definition": "Schema for setup plan resources describing intended changes",
+      "importCode": "import { setupPlanSchema, SetupPlan, PlannedChange } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Schemas",
+      "name": "Changeset Schema",
+      "definition": "Schema for applied changeset resources recording actual modifications",
+      "importCode": "import { appliedChangesetSchema, AppliedChangeset } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Interview",
+      "name": "Interview State Machine",
+      "definition": "State machine for managing the interactive setup interview",
+      "importCode": "import { InterviewStateMachine, INTERVIEW_QUESTIONS, getTotalSteps } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Generator",
+      "name": "Plan Generator",
+      "definition": "Generates setup plans from completed project profiles",
+      "importCode": "import { generateSetupPlan, getPlanSummary } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Applicator",
+      "name": "Plan Applicator",
+      "definition": "Applies setup plans to the filesystem idempotently",
+      "importCode": "import { applySetupPlan, getChangesetSummary } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Templates",
+      "name": "Prisma Templates",
+      "definition": "Generates Prisma schema based on project configuration",
+      "importCode": "import { generatePrismaSchema, describePrismaSchema } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Templates",
+      "name": "Environment Templates",
+      "definition": "Generates .env template files for apps and packages",
+      "importCode": "import { generateEnvTemplate, getRequiredEnvVars } from '@repo/project-setup-mcp';"
+    },
+    {
+      "category": "Templates",
+      "name": "Wiring Templates",
+      "definition": "Generates integration code for rate limiting, storage, and analytics",
+      "importCode": "import { generateRateLimitMiddleware, generateStorageUtil, generateAnalyticsProvider } from '@repo/project-setup-mcp';"
+    }
+  ]
+}

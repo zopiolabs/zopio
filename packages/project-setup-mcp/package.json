@@ -1,0 +1,40 @@
+{
+  "name": "@repo/project-setup-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "description": "MCP server for interactive Zopio project setup and bootstrapping",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate": "tsx scripts/validate-setup.ts",
+    "validate:dry": "tsx scripts/validate-setup.ts --dry-run"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@repo/mcp": "workspace:*",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "24.0.13",
+    "tsup": "^8.0.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.5",
+    "vitest": "^3.1.4"
+  }
+}
