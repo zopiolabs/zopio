@@ -82,8 +82,19 @@ export class PlanExecutor {
       if (!section.trim()) {
         continue;
       }
-      const firstLine = section.split('\n')[0];
-      if (!existing.includes(firstLine)) {
+
+      // Extract keys from the section
+      const keys = section
+        .split('\n')
+        .map((line) => line.split('=')[0].trim())
+        .filter((key) => key && !key.startsWith('#'));
+
+      // If any key exists in existing content, skip the whole section to avoid duplication
+      const hasExistingKey = keys.some((key) =>
+        new RegExp(`^${key}=`, 'm').test(existing)
+      );
+
+      if (!hasExistingKey) {
         newContent += `\n${section}\n`;
         updated = true;
       }
