@@ -55,6 +55,7 @@
     "@commitlint/cli": "^19.0.3",
     "@commitlint/config-conventional": "^19.0.3",
     "@repo/typescript-config": "workspace:*",
+    "@repo/project-setup-mcp": "workspace:*",
     "@turbo/gen": "^2.5.3",
     "@types/node": "^24.0.13",
     "cross-env": "^7.0.3",

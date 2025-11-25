@@ -7,8 +7,8 @@
 import { Command } from 'commander';
 import { initialize } from './initialize.js';
 import { update } from './update.js';
+import { projectSetup } from './project-setup.js';
 
-// @ts-expect-error: Command is imported as a type but used as a value
 const program = new Command();
 
 program
@@ -28,5 +28,10 @@ program
   .option('--from <version>', 'Version to update from e.g. 1.0.0')
   .option('--to <version>', 'Version to update to e.g. 2.0.0')
   .action(update);
+
+program
+  .command('project:setup')
+  .description('Setup a new Zopio project interactively')
+  .action(projectSetup);
 
 program.parse(process.argv);
