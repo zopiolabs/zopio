@@ -115,6 +115,18 @@ _Each module must include a `zopio.module.json` manifest file describing its typ
 
 ---
 
+## Parlant Pilot (test/parlant branch)
+
+- Backend server: `apps/parlant-server` runs a Python Parlant server (via `main.py` and `parlant` SDK).
+- Backend proxy: `apps/api/app/parlant/[...path]/route.ts` forwards `/parlant/*` requests to the configured `PARLANT_SERVER_URL` (typically `http://localhost:8800` for the in-repo server).
+- Frontend demos: `apps/app/app/(authenticated)/parlant-demo-internal/page.tsx` and `apps/app/app/(unauthenticated)/parlant-demo/page.tsx` embed the `parlant-chat-react` widget via the proxy.
+- Environment:
+  - `PARLANT_SERVER_URL` for the API app.
+  - `NEXT_PUBLIC_API_URL` for the app → API base URL.
+  - `NEXT_PUBLIC_PARLANT_AGENT_ID` for the Parlant agent used in the pilot.
+
+---
+
 ## ❤️ Join Zopio Community
 
 We’re building Zopio together with developers like you.

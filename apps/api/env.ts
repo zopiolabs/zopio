@@ -10,6 +10,7 @@ import { keys as core } from '@repo/next-config/keys';
 import { keys as observability } from '@repo/observability/keys';
 import { keys as payments } from '@repo/payments/keys';
 import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
 export const env = createEnv({
   extends: [
@@ -21,7 +22,11 @@ export const env = createEnv({
     observability(),
     payments(),
   ],
-  server: {},
+  server: {
+    PARLANT_SERVER_URL: z.string().url().optional(),
+  },
   client: {},
-  runtimeEnv: {},
+  runtimeEnv: {
+    PARLANT_SERVER_URL: process.env.PARLANT_SERVER_URL,
+  },
 });

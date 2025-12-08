@@ -22,7 +22,7 @@
     "format": "ultracite format",
     "lint": "ultracite lint",
     "typecheck": "tsc --noEmit",
-    "lint-staged": "lint-staged",
+    "lint-staged": "lint-staged --concurrent false",
     "check-naming": "node scripts/check-naming.js",
     "// Testing": "",
     "test": "turbo test",
