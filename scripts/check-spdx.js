@@ -1,31 +1,32 @@
 #!/usr/bin/env node
+"use strict";
 /**
  * SPDX-License-Identifier: MIT
  *
  * Script to check and fix SPDX license headers in source files
  */
 
-const fs = require('node:fs');
-const path = require('node:path');
-const readline = require('node:readline');
+const fs = require("node:fs");
+const path = require("node:path");
+const readline = require("node:readline");
 
 // Configuration
 const CONFIG = {
   IGNORE_DIRS: [
-    'node_modules',
-    '.turbo',
-    '.next',
-    '.git',
-    'dist',
-    'out',
-    'build',
-    '.cache',
-    '.bin',
-    'coverage',
+    "node_modules",
+    ".turbo",
+    ".next",
+    ".git",
+    "dist",
+    "out",
+    "build",
+    ".cache",
+    ".bin",
+    "coverage",
   ],
-  ALLOWED_EXTENSIONS: ['.js', '.ts', '.tsx', '.mjs', '.cjs'],
-  SPDX_IDENTIFIER: 'SPDX-License-Identifier',
-  DEFAULT_LICENSE: 'MIT',
+  ALLOWED_EXTENSIONS: [".js", ".ts", ".tsx", ".mjs", ".cjs"],
+  SPDX_IDENTIFIER: "SPDX-License-Identifier",
+  DEFAULT_LICENSE: "MIT",
   MAX_HEADER_LINES: 10,
   BATCH_SIZE: 100, // Process files in batches for progress reporting
 };
@@ -34,27 +35,32 @@ const CONFIG = {
 function detectProjectLicense() {
   // Try to read from LICENSE.md
   try {
-    const licenseContent = fs.readFileSync('LICENSE.md', 'utf-8');
-    const firstLine = licenseContent.split('\n')[0].trim();
+    const licenseContent = fs.readFileSync("LICENSE.md", "utf-8");
+    const firstLine = licenseContent.split("\n")[0].trim();
 
-    if (firstLine.includes('MIT')) {
-      return 'MIT';
-    } else if (firstLine.includes('Apache')) {
-      return firstLine.includes('2.0') ? 'Apache-2.0' : 'Apache';
-    } else if (firstLine.includes('BSD')) {
-      if (firstLine.includes('3-Clause')) {
-        return 'BSD-3-Clause';
-      } else if (firstLine.includes('2-Clause')) {
-        return 'BSD-2-Clause';
+    if (firstLine.includes("MIT")) {
+      return "MIT";
+    }
+    if (firstLine.includes("Apache")) {
+      return firstLine.includes("2.0") ? "Apache-2.0" : "Apache";
+    }
+    if (firstLine.includes("BSD")) {
+      if (firstLine.includes("3-Clause")) {
+        return "BSD-3-Clause";
       }
-      return 'BSD';
-    } else if (firstLine.includes('GPL')) {
-      if (firstLine.includes('v3')) {
-        return 'GPL-3.0';
-      } else if (firstLine.includes('v2')) {
-        return 'GPL-2.0';
+      if (firstLine.includes("2-Clause")) {
+        return "BSD-2-Clause";
       }
-      return 'GPL';
+      return "BSD";
+    }
+    if (firstLine.includes("GPL")) {
+      if (firstLine.includes("v3")) {
+        return "GPL-3.0";
+      }
+      if (firstLine.includes("v2")) {
+        return "GPL-2.0";
+      }
+      return "GPL";
     }
   } catch (e) {
     // LICENSE.md not found or couldn't be read
@@ -62,7 +68,7 @@ function detectProjectLicense() {
 
   // Try to read from package.json
   try {
-    const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+    const packageJson = JSON.parse(fs.readFileSync("package.json", "utf-8"));
     if (packageJson.license) {
       return packageJson.license;
     }
@@ -79,31 +85,34 @@ CONFIG.PROJECT_LICENSE = detectProjectLicense();
 
 // CLI arguments
 const args = process.argv.slice(2);
-const AUTO_FIX = args.includes('--fix');
-const VERBOSE = args.includes('--verbose');
-const HELP = args.includes('--help') || args.includes('-h');
-const SPECIFIC_PATH = args.find(arg => !arg.startsWith('-'));
-const QUIET = args.includes('--quiet');
-const SUMMARY_ONLY = args.includes('--summary');
-const GENERATE_REPORT = args.includes('--report');
-const CI_MODE = args.includes('--ci');
-const STAGED_ONLY = args.includes('--staged');
-const LICENSE = args.find(arg => arg.startsWith('--license='))?.split('=')[1] || CONFIG.PROJECT_LICENSE;
+const AUTO_FIX = args.includes("--fix");
+const VERBOSE = args.includes("--verbose");
+const HELP = args.includes("--help") || args.includes("-h");
+const SPECIFIC_PATH = args.find((arg) => !arg.startsWith("-"));
+const QUIET = args.includes("--quiet");
+const SUMMARY_ONLY = args.includes("--summary");
+const GENERATE_REPORT = args.includes("--report");
+const CI_MODE = args.includes("--ci");
+const STAGED_ONLY = args.includes("--staged");
+const LICENSE =
+  args.find((arg) => arg.startsWith("--license="))?.split("=")[1] ||
+  CONFIG.PROJECT_LICENSE;
 
 // Detect if running in CI environment
-const IS_CI = CI_MODE || process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+const IS_CI =
+  CI_MODE || process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 
 // Colors for terminal output
 const COLORS = {
-  reset: '\x1b[0m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m',
-  white: '\x1b[37m',
-  bold: '\x1b[1m',
+  reset: "\x1b[0m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  magenta: "\x1b[35m",
+  cyan: "\x1b[36m",
+  white: "\x1b[37m",
+  bold: "\x1b[1m",
 };
 
 // Display help message
@@ -166,27 +175,27 @@ function isIgnored(filePath) {
 }
 
 function hasSpdxHeader(fileContent) {
-  const lines = fileContent.split('\n').slice(0, CONFIG.MAX_HEADER_LINES);
+  const lines = fileContent.split("\n").slice(0, CONFIG.MAX_HEADER_LINES);
   return lines.some((line) => line.includes(CONFIG.SPDX_IDENTIFIER));
 }
 
 function getFileType(filePath) {
   const ext = path.extname(filePath);
   switch (ext) {
-    case '.js':
-    case '.ts':
-    case '.tsx':
-    case '.mjs':
-    case '.cjs':
-      return 'javascript';
+    case ".js":
+    case ".ts":
+    case ".tsx":
+    case ".mjs":
+    case ".cjs":
+      return "javascript";
     default:
-      return 'unknown';
+      return "unknown";
   }
 }
 
 function createSpdxHeader(fileType, license) {
   switch (fileType) {
-    case 'javascript':
+    case "javascript":
       return `/**
  * SPDX-License-Identifier: ${license}
  */
@@ -201,7 +210,7 @@ function createSpdxHeader(fileType, license) {
 
 function addSpdxHeader(filePath, license) {
   try {
-    const content = fs.readFileSync(filePath, 'utf-8');
+    const content = fs.readFileSync(filePath, "utf-8");
     if (hasSpdxHeader(content)) return false;
 
     const fileType = getFileType(filePath);
@@ -209,10 +218,10 @@ function addSpdxHeader(filePath, license) {
 
     // Handle shebang if present
     let newContent;
-    if (content.startsWith('#!')) {
-      const lines = content.split('\n');
+    if (content.startsWith("#!")) {
+      const lines = content.split("\n");
       const shebang = lines[0];
-      const rest = lines.slice(1).join('\n');
+      const rest = lines.slice(1).join("\n");
       newContent = `${shebang}\n${header}${rest}`;
     } else {
       newContent = `${header}${content}`;
@@ -281,13 +290,13 @@ function walkDir(dir, fileCallback, progressCallback = null) {
 
 // Logging functions
 function logSuccess(message) {
-  if (!QUIET && !SUMMARY_ONLY) {
+  if (!(QUIET || SUMMARY_ONLY)) {
     console.log(`${COLORS.green}✓${COLORS.reset} ${message}`);
   }
 }
 
 function logWarning(message) {
-  if (!QUIET && !SUMMARY_ONLY) {
+  if (!(QUIET || SUMMARY_ONLY)) {
     console.log(`${COLORS.yellow}!${COLORS.reset} ${message}`);
   }
 }
@@ -306,22 +315,28 @@ function logInfo(message) {
 
 function updateProgress(current, total) {
   const percentage = Math.floor((current / total) * 100);
-  process.stdout.write(`\r${COLORS.cyan}⟳${COLORS.reset} Checking files: ${current}/${total} (${percentage}%)`);
+  process.stdout.write(
+    `\r${COLORS.cyan}⟳${COLORS.reset} Checking files: ${current}/${total} (${percentage}%)`
+  );
   if (current === total) {
-    process.stdout.write('\n');
+    process.stdout.write("\n");
   }
 }
 
 function printSummary() {
-  console.log('\n' + '='.repeat(50));
+  console.log("\n" + "=".repeat(50));
   console.log(`${COLORS.bold}SPDX Header Check Summary${COLORS.reset}`);
-  console.log('='.repeat(50));
+  console.log("=".repeat(50));
   console.log(`Total files scanned: ${stats.checkedFiles}/${stats.totalFiles}`);
 
   if (stats.missingHeaders > 0) {
-    console.log(`${COLORS.yellow}Missing headers: ${stats.missingHeaders}${COLORS.reset}`);
+    console.log(
+      `${COLORS.yellow}Missing headers: ${stats.missingHeaders}${COLORS.reset}`
+    );
   } else {
-    console.log(`${COLORS.green}Missing headers: ${stats.missingHeaders}${COLORS.reset}`);
+    console.log(
+      `${COLORS.green}Missing headers: ${stats.missingHeaders}${COLORS.reset}`
+    );
   }
 
   if (AUTO_FIX) {
@@ -329,10 +344,12 @@ function printSummary() {
   }
 
   if (stats.errors > 0) {
-    console.log(`${COLORS.red}Errors encountered: ${stats.errors}${COLORS.reset}`);
+    console.log(
+      `${COLORS.red}Errors encountered: ${stats.errors}${COLORS.reset}`
+    );
   }
 
-  console.log('='.repeat(50));
+  console.log("=".repeat(50));
 }
 
 // Main execution
@@ -342,15 +359,15 @@ const missingSpdxFiles = [];
 // Get git staged files if in staged mode
 async function getGitStagedFiles() {
   return new Promise((resolve, reject) => {
-    const { exec } = require('child_process');
-    exec('git diff --cached --name-only', (error, stdout) => {
+    const { exec } = require("child_process");
+    exec("git diff --cached --name-only", (error, stdout) => {
       if (error) {
         console.error(`Error getting staged files: ${error.message}`);
         resolve([]);
         return;
       }
 
-      const files = stdout.trim().split('\n').filter(Boolean);
+      const files = stdout.trim().split("\n").filter(Boolean);
       resolve(files);
     });
   });
@@ -362,12 +379,16 @@ let isFileStaged = () => true; // Default to checking all files
 
 if (STAGED_ONLY) {
   try {
-    const { execSync } = require('child_process');
-    stagedFiles = execSync('git diff --cached --name-only', { encoding: 'utf-8' })
-      .trim().split('\n').filter(Boolean);
+    const { execSync } = require("child_process");
+    stagedFiles = execSync("git diff --cached --name-only", {
+      encoding: "utf-8",
+    })
+      .trim()
+      .split("\n")
+      .filter(Boolean);
 
     if (stagedFiles.length === 0) {
-      if (!QUIET && !CI_MODE) {
+      if (!(QUIET || CI_MODE)) {
         console.log(`${COLORS.yellow}No staged files found.${COLORS.reset}`);
       }
       process.exit(0);
@@ -375,77 +396,87 @@ if (STAGED_ONLY) {
 
     isFileStaged = (file) => stagedFiles.includes(file);
 
-    if (!QUIET && !SUMMARY_ONLY && !CI_MODE) {
-      console.log(`${COLORS.blue}Found ${stagedFiles.length} staged files${COLORS.reset}`);
+    if (!(QUIET || SUMMARY_ONLY || CI_MODE)) {
+      console.log(
+        `${COLORS.blue}Found ${stagedFiles.length} staged files${COLORS.reset}`
+      );
     }
   } catch (error) {
-    console.error(`${COLORS.red}Error getting staged files: ${error.message}${COLORS.reset}`);
+    console.error(
+      `${COLORS.red}Error getting staged files: ${error.message}${COLORS.reset}`
+    );
     process.exit(1);
   }
 }
 
 // Determine the root directory to scan
-const rootDir = SPECIFIC_PATH || '.';
+const rootDir = SPECIFIC_PATH || ".";
 
-if (!QUIET && !SUMMARY_ONLY && !CI_MODE) {
+if (!(QUIET || SUMMARY_ONLY || CI_MODE)) {
   console.log(`${COLORS.bold}SPDX License Header Checker${COLORS.reset}`);
   console.log(`Scanning directory: ${path.resolve(rootDir)}`);
-  console.log(`Project license: ${LICENSE} (${LICENSE === CONFIG.PROJECT_LICENSE ? 'auto-detected' : 'user-specified'})`);
+  console.log(
+    `Project license: ${LICENSE} (${LICENSE === CONFIG.PROJECT_LICENSE ? "auto-detected" : "user-specified"})`
+  );
   if (AUTO_FIX) {
     console.log(`Auto-fix enabled with license: ${LICENSE}`);
   }
   if (STAGED_ONLY) {
     console.log(`Checking ${stagedFiles.length} staged files only`);
   }
-  console.log('');
+  console.log("");
 }
 
-walkDir(rootDir, (filePath) => {
-  const ext = path.extname(filePath);
+walkDir(
+  rootDir,
+  (filePath) => {
+    const ext = path.extname(filePath);
 
-  // Skip if not in staged files when in staged mode
-  if (STAGED_ONLY && !isFileStaged(filePath)) {
-    return;
-  }
-
-  if (CONFIG.ALLOWED_EXTENSIONS.includes(ext) && !isIgnored(filePath)) {
-    stats.checkedFiles++;
-
-    try {
-      const content = fs.readFileSync(filePath, 'utf-8');
-
-      if (!hasSpdxHeader(content)) {
-        stats.missingHeaders++;
-        missingSpdxFiles.push(filePath);
-
-        if (AUTO_FIX) {
-          const fixed = addSpdxHeader(filePath, LICENSE);
-          if (fixed) {
-            stats.fixedFiles++;
-            logInfo(`Fixed: ${filePath}`);
-          }
-        } else {
-          logInfo(`Missing header: ${filePath}`);
-        }
-      } else if (VERBOSE) {
-        logInfo(`OK: ${filePath}`);
-      }
-    } catch (error) {
-      logError(`Error reading ${filePath}: ${error.message}`);
-      stats.errors++;
+    // Skip if not in staged files when in staged mode
+    if (STAGED_ONLY && !isFileStaged(filePath)) {
+      return;
     }
-  }
-}, updateProgress);
+
+    if (CONFIG.ALLOWED_EXTENSIONS.includes(ext) && !isIgnored(filePath)) {
+      stats.checkedFiles++;
+
+      try {
+        const content = fs.readFileSync(filePath, "utf-8");
+
+        if (!hasSpdxHeader(content)) {
+          stats.missingHeaders++;
+          missingSpdxFiles.push(filePath);
+
+          if (AUTO_FIX) {
+            const fixed = addSpdxHeader(filePath, LICENSE);
+            if (fixed) {
+              stats.fixedFiles++;
+              logInfo(`Fixed: ${filePath}`);
+            }
+          } else {
+            logInfo(`Missing header: ${filePath}`);
+          }
+        } else if (VERBOSE) {
+          logInfo(`OK: ${filePath}`);
+        }
+      } catch (error) {
+        logError(`Error reading ${filePath}: ${error.message}`);
+        stats.errors++;
+      }
+    }
+  },
+  updateProgress
+);
 
 // Final output
 if (missingSpdxFiles.length > 0 && !AUTO_FIX) {
   if (!SUMMARY_ONLY) {
-    console.log('\n');
-    logError('Missing SPDX headers in the following files:');
+    console.log("\n");
+    logError("Missing SPDX headers in the following files:");
 
     // Group files by directory for better readability
     const filesByDir = {};
-    missingSpdxFiles.forEach(file => {
+    missingSpdxFiles.forEach((file) => {
       const dir = path.dirname(file);
       if (!filesByDir[dir]) filesByDir[dir] = [];
       filesByDir[dir].push(path.basename(file));
@@ -461,8 +492,8 @@ if (missingSpdxFiles.length > 0 && !AUTO_FIX) {
 
     // Group by top-level directory first
     const topLevelDirs = {};
-    sortedDirs.forEach(dir => {
-      const topDir = dir.split(path.sep)[0] || '.';
+    sortedDirs.forEach((dir) => {
+      const topDir = dir.split(path.sep)[0] || ".";
       if (!topLevelDirs[topDir]) topLevelDirs[topDir] = [];
       topLevelDirs[topDir].push(dir);
     });
@@ -470,14 +501,19 @@ if (missingSpdxFiles.length > 0 && !AUTO_FIX) {
     Object.entries(topLevelDirs).forEach(([topDir, dirs]) => {
       console.log(`${COLORS.bold}${COLORS.magenta}${topDir}/${COLORS.reset}`);
 
-      dirs.forEach(dir => {
+      dirs.forEach((dir) => {
         // Skip printing the top dir again if it's the same
         if (dir !== topDir) {
-          const relativeDir = dir === topDir ? '' : dir.startsWith(topDir) ? dir.substring(topDir.length + 1) : dir;
+          const relativeDir =
+            dir === topDir
+              ? ""
+              : dir.startsWith(topDir)
+                ? dir.substring(topDir.length + 1)
+                : dir;
           console.log(`  ${COLORS.yellow}${relativeDir}${COLORS.reset}`);
         }
 
-        filesByDir[dir].sort().forEach(file => {
+        filesByDir[dir].sort().forEach((file) => {
           console.log(`    - ${file}`);
         });
       });
@@ -488,21 +524,25 @@ if (missingSpdxFiles.length > 0 && !AUTO_FIX) {
 
   if (AUTO_FIX) {
     if (stats.fixedFiles === stats.missingHeaders) {
-      logSuccess('All files fixed successfully');
+      logSuccess("All files fixed successfully");
       process.exit(0);
     } else {
-      logError(`Fixed ${stats.fixedFiles}/${stats.missingHeaders} files with issues`);
+      logError(
+        `Fixed ${stats.fixedFiles}/${stats.missingHeaders} files with issues`
+      );
       process.exit(1);
     }
   } else {
-    logWarning(`Run with --fix to automatically add SPDX headers to ${missingSpdxFiles.length} files`);
+    logWarning(
+      `Run with --fix to automatically add SPDX headers to ${missingSpdxFiles.length} files`
+    );
     process.exit(1);
   }
 } else {
   if (AUTO_FIX && stats.fixedFiles > 0) {
     logSuccess(`Fixed SPDX headers in ${stats.fixedFiles} files`);
   } else {
-    logSuccess('SPDX header check completed successfully');
+    logSuccess("SPDX header check completed successfully");
   }
 
   if (SUMMARY_ONLY || stats.fixedFiles > 0) {
@@ -516,31 +556,33 @@ if (missingSpdxFiles.length > 0 && !AUTO_FIX) {
   if (GENERATE_REPORT) {
     const reportData = {
       timestamp: new Date().toISOString(),
-      duration: parseFloat(duration),
+      duration: Number.parseFloat(duration),
       stats: {
         totalFiles: stats.totalFiles,
         checkedFiles: stats.checkedFiles,
         missingHeaders: stats.missingHeaders,
         fixedFiles: stats.fixedFiles,
-        errors: stats.errors
+        errors: stats.errors,
       },
       license: LICENSE,
       autoDetected: LICENSE === CONFIG.PROJECT_LICENSE,
-      missingSpdxFiles: missingSpdxFiles.map(file => ({
+      missingSpdxFiles: missingSpdxFiles.map((file) => ({
         path: file,
         directory: path.dirname(file),
         filename: path.basename(file),
-        extension: path.extname(file)
+        extension: path.extname(file),
       })),
-      rootDirectory: path.resolve(rootDir)
+      rootDirectory: path.resolve(rootDir),
     };
 
-    const reportFilename = `spdx-report-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+    const reportFilename = `spdx-report-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
     fs.writeFileSync(reportFilename, JSON.stringify(reportData, null, 2));
-    console.log(`\n${COLORS.cyan}Report generated: ${reportFilename}${COLORS.reset}`);
+    console.log(
+      `\n${COLORS.cyan}Report generated: ${reportFilename}${COLORS.reset}`
+    );
   }
 
-  if (!QUIET && !SUMMARY_ONLY) {
+  if (!(QUIET || SUMMARY_ONLY)) {
     console.log(`\nCompleted in ${duration}s`);
   }
 

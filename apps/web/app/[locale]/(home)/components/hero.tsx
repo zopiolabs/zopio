@@ -2,13 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { env } from '@/env';
-import { blog } from '@repo/cms';
-import { Feed } from '@repo/cms/components/feed';
-import { Button } from '@repo/design-system/ui/button';
-import type { Dictionary } from '@repo/internationalization';
-import { MoveRight, PhoneCall } from 'lucide-react';
-import Link from 'next/link';
+import { blog } from "@repo/cms";
+import { Feed } from "@repo/cms/components/feed";
+import { Button } from "@repo/design-system/ui/button";
+import type { Dictionary } from "@repo/internationalization";
+import { MoveRight, PhoneCall } from "lucide-react";
+import Link from "next/link";
+import { env } from "@/env";
 
 type HeroProps = {
   dictionary: Dictionary;
@@ -27,21 +27,19 @@ type BlogQueryResult = {
 const BlogAnnouncement = ({
   dictionary,
   data,
-}: { dictionary: Dictionary; data: BlogQueryResult | null }) => {
-  if (
-    !data ||
-    !data.blog ||
-    !data.blog.posts ||
-    !data.blog.posts.item ||
-    !data.blog.posts.item._slug
-  ) {
+}: {
+  dictionary: Dictionary;
+  data: BlogQueryResult | null;
+}) => {
+  const slug = data?.blog?.posts?.item?._slug;
+  if (!slug) {
     return null;
   }
 
   return (
-    <Button variant="secondary" size="sm" className="gap-4" asChild>
-      <Link href={`/blog/${data.blog.posts.item._slug}`}>
-        {dictionary.web.home.hero.announcement}{' '}
+    <Button asChild className="gap-4" size="sm" variant="secondary">
+      <Link href={`/blog/${slug}`}>
+        {dictionary.web.home.hero.announcement}{" "}
         <MoveRight className="h-4 w-4" />
       </Link>
     </Button>
@@ -70,7 +68,7 @@ export const Hero = async ({ dictionary }: HeroProps) => {
               {(data: Record<string, unknown>) => {
                 const blogResult = data.blog as BlogQueryResult | null;
                 return (
-                  <BlogAnnouncement dictionary={dictionary} data={blogResult} />
+                  <BlogAnnouncement data={blogResult} dictionary={dictionary} />
                 );
               }}
             </Feed>
@@ -84,12 +82,12 @@ export const Hero = async ({ dictionary }: HeroProps) => {
             </p>
           </div>
           <div className="flex flex-row gap-3">
-            <Button size="lg" className="gap-4" variant="outline" asChild>
+            <Button asChild className="gap-4" size="lg" variant="outline">
               <Link href="/contact">
                 Get in touch <PhoneCall className="h-4 w-4" />
               </Link>
             </Button>
-            <Button size="lg" className="gap-4" asChild>
+            <Button asChild className="gap-4" size="lg">
               <Link href={env.NEXT_PUBLIC_APP_URL}>
                 Sign up <MoveRight className="h-4 w-4" />
               </Link>

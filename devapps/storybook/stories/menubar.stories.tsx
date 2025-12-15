@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -20,16 +18,17 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from '@repo/design-system/ui/menubar';
+} from "@repo/design-system/ui/menubar";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * A visually persistent menu common in desktop applications that provides
  * quick access to a consistent set of commands.
  */
 const meta: Meta<typeof Menubar> = {
-  title: 'ui/Menubar',
+  title: "ui/Menubar",
   component: Menubar,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
 
   render: (args) => (
@@ -50,7 +49,7 @@ const meta: Meta<typeof Menubar> = {
     </Menubar>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

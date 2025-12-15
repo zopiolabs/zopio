@@ -1,3 +1,4 @@
+"use strict";
 /**
  * SPDX-License-Identifier: MIT
  */
@@ -9,7 +10,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 
 // Check if we're in a CI environment
-const isCI = process.env.CI === 'true';
+const isCI = process.env.CI === "true";
 
 if (isCI) {
   // Skip Husky installation in CI environments
@@ -18,9 +19,9 @@ if (isCI) {
 
 try {
   // Check if .git directory exists (we're in a git repo)
-  if (fs.existsSync('.git')) {
+  if (fs.existsSync(".git")) {
     // Install Husky
-    execSync('npx husky install', { stdio: 'inherit' });
+    execSync("npx husky install", { stdio: "inherit" });
   }
 } catch (_) {
   // Silently exit with success to avoid breaking CI

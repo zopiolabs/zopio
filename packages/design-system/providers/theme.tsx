@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { ThemeProviderProps } from 'next-themes';
-import { ThemeProvider as NextThemeProvider } from 'next-themes';
+import type { ThemeProviderProps } from "next-themes";
+import { ThemeProvider as NextThemeProvider } from "next-themes";
 
 export const ThemeProvider = ({
   children,
@@ -12,8 +12,8 @@ export const ThemeProvider = ({
   <NextThemeProvider
     attribute="class"
     defaultTheme="system"
-    enableSystem
     disableTransitionOnChange
+    enableSystem
     {...properties}
   >
     {children}

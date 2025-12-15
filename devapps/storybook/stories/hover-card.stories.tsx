@@ -2,21 +2,20 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '@repo/design-system/ui/hover-card';
+} from "@repo/design-system/ui/hover-card";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * For sighted users to preview content available behind a link.
  */
 const meta: Meta<typeof HoverCard> = {
-  title: 'ui/HoverCard',
+  title: "ui/HoverCard",
   component: HoverCard,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {},
   render: (args) => (
@@ -28,7 +27,7 @@ const meta: Meta<typeof HoverCard> = {
     </HoverCard>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

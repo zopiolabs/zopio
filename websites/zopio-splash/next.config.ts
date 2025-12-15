@@ -2,15 +2,22 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { NextConfig } from 'next';
+import path from "node:path";
+import type { NextConfig } from "next";
 
 const config: NextConfig = {
+  outputFileTracingRoot: path.resolve(__dirname, "../.."),
+
+  turbopack: {
+    root: path.resolve(__dirname, "../.."),
+  },
+
   images: {
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
-        hostname: 'avatars.githubusercontent.com',
-        protocol: 'https',
+        hostname: "avatars.githubusercontent.com",
+        protocol: "https",
       },
     ],
   },

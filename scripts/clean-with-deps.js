@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict";
 /**
  * SPDX-License-Identifier: MIT
  *
@@ -8,19 +9,19 @@
  *   node scripts/clean-with-deps.js clean-hard
  */
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
 // Map required internal scripts to their dependencies
 const SCRIPT_DEP_MAP = {
-  'clean-cache': {
-    file: 'scripts/clean-cache.js',
-    deps: ['fast-glob'],
+  "clean-cache": {
+    file: "scripts/clean-cache.js",
+    deps: ["fast-glob"],
   },
-  'clean-hard': {
-    file: 'scripts/clean-hard.js',
-    deps: ['fast-glob'],
+  "clean-hard": {
+    file: "scripts/clean-hard.js",
+    deps: ["fast-glob"],
   },
 };
 
@@ -36,9 +37,9 @@ function hasPackage(pkgName) {
 async function main() {
   const scriptArg = process.argv[2];
 
-  if (!scriptArg || !SCRIPT_DEP_MAP[scriptArg]) {
-    console.error(`❌ Usage: node scripts/clean-with-deps.js <script-name>`);
-    console.error(`   Available: ${Object.keys(SCRIPT_DEP_MAP).join(', ')}`);
+  if (!(scriptArg && SCRIPT_DEP_MAP[scriptArg])) {
+    console.error("❌ Usage: node scripts/clean-with-deps.js <script-name>");
+    console.error(`   Available: ${Object.keys(SCRIPT_DEP_MAP).join(", ")}`);
     process.exit(1);
   }
 
@@ -46,11 +47,13 @@ async function main() {
   const missingDeps = deps.filter((dep) => !hasPackage(dep));
 
   if (missingDeps.length > 0) {
-    console.log(`📦 Installing missing devDependencies: ${missingDeps.join(', ')}`);
+    console.log(
+      `📦 Installing missing devDependencies: ${missingDeps.join(", ")}`
+    );
     try {
-      execSync(`pnpm add -w -D ${missingDeps.join(' ')}`, { stdio: 'inherit' });
+      execSync(`pnpm add -w -D ${missingDeps.join(" ")}`, { stdio: "inherit" });
     } catch (err) {
-      console.error(`❌ Failed to install dependencies.`, err);
+      console.error("❌ Failed to install dependencies.", err);
       process.exit(1);
     }
   }

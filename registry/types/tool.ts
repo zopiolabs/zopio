@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { BaseModule } from './module.js';
+import type { BaseModule } from "./module.js";
 
 /**
  * Interface for tool command definitions
@@ -35,7 +35,7 @@ export interface ToolCommand {
     /**
      * Type of the argument
      */
-    type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+    type: "string" | "number" | "boolean" | "array" | "object";
 
     /**
      * Whether the argument is required
@@ -61,7 +61,7 @@ export interface ToolManifest extends BaseModule {
   /**
    * Type of module (must be 'tool')
    */
-  type: 'tool';
+  type: "tool";
 
   /**
    * Zopio-specific configuration

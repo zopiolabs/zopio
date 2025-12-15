@@ -2,15 +2,15 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { ThemeProvider } from '@repo/design-system/providers/theme';
-import { Toaster } from '@repo/design-system/ui/sonner';
-import { TooltipProvider } from '@repo/design-system/ui/tooltip';
-import { withThemeByClassName } from '@storybook/addon-themes';
-import type { Preview } from '@storybook/nextjs';
+import { ThemeProvider } from "@repo/design-system/providers/theme";
+import { Toaster } from "@repo/design-system/ui/sonner";
+import { TooltipProvider } from "@repo/design-system/ui/tooltip";
+import { withThemeByClassName } from "@storybook/addon-themes";
+import type { Preview } from "@storybook/nextjs";
 
 // Import styles
-import '@repo/design-system/styles/globals.css';
-import '../styles/storybook.css';
+import "@repo/design-system/styles/globals.css";
+import "../styles/storybook.css";
 
 const preview: Preview = {
   parameters: {
@@ -23,12 +23,12 @@ const preview: Preview = {
     chromatic: {
       modes: {
         light: {
-          theme: 'light',
-          className: 'light',
+          theme: "light",
+          className: "light",
         },
         dark: {
-          theme: 'dark',
-          className: 'dark',
+          theme: "dark",
+          className: "dark",
         },
       },
     },
@@ -37,26 +37,24 @@ const preview: Preview = {
   decorators: [
     withThemeByClassName({
       themes: {
-        light: 'light',
-        dark: 'dark',
+        light: "light",
+        dark: "dark",
       },
-      defaultTheme: 'light',
+      defaultTheme: "light",
     }),
-    (Story) => {
-      return (
-        <div className="bg-background">
-          <ThemeProvider>
-            <TooltipProvider>
-              <Story />
-            </TooltipProvider>
-            <Toaster />
-          </ThemeProvider>
-        </div>
-      );
-    },
+    (Story) => (
+      <div className="bg-background">
+        <ThemeProvider>
+          <TooltipProvider>
+            <Story />
+          </TooltipProvider>
+          <Toaster />
+        </ThemeProvider>
+      </div>
+    ),
   ],
 
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default preview;

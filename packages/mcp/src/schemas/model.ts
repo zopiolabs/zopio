@@ -5,26 +5,26 @@
 /**
  * Data model resource schema for MCP
  */
-import { z } from 'zod';
-import { resourceSchema } from '../protocol.js';
+import { z } from "zod";
+import { resourceSchema } from "../protocol.js";
 
 /**
  * Schema for model field definition
  */
 const fieldDefinitionSchema = z.object({
   type: z.enum([
-    'string',
-    'number',
-    'integer',
-    'boolean',
-    'date',
-    'datetime',
-    'object',
-    'array',
-    'relation',
-    'enum',
-    'json',
-    'binary',
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "date",
+    "datetime",
+    "object",
+    "array",
+    "relation",
+    "enum",
+    "json",
+    "binary",
   ]),
   description: z.string().optional(),
   required: z.boolean().optional().default(false),
@@ -42,10 +42,10 @@ const fieldDefinitionSchema = z.object({
     .object({
       model: z.string(),
       type: z.enum([
-        'one-to-one',
-        'one-to-many',
-        'many-to-one',
-        'many-to-many',
+        "one-to-one",
+        "one-to-many",
+        "many-to-one",
+        "many-to-many",
       ]),
       foreignKey: z.string().optional(),
       through: z.string().optional(),
@@ -57,7 +57,7 @@ const fieldDefinitionSchema = z.object({
  * Schema for data model resources
  */
 export const modelSchema = resourceSchema.extend({
-  type: z.literal('model'),
+  type: z.literal("model"),
   attributes: z
     .object({
       name: z.string(),
@@ -85,7 +85,7 @@ export const modelSchema = resourceSchema.extend({
         .optional(),
       packageName: z
         .string()
-        .regex(/^@repo\//, 'Package name must use @repo/* namespace')
+        .regex(/^@repo\//, "Package name must use @repo/* namespace")
         .optional(),
     })
     .optional(),
@@ -95,7 +95,7 @@ export const modelSchema = resourceSchema.extend({
         .object({
           data: z.object({
             id: z.string(),
-            type: z.literal('package'),
+            type: z.literal("package"),
           }),
         })
         .optional(),
@@ -104,7 +104,7 @@ export const modelSchema = resourceSchema.extend({
           data: z.array(
             z.object({
               id: z.string(),
-              type: z.literal('model'),
+              type: z.literal("model"),
             })
           ),
         })
@@ -129,17 +129,17 @@ export type ModelResource = z.infer<typeof modelSchema>;
  */
 export function createModelResource(
   id: string,
-  attributes: NonNullable<ModelResource['attributes']>,
+  attributes: NonNullable<ModelResource["attributes"]>,
   packageId?: string,
   relatedModelIds?: string[]
 ): ModelResource {
-  const relationships: NonNullable<ModelResource['relationships']> = {};
+  const relationships: NonNullable<ModelResource["relationships"]> = {};
 
   if (packageId) {
     relationships.package = {
       data: {
         id: packageId,
-        type: 'package',
+        type: "package",
       },
     };
   }
@@ -148,14 +148,14 @@ export function createModelResource(
     relationships.relatedModels = {
       data: relatedModelIds.map((modelId) => ({
         id: modelId,
-        type: 'model',
+        type: "model",
       })),
     };
   }
 
   return {
     id,
-    type: 'model',
+    type: "model",
     attributes,
     ...(Object.keys(relationships).length > 0 ? { relationships } : {}),
   };

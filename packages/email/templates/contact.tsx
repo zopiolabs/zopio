@@ -12,9 +12,9 @@ import {
   Section,
   Tailwind,
   Text,
-} from '@react-email/components';
+} from "@react-email/components";
 // Import React for JSX support
-import type * as React from 'react';
+import type * as React from "react";
 
 /**
  * Props for the ContactTemplate component
@@ -59,8 +59,8 @@ const ContactTemplate = (props: ContactTemplateProps): React.ReactElement => {
 
 // Add preview props for email testing
 ContactTemplate.PreviewProps = {
-  name: 'Jane Smith',
-  email: 'jane.smith@example.com',
+  name: "Jane Smith",
+  email: "jane.smith@example.com",
   message: "I'm interested in your services.",
 };
 

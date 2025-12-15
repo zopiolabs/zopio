@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { keys } from './keys';
+import { keys } from "./keys";
 
 // Custom implementation to replace basehub functionality
 type FragmentType<T> = { __type: string } & T;
@@ -27,15 +27,19 @@ function createFragmentOn() {
 
 const fragmentOn = createFragmentOn();
 
-function basehubClient(options: { token: string }) {
+function basehubClient(options: { token?: string }) {
+  if (!options.token) {
+    return { query: async (_queryOptions: QueryOptions) => ({}) };
+  }
+
   const baseUrl = `https://basehub.com/api/graphql?token=${options.token}`;
 
   async function query(queryOptions: QueryOptions) {
     try {
       const response = await fetch(baseUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query: JSON.stringify(queryOptions) }),
       });
@@ -62,7 +66,7 @@ const basehub = basehubClient({
  * Common Fragments
  * -----------------------------------------------------------------------------------------------*/
 
-const imageFragment = fragmentOn('BlockImage', {
+const imageFragment = fragmentOn("BlockImage", {
   url: true,
   width: true,
   height: true,
@@ -74,7 +78,7 @@ const imageFragment = fragmentOn('BlockImage', {
  * Blog Fragments & Queries
  * -----------------------------------------------------------------------------------------------*/
 
-const postMetaFragment = fragmentOn('PostsItem', {
+const postMetaFragment = fragmentOn("PostsItem", {
   _slug: true,
   _title: true,
   authors: {
@@ -90,7 +94,7 @@ const postMetaFragment = fragmentOn('PostsItem', {
   image: imageFragment,
 });
 
-const postFragment = fragmentOn('PostsItem', {
+const postFragment = fragmentOn("PostsItem", {
   ...postMetaFragment,
   body: {
     plainText: true,
@@ -106,7 +110,7 @@ export type PostMeta = typeof postMetaFragment;
 export type Post = typeof postFragment;
 
 export const blog = {
-  postsQuery: fragmentOn('Query', {
+  postsQuery: fragmentOn("Query", {
     blog: {
       posts: {
         items: postMetaFragment,
@@ -114,11 +118,11 @@ export const blog = {
     },
   }),
 
-  latestPostQuery: fragmentOn('Query', {
+  latestPostQuery: fragmentOn("Query", {
     blog: {
       posts: {
         __args: {
-          orderBy: '_sys_createdAt__DESC',
+          orderBy: "_sys_createdAt__DESC",
         },
         item: postFragment,
       },
@@ -142,12 +146,12 @@ export const blog = {
     try {
       const data = await basehub.query(blog.postsQuery);
 
-      // Add null checks to handle potential undefined values
-      if (!data || !data.blog || !data.blog.posts) {
+      const posts = data?.blog?.posts;
+      if (!posts) {
         return [];
       }
 
-      return data.blog.posts.items || [];
+      return posts.items || [];
     } catch (_) {
       return [];
     }
@@ -157,11 +161,12 @@ export const blog = {
     try {
       const data = await basehub.query(blog.latestPostQuery);
 
-      if (!data || !data.blog || !data.blog.posts) {
+      const posts = data?.blog?.posts;
+      if (!posts) {
         return null;
       }
 
-      return data.blog.posts.item;
+      return posts.item;
     } catch (_) {
       return null;
     }
@@ -172,11 +177,12 @@ export const blog = {
       const query = blog.postQuery(slug);
       const data = await basehub.query(query);
 
-      if (!data || !data.blog || !data.blog.posts) {
+      const posts = data?.blog?.posts;
+      if (!posts) {
         return null;
       }
 
-      return data.blog.posts.item;
+      return posts.item;
     } catch (_) {
       return null;
     }
@@ -187,13 +193,13 @@ export const blog = {
  * Legal Fragments & Queries
  * -----------------------------------------------------------------------------------------------*/
 
-const legalPostMetaFragment = fragmentOn('LegalPagesItem', {
+const legalPostMetaFragment = fragmentOn("LegalPagesItem", {
   _slug: true,
   _title: true,
   description: true,
 });
 
-const legalPostFragment = fragmentOn('LegalPagesItem', {
+const legalPostFragment = fragmentOn("LegalPagesItem", {
   ...legalPostMetaFragment,
   body: {
     plainText: true,
@@ -209,23 +215,23 @@ export type LegalPostMeta = typeof legalPostMetaFragment;
 export type LegalPost = typeof legalPostFragment;
 
 export const legal = {
-  postsQuery: fragmentOn('Query', {
+  postsQuery: fragmentOn("Query", {
     legalPages: {
       items: legalPostFragment,
     },
   }),
 
-  latestPostQuery: fragmentOn('Query', {
+  latestPostQuery: fragmentOn("Query", {
     legalPages: {
       __args: {
-        orderBy: '_sys_createdAt__DESC',
+        orderBy: "_sys_createdAt__DESC",
       },
       item: legalPostFragment,
     },
   }),
 
   postQuery: (slug: string) =>
-    fragmentOn('Query', {
+    fragmentOn("Query", {
       legalPages: {
         __args: {
           filter: {
@@ -240,12 +246,12 @@ export const legal = {
     try {
       const data = await basehub.query(legal.postsQuery);
 
-      // Add null checks to handle potential undefined values
-      if (!data || !data.legalPages) {
+      const legalPages = data?.legalPages;
+      if (!legalPages) {
         return [];
       }
 
-      return data.legalPages.items || [];
+      return legalPages.items || [];
     } catch (_) {
       return [];
     }
@@ -255,11 +261,12 @@ export const legal = {
     try {
       const data = await basehub.query(legal.latestPostQuery);
 
-      if (!data || !data.legalPages) {
+      const legalPages = data?.legalPages;
+      if (!legalPages) {
         return null;
       }
 
-      return data.legalPages.item;
+      return legalPages.item;
     } catch (_) {
       return null;
     }
@@ -270,11 +277,12 @@ export const legal = {
       const query = legal.postQuery(slug);
       const data = await basehub.query(query);
 
-      if (!data || !data.legalPages) {
+      const legalPages = data?.legalPages;
+      if (!legalPages) {
         return null;
       }
 
-      return data.legalPages.item;
+      return legalPages.item;
     } catch (_) {
       return null;
     }

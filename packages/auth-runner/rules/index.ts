@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export * from './combined-rules';
+export * from "./combined-rules";

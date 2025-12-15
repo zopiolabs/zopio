@@ -2,32 +2,31 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import type React from 'react';
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@repo/design-system/ui/accordion';
+} from "@repo/design-system/ui/accordion";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import type React from "react";
 
 /**
  * A vertically stacked set of interactive headings that each reveal a section
  * of content.
  */
 const meta: Meta<typeof Accordion> = {
-  title: 'ui/Accordion',
+  title: "ui/Accordion",
   component: Accordion,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     type: {
-      options: ['single', 'multiple'],
-      control: { type: 'radio' },
+      options: ["single", "multiple"],
+      control: { type: "radio" },
     },
   },
   args: {
-    type: 'single',
+    type: "single",
     collapsible: true,
   },
   render: (args) => (
@@ -62,4 +61,4 @@ type Story = StoryObj<React.ComponentProps<typeof Accordion>>;
 /**
  * The default behavior of the accordion allows only one item to be open.
  */
-export const Default: Story = { args: { type: 'single', collapsible: true } };
+export const Default: Story = { args: { type: "single", collapsible: true } };

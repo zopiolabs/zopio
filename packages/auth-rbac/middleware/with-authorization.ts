@@ -2,11 +2,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { getUserContext } from '../adapters/clerk';
-import { rules } from '../config/rules';
-import { evaluateAccess } from '../engine/evaluate';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { getUserContext } from "../adapters/clerk";
+import { rules } from "../config/rules";
+import { evaluateAccess } from "../engine/evaluate";
 
 /**
  * Middleware for handling authorization based on RBAC rules
@@ -33,7 +33,7 @@ export function withAuthorization(options: {
       // If access is denied, return a 403 response
       if (!result.can) {
         return NextResponse.json(
-          { error: result.reason || 'Access denied' },
+          { error: result.reason || "Access denied" },
           { status: 403 }
         );
       }
@@ -42,7 +42,7 @@ export function withAuthorization(options: {
       return NextResponse.next();
     } catch (err: unknown) {
       // Handle authentication errors
-      const errorMessage = err instanceof Error ? err.message : 'Unauthorized';
+      const errorMessage = err instanceof Error ? err.message : "Unauthorized";
 
       return NextResponse.json({ error: errorMessage }, { status: 401 });
     }

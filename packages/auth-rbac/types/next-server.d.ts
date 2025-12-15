@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-declare module 'next/server' {
+declare module "next/server" {
   export interface NextRequest extends Request {
     cookies: {
       get: (name: string) => { name: string; value: string } | undefined;
@@ -16,7 +16,7 @@ declare module 'next/server' {
           domain?: string;
           secure?: boolean;
           httpOnly?: boolean;
-          sameSite?: 'strict' | 'lax' | 'none';
+          sameSite?: "strict" | "lax" | "none";
         }
       ) => void;
       delete: (name: string) => void;

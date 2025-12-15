@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { DashboardWidget } from '@repo/sample-plugin';
-import type { FC } from 'react';
+import { DashboardWidget } from "@repo/sample-plugin";
+import type { FC } from "react";
 
 /**
  * Example usage of the sample plugin

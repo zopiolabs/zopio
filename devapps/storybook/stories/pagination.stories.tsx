@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Pagination,
   PaginationContent,
@@ -12,15 +10,16 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@repo/design-system/ui/pagination';
+} from "@repo/design-system/ui/pagination";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Pagination with page navigation, next and previous links.
  */
 const meta: Meta<typeof Pagination> = {
-  title: 'ui/Pagination',
+  title: "ui/Pagination",
   component: Pagination,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <Pagination {...args}>
@@ -47,7 +46,7 @@ const meta: Meta<typeof Pagination> = {
     </Pagination>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Sheet,
   SheetClose,
@@ -13,26 +11,27 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@repo/design-system/ui/sheet';
+} from "@repo/design-system/ui/sheet";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Extends the Dialog component to display content that complements the main
  * content of the screen.
  */
 const meta: Meta<typeof SheetContent> = {
-  title: 'ui/Sheet',
+  title: "ui/Sheet",
   component: Sheet,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     side: {
-      options: ['top', 'bottom', 'left', 'right'],
+      options: ["top", "bottom", "left", "right"],
       control: {
-        type: 'radio',
+        type: "radio",
       },
     },
   },
   args: {
-    side: 'right',
+    side: "right",
   },
   render: (args) => (
     <Sheet>
@@ -47,13 +46,13 @@ const meta: Meta<typeof SheetContent> = {
         </SheetHeader>
         <SheetFooter>
           <SheetClose>
-            <button type="button" className="hover:underline">
+            <button className="hover:underline" type="button">
               Cancel
             </button>
           </SheetClose>
           <button
-            type="button"
             className="rounded bg-primary px-4 py-2 text-primary-foreground"
+            type="button"
           >
             Submit
           </button>
@@ -62,7 +61,7 @@ const meta: Meta<typeof SheetContent> = {
     </Sheet>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 } satisfies Meta<typeof SheetContent>;
 

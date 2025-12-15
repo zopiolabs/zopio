@@ -2,10 +2,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import chalk from 'chalk';
-import { Command } from 'commander';
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import chalk from "chalk";
+import { Command } from "commander";
 
 // Type definitions for inquirer questions and answers
 type Question = {
@@ -49,7 +49,7 @@ type GenerateOptions = {
 };
 
 // Format type used for validation
-type FormatType = 'json' | 'table' | 'markdown';
+type FormatType = "json" | "table" | "markdown";
 
 type AnalyzeOptions = {
   format: FormatType;
@@ -74,11 +74,11 @@ export async function generateHandler(options: GenerateOptions): Promise<void> {
     logger.info(`Generating ${options.type}: ${options.name}`);
 
     // Ask for additional configuration if needed
-    if (options.type === 'component') {
+    if (options.type === "component") {
       // In a real implementation, we would use inquirer
       // For now, use default values to avoid dependency issues
       const answers = {
-        componentType: options.componentType || 'Functional',
+        componentType: options.componentType || "Functional",
         withStyles:
           options.withStyles !== undefined ? options.withStyles : true,
       };
@@ -90,19 +90,15 @@ export async function generateHandler(options: GenerateOptions): Promise<void> {
       options.withStyles = answers.withStyles as boolean;
 
       // Create the output directory if it doesn't exist
-      const outputDir = path.resolve(process.cwd(), options.path);
-      if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
+      const outputDir = resolve(process.cwd(), options.path);
+      if (!existsSync(outputDir)) {
+        mkdirSync(outputDir, { recursive: true });
       }
 
       // Generate the files based on templates
-      const _templatePath = path.resolve(
-        process.cwd(),
-        './templates',
-        options.type
-      );
+      const _templatePath = resolve(process.cwd(), "./templates", options.type);
       // Create the target path
-      const targetPath = path.join(outputDir, options.name);
+      const targetPath = join(outputDir, options.name);
       // Use targetPath in a meaningful way
       // Using chalk instead of console.log to comply with linting rules
       process.stdout.write(chalk.green(`Creating module at: ${targetPath}\n`));
@@ -130,14 +126,14 @@ export async function analyzeHandler(options: AnalyzeOptions): Promise<void> {
     // Add await to ensure async function has at least one await expression
     await Promise.resolve();
     const logger = createLogger();
-    logger.info('Analyzing project structure...');
+    logger.info("Analyzing project structure...");
 
     // Scan the project directory
     const projectRoot = process.cwd();
-    const packageJsonPath = path.join(projectRoot, 'package.json');
+    const packageJsonPath = join(projectRoot, "package.json");
 
-    if (!fs.existsSync(packageJsonPath)) {
-      throw new Error('No package.json found. Are you in a Node.js project?');
+    if (!existsSync(packageJsonPath)) {
+      throw new Error("No package.json found. Are you in a Node.js project?");
     }
 
     // Define type for package.json structure
@@ -150,13 +146,13 @@ export async function analyzeHandler(options: AnalyzeOptions): Promise<void> {
     };
 
     const packageJson = JSON.parse(
-      fs.readFileSync(packageJsonPath, 'utf8')
+      readFileSync(packageJsonPath, "utf8")
     ) as PackageJson;
 
     // Collect project stats
     const stats: ProjectStats = {
-      name: packageJson.name || 'unknown',
-      version: packageJson.version || '0.0.0',
+      name: packageJson.name || "unknown",
+      version: packageJson.version || "0.0.0",
       dependencies: Object.keys(packageJson.dependencies || {}).length,
       devDependencies: Object.keys(packageJson.devDependencies || {}).length,
       scripts: Object.keys(packageJson.scripts || {}).length,
@@ -164,11 +160,11 @@ export async function analyzeHandler(options: AnalyzeOptions): Promise<void> {
 
     // Output the results in the requested format
     switch (options.format) {
-      case 'json': {
+      case "json": {
         logger.info(JSON.stringify(stats, null, 2));
         break;
       }
-      case 'markdown': {
+      case "markdown": {
         logger.info(`# Project Analysis: ${stats.name}@${stats.version}\n`);
         logger.info(`- **Dependencies:** ${String(stats.dependencies)}`);
         logger.info(`- **Dev Dependencies:** ${String(stats.devDependencies)}`);
@@ -177,7 +173,7 @@ export async function analyzeHandler(options: AnalyzeOptions): Promise<void> {
       }
       default: {
         // Default is table format
-        logger.info('\nProject Analysis:');
+        logger.info("\nProject Analysis:");
         logger.info(`Name:             ${stats.name}`);
         logger.info(`Version:          ${stats.version}`);
         logger.info(`Dependencies:     ${String(stats.dependencies)}`);
@@ -187,7 +183,7 @@ export async function analyzeHandler(options: AnalyzeOptions): Promise<void> {
       }
     }
 
-    logger.success('Analysis complete');
+    logger.success("Analysis complete");
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const logger = createLogger();
@@ -236,43 +232,43 @@ if (require.main === module) {
   const program = new Command();
 
   program
-    .name('sample-tool')
-    .description('Zopio CLI utility for development workflows')
-    .version('1.0.0');
+    .name("sample-tool")
+    .description("Zopio CLI utility for development workflows")
+    .version("1.0.0");
 
   program
-    .command('generate')
-    .description('Generate a new component, module, or utility')
+    .command("generate")
+    .description("Generate a new component, module, or utility")
     .option(
-      '-t, --type <type>',
-      'Type to generate (component, module, utility)',
-      'component'
+      "-t, --type <type>",
+      "Type to generate (component, module, utility)",
+      "component"
     )
-    .option('-n, --name <name>', 'Name of the item to generate', 'NewItem')
+    .option("-n, --name <name>", "Name of the item to generate", "NewItem")
     .option(
-      '-p, --path <path>',
-      'Path where the item should be generated',
-      './'
+      "-p, --path <path>",
+      "Path where the item should be generated",
+      "./"
     )
     .action(generateHandler);
 
   // Analyze command
   program
-    .command('analyze')
-    .description('Analyze the project structure and dependencies')
+    .command("analyze")
+    .description("Analyze the project structure and dependencies")
     .option(
-      '-f, --format <format>',
-      'Output format (json, table, markdown)',
+      "-f, --format <format>",
+      "Output format (json, table, markdown)",
       (value: string) => {
-        const validFormats = ['json', 'table', 'markdown'] as const;
+        const validFormats = ["json", "table", "markdown"] as const;
         type FormatType = (typeof validFormats)[number];
 
         if (!validFormats.includes(value as FormatType)) {
-          throw new Error(`Format must be one of: ${validFormats.join(', ')}`);
+          throw new Error(`Format must be one of: ${validFormats.join(", ")}`);
         }
         return value as FormatType;
       },
-      'table'
+      "table"
     )
     .action(analyzeHandler);
 

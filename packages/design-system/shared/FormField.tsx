@@ -2,14 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React from 'react';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import React from "react";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 // Utility function for class name merging
-const cn = (...classes: (string | undefined)[]) => {
-  return classes.filter(Boolean).join(' ');
-};
+const cn = (...classes: (string | undefined)[]) =>
+  classes.filter(Boolean).join(" ");
 
 export interface FormFieldProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -52,11 +51,11 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
     const descriptionId = description ? `${fieldId}-description` : undefined;
 
     return (
-      <div className={cn('space-y-2', className)}>
+      <div className={cn("space-y-2", className)}>
         {label && (
           <Label
+            className={cn("font-medium text-sm", labelClassName)}
             htmlFor={fieldId}
-            className={cn('font-medium text-sm', labelClassName)}
           >
             {label}
             {required && <span className="ml-1 text-destructive">*</span>}
@@ -65,32 +64,32 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
 
         {description && (
           <p
-            id={descriptionId}
             className={cn(
-              'text-muted-foreground text-sm',
+              "text-muted-foreground text-sm",
               descriptionClassName
             )}
+            id={descriptionId}
           >
             {description}
           </p>
         )}
 
         <Input
-          id={fieldId}
-          ref={ref}
-          aria-invalid={!!error}
           aria-describedby={
             error ? errorId : description ? descriptionId : undefined
           }
+          aria-invalid={!!error}
+          className={cn(error && "border-destructive", inputClassName)}
+          id={fieldId}
+          ref={ref}
           required={required}
-          className={cn(error && 'border-destructive', inputClassName)}
           {...props}
         />
 
         {error && (
           <p
+            className={cn("text-destructive text-sm", errorClassName)}
             id={errorId}
-            className={cn('text-destructive text-sm', errorClassName)}
             role="alert"
           >
             {error}
@@ -101,4 +100,4 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
   }
 );
 
-FormField.displayName = 'FormField';
+FormField.displayName = "FormField";

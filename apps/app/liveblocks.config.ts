@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export * from '@repo/collaboration/config';
+export * from "@repo/collaboration/config";

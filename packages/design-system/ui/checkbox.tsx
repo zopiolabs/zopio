@@ -2,13 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import type * as React from 'react';
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import type * as React from "react";
 // Removed lucide-react import to fix JSX compatibility issues with React 19.1.0
 
-import { cn } from '@repo/design-system/lib/utils';
+import { cn } from "@repo/design-system/lib/utils";
 
 function Checkbox({
   className,
@@ -16,28 +16,28 @@ function Checkbox({
 }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
   return (
     <CheckboxPrimitive.Root
-      data-slot="checkbox"
       className={cn(
-        'peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:data-[state=checked]:bg-primary dark:aria-invalid:ring-destructive/40',
+        "peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:data-[state=checked]:bg-primary dark:aria-invalid:ring-destructive/40",
         className
       )}
+      data-slot="checkbox"
       {...props}
     >
       <CheckboxPrimitive.Indicator
-        data-slot="checkbox-indicator"
         className="flex items-center justify-center text-current transition-none"
+        data-slot="checkbox-indicator"
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
+          className="size-3.5"
           fill="none"
+          height="24"
           stroke="currentColor"
-          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="size-3.5"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <polyline points="20 6 9 17 4 12" />
         </svg>

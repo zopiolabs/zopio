@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-Object.defineProperty(exports, '__esModule', { value: true });
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.evaluateAccess = evaluateAccess;
-const evaluateDsl_1 = require('./evaluate-dsl');
+const evaluateDsl_1 = require("./evaluate-dsl");
 /**
  * Evaluates if the condition for a rule is satisfied
  */
@@ -27,7 +27,7 @@ function evaluateFieldAccess(rule, field) {
   // Only check field permissions if a field is specified and the rule has field permissions
   if (field && rule.fieldPermissions) {
     const accessLevel = rule.fieldPermissions[field];
-    if (!accessLevel || accessLevel === 'none') {
+    if (!accessLevel || accessLevel === "none") {
       return { can: false, reason: `No access to field '${field}'` };
     }
   }
@@ -54,5 +54,5 @@ function evaluateAccess({ rules, context, action, resource, record, field }) {
     }
   }
   // No matching rule found
-  return { can: false, reason: 'No matching rule found' };
+  return { can: false, reason: "No matching rule found" };
 }

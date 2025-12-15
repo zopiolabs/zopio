@@ -3,8 +3,8 @@
  */
 
 // Using createEnv directly without the vercel preset to avoid import.meta.env issues
-import { createEnv } from '@t3-oss/env-nextjs';
-import { z } from 'zod';
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
 export const keys = () =>
   createEnv({
@@ -12,7 +12,7 @@ export const keys = () =>
       ANALYZE: z.string().optional(),
 
       // Added by Vercel
-      NEXT_RUNTIME: z.enum(['nodejs', 'edge']).optional(),
+      NEXT_RUNTIME: z.enum(["nodejs", "edge"]).optional(),
     },
     client: {
       NEXT_PUBLIC_APP_URL: z.string().url(),

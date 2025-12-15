@@ -9,6 +9,6 @@
     "typecheck": "echo 'No TypeScript files to check in Prisma Studio wrapper' && exit 0"
   },
   "devDependencies": {
-    "prisma": "6.4.1"
+    "prisma": "6.19.1"
   }
 }

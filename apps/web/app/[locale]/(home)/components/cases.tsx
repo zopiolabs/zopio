@@ -2,17 +2,17 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
 import {
   Carousel,
   type CarouselApi,
   CarouselContent,
   CarouselItem,
-} from '@repo/design-system/ui/carousel';
-import type { Dictionary } from '@repo/internationalization';
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+} from "@repo/design-system/ui/carousel";
+import type { Dictionary } from "@repo/internationalization";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
 
 type CasesProps = {
   dictionary: Dictionary;
@@ -21,6 +21,10 @@ type CasesProps = {
 export const Cases: FC<CasesProps> = ({ dictionary }) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const logos = Array.from({ length: 15 }, (_value, index) => ({
+    id: `logo-${index + 1}`,
+    label: `Logo ${index + 1}`,
+  }));
 
   useEffect(() => {
     if (!api) {
@@ -45,12 +49,12 @@ export const Cases: FC<CasesProps> = ({ dictionary }) => {
           <h2 className="text-left font-regular text-xl tracking-tighter md:text-5xl lg:max-w-xl">
             {dictionary.web.home.cases.title}
           </h2>
-          <Carousel setApi={setApi} className="w-full">
+          <Carousel className="w-full" setApi={setApi}>
             <CarouselContent>
-              {Array.from({ length: 15 }).map((_, index) => (
-                <CarouselItem className="basis-1/4 lg:basis-1/6" key={index}>
+              {logos.map((logo) => (
+                <CarouselItem className="basis-1/4 lg:basis-1/6" key={logo.id}>
                   <div className="flex aspect-square items-center justify-center rounded-md bg-muted p-6">
-                    <span className="text-sm">Logo {index + 1}</span>
+                    <span className="text-sm">{logo.label}</span>
                   </div>
                 </CarouselItem>
               ))}

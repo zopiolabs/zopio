@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Drawer,
   DrawerClose,
@@ -13,15 +11,16 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@repo/design-system/ui/drawer';
+} from "@repo/design-system/ui/drawer";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * A drawer component for React.
  */
 const meta: Meta<typeof Drawer> = {
-  title: 'ui/Drawer',
+  title: "ui/Drawer",
   component: Drawer,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <Drawer {...args}>
@@ -33,13 +32,13 @@ const meta: Meta<typeof Drawer> = {
         </DrawerHeader>
         <DrawerFooter>
           <button
-            type="button"
             className="rounded bg-primary px-4 py-2 text-primary-foreground"
+            type="button"
           >
             Submit
           </button>
           <DrawerClose>
-            <button type="button" className="hover:underline">
+            <button className="hover:underline" type="button">
               Cancel
             </button>
           </DrawerClose>
@@ -48,7 +47,7 @@ const meta: Meta<typeof Drawer> = {
     </Drawer>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

@@ -2,14 +2,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { RichText } from 'basehub/react-rich-text';
-import type { ComponentProps, FC } from 'react';
+import { RichText } from "basehub/react-rich-text";
+import type { ComponentProps, FC } from "react";
 
 type TableOfContentsProperties = Omit<
   ComponentProps<typeof RichText>,
-  'children'
+  "children"
 > & {
-  readonly data: ComponentProps<typeof RichText>['children'];
+  readonly data: ComponentProps<typeof RichText>["children"];
 };
 
 export const TableOfContents: FC<TableOfContentsProperties> = ({
@@ -30,7 +30,7 @@ export const TableOfContents: FC<TableOfContentsProperties> = ({
         a: ({ children, href }) => (
           <a
             className="line-clamp-3 flex rounded-sm text-foreground text-sm underline decoration-foreground/0 transition-colors hover:decoration-foreground/50"
-            href={`#${href?.split('#').at(1)}`}
+            href={`#${href?.split("#").at(1)}`}
           >
             {children}
           </a>

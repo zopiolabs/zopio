@@ -2,25 +2,24 @@
  * SPDX-License-Identifier: MIT
  */
 
-import 'server-only';
+import "server-only";
 
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
-import ws from 'ws';
-import { PrismaClient } from './generated/client';
-import { keys } from './keys';
+import { neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import ws from "ws";
+import { PrismaClient } from "./generated/client";
+import { keys } from "./keys";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 neonConfig.webSocketConstructor = ws;
 
-const pool = new Pool({ connectionString: keys().DATABASE_URL });
-const adapter = new PrismaNeon(pool);
+const adapter = new PrismaNeon({ connectionString: keys().DATABASE_URL });
 
 export const database = globalForPrisma.prisma || new PrismaClient({ adapter });
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = database;
 }
 
-export * from './generated/client';
+export * from "./generated/client";

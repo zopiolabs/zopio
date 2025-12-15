@@ -7,9 +7,9 @@ import type {
   AccessEvaluationResult,
   PermissionRule,
   UserContext,
-} from '../types';
+} from "../types";
 
-import { evaluateDsl } from './evaluate-dsl';
+import { evaluateDsl } from "./evaluate-dsl";
 
 /**
  * Evaluates if the condition for a rule is satisfied
@@ -43,7 +43,7 @@ function evaluateFieldAccess(
   // Only check field permissions if a field is specified and the rule has field permissions
   if (field && rule.fieldPermissions) {
     const accessLevel = rule.fieldPermissions[field];
-    if (!accessLevel || accessLevel === 'none') {
+    if (!accessLevel || accessLevel === "none") {
       return { can: false, reason: `No access to field '${field}'` };
     }
   }
@@ -83,5 +83,5 @@ export function evaluateAccess({
   }
 
   // No matching rule found
-  return { can: false, reason: 'No matching rule found' };
+  return { can: false, reason: "No matching rule found" };
 }

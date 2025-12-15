@@ -4,22 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "basehub dev",
-    "build": "basehub build",
+    "build": "node ./scripts/build.mjs",
     "analyze": "basehub",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.4",
-    "basehub": "^8.2.7",
-    "react": "^19.1.0",
-    "zod": "^3.25.28"
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "basehub": "^9.5.3",
+    "react": "^19.2.3",
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "24.0.13",
-    "@types/react": "19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "next": "15.3.3"
+    "@types/node": "25.0.2",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "next": "16.0.10"
   }
 }

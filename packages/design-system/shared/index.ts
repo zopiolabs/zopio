@@ -9,23 +9,22 @@
  * crud/ui and view-builder modules for consistent styling and behavior.
  */
 
-export { FormField, type FormFieldProps } from './FormField';
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  type CardProps,
+  CardTitle,
+} from "./Card";
+export { FormField, type FormFieldProps } from "./FormField";
 export {
   SelectField,
   type SelectFieldProps,
   type SelectOption,
-} from './SelectField';
-export {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-  type CardProps,
-} from './Card';
+} from "./SelectField";
 
 // Utility function for class name merging
-export const cn = (...classes: (string | undefined)[]) => {
-  return classes.filter(Boolean).join(' ');
-};
+export const cn = (...classes: (string | undefined)[]) =>
+  classes.filter(Boolean).join(" ");

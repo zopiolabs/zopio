@@ -2,31 +2,31 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { type ExecSyncOptions, exec as execRaw } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import { promisify } from 'node:util';
+import { type ExecSyncOptions, exec as execRaw } from "node:child_process";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { promisify } from "node:util";
 
-export const url = 'https://github.com/zopiolabs/zopio';
+export const url = "https://github.com/zopiolabs/zopio";
 
 export const cleanFileName = (file: string) =>
-  file.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\\/g, '/');
+  file.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\\/g, "/");
 
-export const execSyncOpts: ExecSyncOptions = { stdio: 'ignore' };
+export const execSyncOpts: ExecSyncOptions = { stdio: "ignore" };
 
 export const internalContentDirs = [
-  join('.github', 'workflows'),
-  'websites/zopio-docs',
-  'websites/zopio-splash',
+  join(".github", "workflows"),
+  "websites/zopio-docs",
+  "websites/zopio-splash",
 ];
 
 export const internalContentFiles = [
-  join('.github', 'CONTRIBUTING.md'),
-  join('.github', 'FUNDING.yml'),
-  join('.github', 'SECURITY.md'),
-  '.autorc',
-  'CHANGELOG.md',
-  'LICENSE.md',
+  join(".github", "CONTRIBUTING.md"),
+  join(".github", "FUNDING.yml"),
+  join(".github", "SECURITY.md"),
+  ".autorc",
+  "CHANGELOG.md",
+  "LICENSE.md",
 ];
 
 export const allInternalContent = [
@@ -36,22 +36,22 @@ export const allInternalContent = [
 
 export const semver = /^\d+\.\d+\.\d+$/;
 
-export const tempDirName = 'zopio-update';
+export const tempDirName = "zopio-update";
 
 export const exec = promisify(execRaw);
 
-export const supportedPackageManagers = ['npm', 'yarn', 'bun', 'pnpm'];
+export const supportedPackageManagers = ["npm", "yarn", "bun", "pnpm"];
 
 export const getAvailableVersions = async (): Promise<string[]> => {
-  const changelog = await readFile('CHANGELOG.md', 'utf-8');
+  const changelog = await readFile("CHANGELOG.md", "utf-8");
   const versionRegex = /# v(\d+\.\d+\.\d+)/g;
   const matches = [...changelog.matchAll(versionRegex)];
 
   return matches
     .map((match) => match[1])
     .sort((a, b) => {
-      const [aMajor, aMinor, aPatch] = a.split('.').map(Number);
-      const [bMajor, bMinor, bPatch] = b.split('.').map(Number);
+      const [aMajor, aMinor, aPatch] = a.split(".").map(Number);
+      const [bMajor, bMinor, bPatch] = b.split(".").map(Number);
       if (aMajor !== bMajor) {
         return bMajor - aMajor;
       }

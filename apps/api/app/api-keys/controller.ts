@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // apps/api/app/api-keys/controller.ts
-import { randomBytes } from 'node:crypto';
-import { z } from 'zod';
+import { randomBytes } from "node:crypto";
+import { z } from "zod";
 
 type CreateKeyInput = {
   userId: string;
@@ -12,11 +12,11 @@ type CreateKeyInput = {
 
 // Schema for API key creation validation
 const apiKeySchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().min(1, "Name is required"),
   scopes: z.array(z.string()),
   expiration: z
     .string()
-    .regex(/^\d+[dmy]$/, 'Expiration must be in format like 30d, 6m, or 1y'),
+    .regex(/^\d+[dmy]$/, "Expiration must be in format like 30d, 6m, or 1y"),
 });
 
 export async function createApiKeyController(input: CreateKeyInput) {
@@ -26,7 +26,7 @@ export async function createApiKeyController(input: CreateKeyInput) {
   apiKeySchema.parse({ name, scopes, expiration });
 
   // Generate a secure API key
-  const apiKey = `sk_${randomBytes(32).toString('hex')}`;
+  const apiKey = `sk_${randomBytes(32).toString("hex")}`;
 
   // Calculate expiration date
   const expirationValue = Number.parseInt(expiration.slice(0, -1), 10);
@@ -34,13 +34,13 @@ export async function createApiKeyController(input: CreateKeyInput) {
 
   const expiresAt = new Date();
   switch (expirationUnit) {
-    case 'd':
+    case "d":
       expiresAt.setDate(expiresAt.getDate() + expirationValue);
       break;
-    case 'm':
+    case "m":
       expiresAt.setMonth(expiresAt.getMonth() + expirationValue);
       break;
-    case 'y':
+    case "y":
       expiresAt.setFullYear(expiresAt.getFullYear() + expirationValue);
       break;
     default:
@@ -49,11 +49,11 @@ export async function createApiKeyController(input: CreateKeyInput) {
   }
 
   // Create API key in Clerk
-  const response = await fetch('https://api.clerk.com/v1/api_keys', {
-    method: 'POST',
+  const response = await fetch("https://api.clerk.com/v1/api_keys", {
+    method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       name,
@@ -77,10 +77,10 @@ export async function createApiKeyController(input: CreateKeyInput) {
 }
 
 export async function listApiKeysController() {
-  const response = await fetch('https://api.clerk.com/v1/api_keys', {
+  const response = await fetch("https://api.clerk.com/v1/api_keys", {
     headers: {
       Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
   return response.json();
@@ -88,10 +88,10 @@ export async function listApiKeysController() {
 
 export async function deleteApiKeyController(id: string) {
   const response = await fetch(`https://api.clerk.com/v1/api_keys/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
       Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
 

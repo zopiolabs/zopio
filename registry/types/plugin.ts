@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { BaseModule } from './module.js';
+import type { BaseModule } from "./module.js";
 
 /**
  * Interface for UI slot definitions in plugins
@@ -13,7 +13,7 @@ export interface PluginSlot {
   props?: Record<
     string,
     {
-      type: 'string' | 'number' | 'boolean' | 'object' | 'array';
+      type: "string" | "number" | "boolean" | "object" | "array";
       required?: boolean;
       default?: string | number | boolean | Record<string, unknown> | unknown[];
       description?: string;
@@ -26,7 +26,7 @@ export interface PluginSlot {
  * Interface for plugin settings
  */
 export interface PluginSetting {
-  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
+  type: "string" | "number" | "boolean" | "object" | "array";
   required?: boolean;
   default?: string | number | boolean | Record<string, unknown> | unknown[];
   description?: string;
@@ -36,9 +36,9 @@ export interface PluginSetting {
  * Interface for plugin module manifest
  */
 export interface PluginManifest extends BaseModule {
-  type: 'plugin';
+  type: "plugin";
   zopio: {
-    category: 'ui' | 'data' | 'auth' | 'utility' | 'workflow';
+    category: "ui" | "data" | "auth" | "utility" | "workflow";
     icon?: string;
     slots: PluginSlot[];
     permissions?: string[];

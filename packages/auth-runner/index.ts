@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export * from './engine/evaluate';
+export * from "./engine/evaluate";

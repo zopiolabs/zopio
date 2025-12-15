@@ -2,11 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import type * as LabelPrimitive from '@radix-ui/react-label';
-import { Slot } from '@radix-ui/react-slot';
-import * as React from 'react';
+import type * as LabelPrimitive from "@radix-ui/react-label";
+import { Slot } from "@radix-ui/react-slot";
+import { cn } from "@repo/design-system/lib/utils";
+import { Label } from "@repo/design-system/ui/label";
+import * as React from "react";
 import {
   Controller,
   type ControllerProps,
@@ -15,10 +17,7 @@ import {
   FormProvider,
   useFormContext,
   useFormState,
-} from 'react-hook-form';
-
-import { cn } from '@repo/design-system/lib/utils';
-import { Label } from '@repo/design-system/ui/label';
+} from "react-hook-form";
 
 const Form: typeof FormProvider = FormProvider;
 
@@ -38,13 +37,12 @@ const FormField = <
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   ...props
-}: ControllerProps<TFieldValues, TName>) => {
-  return React.createElement(
+}: ControllerProps<TFieldValues, TName>) =>
+  React.createElement(
     FormFieldContext.Provider,
     { value: { name: props.name } },
     React.createElement(Controller as any, props)
   );
-};
 
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
@@ -54,7 +52,7 @@ const useFormField = () => {
   const fieldState = getFieldState(fieldContext.name, formState);
 
   if (!fieldContext) {
-    throw new Error('useFormField should be used within <FormField>');
+    throw new Error("useFormField should be used within <FormField>");
   }
 
   const { id } = itemContext;
@@ -77,15 +75,15 @@ const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue
 );
 
-function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
+function FormItem({ className, ...props }: React.ComponentProps<"div">) {
   const id = React.useId();
 
   return React.createElement(
     FormItemContext.Provider,
     { value: { id } },
-    React.createElement('div', {
-      'data-slot': 'form-item',
-      className: cn('grid gap-2', className),
+    React.createElement("div", {
+      "data-slot": "form-item",
+      className: cn("grid gap-2", className),
       ...props,
     })
   );
@@ -98,9 +96,9 @@ function FormLabel({
   const { error, formItemId } = useFormField();
 
   return React.createElement(Label as any, {
-    'data-slot': 'form-label',
-    'data-error': !!error,
-    className: cn('data-[error=true]:text-destructive', className),
+    "data-slot": "form-label",
+    "data-error": !!error,
+    className: cn("data-[error=true]:text-destructive", className),
     htmlFor: formItemId,
     ...props,
   });
@@ -111,41 +109,41 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
     useFormField();
 
   return React.createElement(Slot as any, {
-    'data-slot': 'form-control',
+    "data-slot": "form-control",
     id: formItemId,
-    'aria-describedby': error
+    "aria-describedby": error
       ? `${formDescriptionId} ${formMessageId}`
       : `${formDescriptionId}`,
-    'aria-invalid': !!error,
+    "aria-invalid": !!error,
     ...props,
   });
 }
 
-function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
+function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
   const { formDescriptionId } = useFormField();
 
-  return React.createElement('p', {
-    'data-slot': 'form-description',
+  return React.createElement("p", {
+    "data-slot": "form-description",
     id: formDescriptionId,
-    className: cn('text-muted-foreground text-sm', className),
+    className: cn("text-muted-foreground text-sm", className),
     ...props,
   });
 }
 
-function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
+function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? '') : props.children;
+  const body = error ? String(error?.message ?? "") : props.children;
 
   if (!body) {
     return null;
   }
 
   return React.createElement(
-    'p',
+    "p",
     {
-      'data-slot': 'form-message',
+      "data-slot": "form-message",
       id: formMessageId,
-      className: cn('text-destructive text-sm', className),
+      className: cn("text-destructive text-sm", className),
       ...props,
     },
     body

@@ -2,22 +2,22 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@repo/design-system/ui/avatar';
+} from "@repo/design-system/ui/avatar";
 import {
   Carousel,
   type CarouselApi,
   CarouselContent,
   CarouselItem,
-} from '@repo/design-system/ui/carousel';
-import type { Dictionary } from '@repo/internationalization';
-import { User } from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from "@repo/design-system/ui/carousel";
+import type { Dictionary } from "@repo/internationalization";
+import { User } from "lucide-react";
+import { useEffect, useState } from "react";
 
 type TestimonialsProps = {
   dictionary: Dictionary;
@@ -50,10 +50,13 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
           <h2 className="text-left font-regular text-3xl tracking-tighter md:text-5xl lg:max-w-xl">
             {dictionary.web.home.testimonials.title}
           </h2>
-          <Carousel setApi={setApi} className="w-full">
+          <Carousel className="w-full" setApi={setApi}>
             <CarouselContent>
-              {dictionary.web.home.testimonials.items.map((item, index) => (
-                <CarouselItem className="lg:basis-1/2" key={index}>
+              {dictionary.web.home.testimonials.items.map((item) => (
+                <CarouselItem
+                  className="lg:basis-1/2"
+                  key={`${item.author.name}-${item.title}`}
+                >
                   <div className="flex aspect-video h-full flex-col justify-between rounded-md bg-muted p-6 lg:col-span-2">
                     <User className="h-8 w-8 stroke-1" />
                     <div className="flex flex-col gap-4">

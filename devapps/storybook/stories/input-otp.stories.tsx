@@ -2,23 +2,22 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
-
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from '@repo/design-system/ui/input-otp';
+} from "@repo/design-system/ui/input-otp";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
 /**
  * Accessible one-time password component with copy paste functionality.
  */
 const meta: Meta<typeof InputOTP> = {
-  title: 'ui/InputOTP',
+  title: "ui/InputOTP",
   component: InputOTP,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
     maxLength: 6,
@@ -39,7 +38,7 @@ const meta: Meta<typeof InputOTP> = {
     </InputOTP>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

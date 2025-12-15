@@ -2,20 +2,19 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React from 'react';
-import { Label } from '../ui/label';
+import React from "react";
+import { Label } from "../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
+} from "../ui/select";
 
 // Utility function for class name merging
-const cn = (...classes: (string | undefined)[]) => {
-  return classes.filter(Boolean).join(' ');
-};
+const cn = (...classes: (string | undefined)[]) =>
+  classes.filter(Boolean).join(" ");
 
 export interface SelectOption {
   value: string;
@@ -77,11 +76,11 @@ export const SelectField = React.forwardRef<
     const descriptionId = description ? `${fieldId}-description` : undefined;
 
     return (
-      <div className={cn('space-y-2', className)}>
+      <div className={cn("space-y-2", className)}>
         {label && (
           <Label
+            className={cn("font-medium text-sm", labelClassName)}
             htmlFor={fieldId}
-            className={cn('font-medium text-sm', labelClassName)}
           >
             {label}
             {required && <span className="ml-1 text-destructive">*</span>}
@@ -90,27 +89,27 @@ export const SelectField = React.forwardRef<
 
         {description && (
           <p
-            id={descriptionId}
             className={cn(
-              'text-muted-foreground text-sm',
+              "text-muted-foreground text-sm",
               descriptionClassName
             )}
+            id={descriptionId}
           >
             {description}
           </p>
         )}
 
-        <Select value={value} onValueChange={onChange} disabled={disabled}>
+        <Select disabled={disabled} onValueChange={onChange} value={value}>
           <SelectTrigger
-            id={fieldId}
-            ref={ref}
-            aria-invalid={!!error}
             aria-describedby={
               error ? errorId : description ? descriptionId : undefined
             }
-            className={cn(error && 'border-destructive', selectClassName)}
+            aria-invalid={!!error}
+            className={cn(error && "border-destructive", selectClassName)}
+            id={fieldId}
+            ref={ref}
           >
-            <SelectValue placeholder={placeholder || 'Select an option'} />
+            <SelectValue placeholder={placeholder || "Select an option"} />
           </SelectTrigger>
           <SelectContent>
             {options.map((option) => (
@@ -123,8 +122,8 @@ export const SelectField = React.forwardRef<
 
         {error && (
           <p
+            className={cn("text-destructive text-sm", errorClassName)}
             id={errorId}
-            className={cn('text-destructive text-sm', errorClassName)}
             role="alert"
           >
             {error}
@@ -135,4 +134,4 @@ export const SelectField = React.forwardRef<
   }
 );
 
-SelectField.displayName = 'SelectField';
+SelectField.displayName = "SelectField";

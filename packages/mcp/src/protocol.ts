@@ -5,8 +5,8 @@
 /**
  * Core protocol implementation for MCP
  */
-import { z } from 'zod';
-import type { Relationship, Resource, ResourceDefinition } from './types.js';
+import { z } from "zod";
+import type { Relationship, Resource, ResourceDefinition } from "./types.js";
 
 /**
  * Base schema for all MCP resources

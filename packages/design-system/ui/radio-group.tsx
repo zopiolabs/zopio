@@ -2,12 +2,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
-import type * as React from 'react';
-
-import { cn } from '@repo/design-system/lib/utils';
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { cn } from "@repo/design-system/lib/utils";
+import type * as React from "react";
 
 function RadioGroup({
   className,
@@ -15,8 +14,8 @@ function RadioGroup({
 }: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
   return (
     <RadioGroupPrimitive.Root
+      className={cn("grid gap-3", className)}
       data-slot="radio-group"
-      className={cn('grid gap-3', className)}
       {...props}
     />
   );
@@ -28,28 +27,28 @@ function RadioGroupItem({
 }: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {
   return (
     <RadioGroupPrimitive.Item
-      data-slot="radio-group-item"
       className={cn(
-        'aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40',
+        "aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
         className
       )}
+      data-slot="radio-group-item"
       {...props}
     >
       <RadioGroupPrimitive.Indicator
-        data-slot="radio-group-indicator"
         className="relative flex items-center justify-center"
+        data-slot="radio-group-indicator"
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
+          className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 size-2 fill-primary"
           fill="currentColor"
+          height="24"
           stroke="currentColor"
-          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 size-2 fill-primary"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <circle cx="12" cy="12" r="10" />
         </svg>

@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { AccessLogEntry } from '../types';
+import type { AccessLogEntry } from "../types";
 interface BetterStackOptions {
   sourceToken: string;
   endpoint?: string;

@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-declare module '@zopio/auth/server' {
-  import type { NextRequest } from 'next/server';
+declare module "@zopio/auth/server" {
+  import type { NextRequest } from "next/server";
 
   export interface AuthSession {
     userId: string;

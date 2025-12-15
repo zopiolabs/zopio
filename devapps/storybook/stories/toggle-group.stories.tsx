@@ -2,49 +2,48 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Bold, Italic, Underline } from 'lucide-react';
-import type React from 'react';
-
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from '@repo/design-system/ui/toggle-group';
+} from "@repo/design-system/ui/toggle-group";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Bold, Italic, Underline } from "lucide-react";
+import type React from "react";
 
 /**
  * A set of two-state buttons that can be toggled on or off.
  */
 const meta: Meta<typeof ToggleGroup> = {
-  title: 'ui/ToggleGroup',
+  title: "ui/ToggleGroup",
   component: ToggleGroup,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     type: {
-      options: ['multiple', 'single'],
-      control: { type: 'radio' },
+      options: ["multiple", "single"],
+      control: { type: "radio" },
     },
   },
   args: {
-    variant: 'default',
-    size: 'default',
-    type: 'multiple',
+    variant: "default",
+    size: "default",
+    type: "multiple",
     disabled: false,
   },
   render: (args) => (
     <ToggleGroup {...args}>
-      <ToggleGroupItem value="bold" aria-label="Toggle bold">
+      <ToggleGroupItem aria-label="Toggle bold" value="bold">
         <Bold className="h-4 w-4" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="italic" aria-label="Toggle italic">
+      <ToggleGroupItem aria-label="Toggle italic" value="italic">
         <Italic className="h-4 w-4" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="underline" aria-label="Toggle underline">
+      <ToggleGroupItem aria-label="Toggle underline" value="underline">
         <Underline className="h-4 w-4" />
       </ToggleGroupItem>
     </ToggleGroup>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -55,7 +54,7 @@ type Story = StoryObj<React.ComponentProps<typeof ToggleGroup>>;
 /**
  * The default form of the toggle group.
  */
-export const Default: Story = { args: { type: 'single' } };
+export const Default: Story = { args: { type: "single" } };
 
 /**
  * Use the `outline` variant to emphasizing the individuality of each button
@@ -63,7 +62,7 @@ export const Default: Story = { args: { type: 'single' } };
  */
 export const Outline: Story = {
   args: {
-    variant: 'outline',
+    variant: "outline",
   },
 };
 
@@ -73,7 +72,7 @@ export const Outline: Story = {
  */
 export const Single: Story = {
   args: {
-    type: 'single',
+    type: "single",
   },
 };
 
@@ -83,7 +82,7 @@ export const Single: Story = {
  */
 export const Small: Story = {
   args: {
-    size: 'sm',
+    size: "sm",
   },
 };
 
@@ -93,7 +92,7 @@ export const Small: Story = {
  */
 export const Large: Story = {
   args: {
-    size: 'lg',
+    size: "lg",
   },
 };
 

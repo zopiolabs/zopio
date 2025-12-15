@@ -2,26 +2,25 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Input } from '@repo/design-system/ui/input';
+import { Input } from "@repo/design-system/ui/input";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Displays a form input field or a component that looks like an input field.
  */
 const meta: Meta<typeof Input> = {
-  title: 'ui/Input',
+  title: "ui/Input",
   component: Input,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
-    className: 'w-96',
-    type: 'email',
-    placeholder: 'Email',
+    className: "w-96",
+    type: "email",
+    placeholder: "Email",
     disabled: false,
   },
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

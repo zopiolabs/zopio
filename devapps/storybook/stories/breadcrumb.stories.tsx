@@ -2,9 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { ArrowRightSquare } from 'lucide-react';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,15 +9,17 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@repo/design-system/ui/breadcrumb';
+} from "@repo/design-system/ui/breadcrumb";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { ArrowRightSquare } from "lucide-react";
 
 /**
  * Displays the path to the current resource using a hierarchy of links.
  */
 const meta: Meta<typeof Breadcrumb> = {
-  title: 'ui/Breadcrumb',
+  title: "ui/Breadcrumb",
   component: Breadcrumb,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {},
   render: (args) => (
@@ -41,7 +40,7 @@ const meta: Meta<typeof Breadcrumb> = {
     </Breadcrumb>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

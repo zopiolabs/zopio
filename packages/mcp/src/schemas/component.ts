@@ -5,22 +5,22 @@
 /**
  * Component resource schema for MCP
  */
-import { z } from 'zod';
-import { resourceSchema } from '../protocol.js';
+import { z } from "zod";
+import { resourceSchema } from "../protocol.js";
 
 /**
  * Schema for component prop definition
  */
 const propDefinitionSchema = z.object({
   type: z.enum([
-    'string',
-    'number',
-    'boolean',
-    'object',
-    'array',
-    'function',
-    'element',
-    'node',
+    "string",
+    "number",
+    "boolean",
+    "object",
+    "array",
+    "function",
+    "element",
+    "node",
   ]),
   description: z.string().optional(),
   required: z.boolean().optional().default(false),
@@ -31,20 +31,20 @@ const propDefinitionSchema = z.object({
  * Schema for component resources
  */
 export const componentSchema = resourceSchema.extend({
-  type: z.literal('component'),
+  type: z.literal("component"),
   attributes: z
     .object({
       name: z.string(),
       description: z.string().optional(),
       category: z
         .enum([
-          'layout',
-          'input',
-          'display',
-          'navigation',
-          'feedback',
-          'data',
-          'overlay',
+          "layout",
+          "input",
+          "display",
+          "navigation",
+          "feedback",
+          "data",
+          "overlay",
         ])
         .optional(),
       props: z.record(z.string(), propDefinitionSchema).optional(),
@@ -62,7 +62,7 @@ export const componentSchema = resourceSchema.extend({
       notes: z.string().optional(),
       packageName: z
         .string()
-        .regex(/^@repo\//, 'Package name must use @repo/* namespace')
+        .regex(/^@repo\//, "Package name must use @repo/* namespace")
         .optional(),
     })
     .optional(),
@@ -72,7 +72,7 @@ export const componentSchema = resourceSchema.extend({
         .object({
           data: z.object({
             id: z.string(),
-            type: z.literal('package'),
+            type: z.literal("package"),
           }),
         })
         .optional(),
@@ -95,12 +95,12 @@ export type ComponentResource = z.infer<typeof componentSchema>;
  */
 export function createComponentResource(
   id: string,
-  attributes: NonNullable<ComponentResource['attributes']>,
+  attributes: NonNullable<ComponentResource["attributes"]>,
   packageId?: string
 ): ComponentResource {
   return {
     id,
-    type: 'component',
+    type: "component",
     attributes,
     ...(packageId
       ? {
@@ -108,7 +108,7 @@ export function createComponentResource(
             package: {
               data: {
                 id: packageId,
-                type: 'package',
+                type: "package",
               },
             },
           },

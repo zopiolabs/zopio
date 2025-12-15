@@ -2,13 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { TriggerClient } from '@trigger.dev/sdk';
+import { TriggerClient } from "@trigger.dev/sdk";
 
 // Validate environment variables
 if (!process.env.TRIGGER_API_KEY) {
   // Using a safer logging approach
   process.stderr.write(
-    'TRIGGER_API_KEY environment variable is not set. Trigger.dev functionality will not work properly.\n'
+    "TRIGGER_API_KEY environment variable is not set. Trigger.dev functionality will not work properly.\n"
   );
 }
 
@@ -17,9 +17,9 @@ if (!process.env.TRIGGER_API_KEY) {
  * @see https://trigger.dev/docs/documentation/clients/javascript-client
  */
 export const client = new TriggerClient({
-  id: 'zopio-trigger',
-  apiKey: process.env.TRIGGER_API_KEY || 'missing-api-key',
-  apiUrl: process.env.TRIGGER_API_URL || 'https://api.trigger.dev',
+  id: "zopio-trigger",
+  apiKey: process.env.TRIGGER_API_KEY || "missing-api-key",
+  apiUrl: process.env.TRIGGER_API_URL || "https://api.trigger.dev",
 });
 
 /**

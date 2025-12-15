@@ -8,14 +8,14 @@
  * This example demonstrates how AI tools can use MCP to understand
  * the Zopio codebase structure and generate appropriate code.
  */
-import { MCPClient } from '../client.js';
+import { MCPClient } from "../client.js";
 import type {
   ApiResource,
   ComponentResource,
   ModelResource,
   PackageResource,
-} from '../schemas/index.js';
-import type { Resource } from '../types.js';
+} from "../schemas/index.js";
+import type { Resource } from "../types.js";
 
 /**
  * Logger utility to replace direct console usage
@@ -59,8 +59,8 @@ type ResourceInfo = { type: string; description?: string };
  * AI context manager that uses MCP to provide context to AI models
  */
 class AiContextManager {
-  private client: MCPClient;
-  private cache: Map<
+  private readonly client: MCPClient;
+  private readonly cache: Map<
     string,
     | ResourceInfo[]
     | PackageResource
@@ -79,7 +79,7 @@ class AiContextManager {
     this.client = new MCPClient({
       serverUrl,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   }
@@ -90,7 +90,7 @@ class AiContextManager {
    * @returns List of available resources
    */
   async getAvailableResources(): Promise<ResourceInfo[]> {
-    const cacheKey = 'resources';
+    const cacheKey = "resources";
 
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey) as ResourceInfo[];
@@ -123,7 +123,7 @@ class AiContextManager {
     }
 
     const resource = (await this.client.readResource(
-      'package',
+      "package",
       id
     )) as PackageResource;
     this.cache.set(cacheKey, resource);
@@ -144,7 +144,7 @@ class AiContextManager {
     }
 
     const resource = (await this.client.readResource(
-      'component',
+      "component",
       id
     )) as ComponentResource;
     this.cache.set(cacheKey, resource);
@@ -164,7 +164,7 @@ class AiContextManager {
       return this.cache.get(cacheKey) as ApiResource;
     }
 
-    const resource = (await this.client.readResource('api', id)) as ApiResource;
+    const resource = (await this.client.readResource("api", id)) as ApiResource;
     this.cache.set(cacheKey, resource);
     return resource;
   }
@@ -183,7 +183,7 @@ class AiContextManager {
     }
 
     const resource = (await this.client.readResource(
-      'model',
+      "model",
       id
     )) as ModelResource;
     this.cache.set(cacheKey, resource);
@@ -204,8 +204,8 @@ class AiContextManager {
     const context = {
       task,
       codebase: {
-        name: 'Zopio',
-        packageNamingConvention: '@repo/*',
+        name: "Zopio",
+        packageNamingConvention: "@repo/*",
         resources: relevantResources,
       },
       timestamp: new Date().toISOString(),
@@ -235,36 +235,36 @@ class AiContextManager {
 
     // Check for design system related tasks
     if (
-      taskLower.includes('design') ||
-      taskLower.includes('component') ||
-      taskLower.includes('ui')
+      taskLower.includes("design") ||
+      taskLower.includes("component") ||
+      taskLower.includes("ui")
     ) {
       try {
-        const designSystemPackage = await this.getPackage('design-system');
+        const designSystemPackage = await this.getPackage("design-system");
         relevantResources.packages.push(designSystemPackage);
 
         // If the task mentions buttons
-        if (taskLower.includes('button')) {
-          const buttonComponent = await this.getComponent('button');
+        if (taskLower.includes("button")) {
+          const buttonComponent = await this.getComponent("button");
           relevantResources.components.push(buttonComponent);
         }
 
         // If the task mentions cards
-        if (taskLower.includes('card')) {
-          const cardComponent = await this.getComponent('card');
+        if (taskLower.includes("card")) {
+          const cardComponent = await this.getComponent("card");
           relevantResources.components.push(cardComponent);
         }
       } catch (error) {
         // Use the logger utility instead of direct console usage
-        logger.error('Error fetching design system resources:', error);
+        logger.error("Error fetching design system resources:", error);
       }
     }
 
     // Check for API related tasks
     if (
-      taskLower.includes('api') ||
-      taskLower.includes('endpoint') ||
-      taskLower.includes('request')
+      taskLower.includes("api") ||
+      taskLower.includes("endpoint") ||
+      taskLower.includes("request")
     ) {
       // Fetch relevant API resources
       // Implementation would depend on available APIs
@@ -272,9 +272,9 @@ class AiContextManager {
 
     // Check for data model related tasks
     if (
-      taskLower.includes('model') ||
-      taskLower.includes('data') ||
-      taskLower.includes('schema')
+      taskLower.includes("model") ||
+      taskLower.includes("data") ||
+      taskLower.includes("schema")
     ) {
       // Fetch relevant model resources
       // Implementation would depend on available models
@@ -289,13 +289,13 @@ class AiContextManager {
  */
 async function exampleAiIntegration() {
   // Initialize AI context manager
-  const contextManager = new AiContextManager('http://localhost:3000/api/mcp');
+  const contextManager = new AiContextManager("http://localhost:3000/api/mcp");
 
   // Example tasks
   const tasks = [
-    'Create a new button component with primary and secondary variants',
-    'Implement an API endpoint for user authentication',
-    'Design a data model for product inventory',
+    "Create a new button component with primary and secondary variants",
+    "Implement an API endpoint for user authentication",
+    "Design a data model for product inventory",
   ];
 
   // Generate context for each task
@@ -304,11 +304,11 @@ async function exampleAiIntegration() {
     logger.log(`\nTask: ${task}`);
     try {
       const context = await contextManager.generateAiContext(task);
-      logger.log('Generated AI context:');
+      logger.log("Generated AI context:");
       logger.log(JSON.stringify(context, null, 2));
 
       // In a real implementation, this context would be sent to an AI model
-      logger.log('Example AI prompt:');
+      logger.log("Example AI prompt:");
       logger.log(`
 Task: ${task}
 
@@ -329,8 +329,8 @@ Please generate code that follows the Zopio conventions and integrates with the 
 // Example usage
 // Check if this is the main module being executed directly
 // Using a more TypeScript-friendly approach than import.meta.main
-if (import.meta.url.endsWith('ai-integration.ts')) {
+if (import.meta.url.endsWith("ai-integration.ts")) {
   exampleAiIntegration().catch((error) => {
-    logger.error('Error in AI integration example:', error);
+    logger.error("Error in AI integration example:", error);
   });
 }

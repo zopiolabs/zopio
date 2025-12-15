@@ -2,13 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import { fonts } from '@repo/design-system/lib/fonts';
-import { Button } from '@repo/design-system/ui/button';
-import { captureException } from '@sentry/nextjs';
-import type NextError from 'next/error';
-import { type FC, useEffect } from 'react';
+import { fonts } from "@repo/design-system/lib/fonts";
+import { Button } from "@repo/design-system/ui/button";
+import { captureException } from "@sentry/nextjs";
+import type NextError from "next/error";
+import { type FC, useEffect } from "react";
 
 type GlobalErrorProperties = {
   readonly error: NextError & { digest?: string };
@@ -21,7 +21,7 @@ const GlobalError: FC<GlobalErrorProperties> = ({ error, reset }) => {
   }, [error]);
 
   return (
-    <html lang="en" className={fonts}>
+    <html className={fonts} lang="en">
       <body>
         <h1>Oops, something went wrong</h1>
         <Button onClick={() => reset()}>Try again</Button>

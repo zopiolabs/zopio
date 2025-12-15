@@ -3,26 +3,26 @@
  */
 
 export default {
-  extends: ['@commitlint/config-conventional'],
+  extends: ["@commitlint/config-conventional"],
   rules: {
     // Add any custom rules here
-    'type-enum': [
+    "type-enum": [
       2,
-      'always',
+      "always",
       [
-        'build',
-        'chore',
-        'ci',
-        'docs',
-        'feat',
-        'fix',
-        'perf',
-        'refactor',
-        'revert',
-        'style',
-        'test',
+        "build",
+        "chore",
+        "ci",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "refactor",
+        "revert",
+        "style",
+        "test",
       ],
     ],
-    'subject-case': [0], // Disable case checking for subject
+    "subject-case": [0], // Disable case checking for subject
   },
 };

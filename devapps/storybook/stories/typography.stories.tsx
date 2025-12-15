@@ -15,8 +15,8 @@ import {
   TypographyMuted,
   TypographyP,
   TypographySmall,
-} from '@repo/design-system/ui/typography';
-import type { Meta, StoryObj } from '@storybook/nextjs';
+} from "@repo/design-system/ui/typography";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Typography components provide a consistent text hierarchy across the application.
@@ -55,10 +55,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
  * - Preserves text scaling for users with visual impairments
  */
 const meta = {
-  title: 'UI/Typography',
-  tags: ['autodocs'],
+  title: "UI/Typography",
+  tags: ["autodocs"],
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 } satisfies Meta;
 
@@ -125,7 +125,7 @@ export const List: Story = {
       <li>First item in the list</li>
       <li>Second item in the list</li>
       <li>
-        Third item with a nested element:{' '}
+        Third item with a nested element:{" "}
         <TypographyInlineCode>code</TypographyInlineCode>
       </li>
       <li>Fourth item in the list</li>
@@ -141,12 +141,12 @@ export const InlineCode: Story = {
   render: () => (
     <div className="space-y-6">
       <TypographyP>
-        You can use the{' '}
-        <TypographyInlineCode>TypographyInlineCode</TypographyInlineCode>{' '}
+        You can use the{" "}
+        <TypographyInlineCode>TypographyInlineCode</TypographyInlineCode>{" "}
         component to highlight code snippets within text.
       </TypographyP>
       <TypographyP>
-        For example:{' '}
+        For example:{" "}
         <TypographyInlineCode>
           npm install @repo/design-system
         </TypographyInlineCode>
@@ -261,7 +261,7 @@ export const AllTypography: Story = {
           <li>First item in the list</li>
           <li>Second item in the list</li>
           <li>
-            Third item with a nested element:{' '}
+            Third item with a nested element:{" "}
             <TypographyInlineCode>code</TypographyInlineCode>
           </li>
           <li>Fourth item in the list</li>
@@ -271,8 +271,8 @@ export const AllTypography: Story = {
       <div>
         <TypographyH2>Inline Code</TypographyH2>
         <TypographyP>
-          You can use the{' '}
-          <TypographyInlineCode>TypographyInlineCode</TypographyInlineCode>{' '}
+          You can use the{" "}
+          <TypographyInlineCode>TypographyInlineCode</TypographyInlineCode>{" "}
           component to highlight code snippets within text.
         </TypographyP>
       </div>

@@ -7,11 +7,11 @@ import {
   createComponentResource,
   createPackageResource,
   packageSchema,
-} from '../schemas/index.js';
+} from "../schemas/index.js";
 /**
  * Example MCP server implementation
  */
-import { MCPServer } from '../server.js';
+import { MCPServer } from "../server.js";
 
 // Logger utility to replace console.log
 const logger = {
@@ -31,20 +31,20 @@ const logger = {
 function createDesignSystemMCPServer() {
   // Define server configuration
   const serverConfig = {
-    name: 'ZopioDesignSystem',
-    description: 'MCP server for Zopio design system components',
+    name: "ZopioDesignSystem",
+    description: "MCP server for Zopio design system components",
     resources: {
       // Define package resource type
       package: MCPServer.createResourceDefinition(packageSchema, {
-        description: 'Zopio package information',
+        description: "Zopio package information",
         examples: [
           {
-            id: 'design-system',
-            type: 'package',
+            id: "design-system",
+            type: "package",
             attributes: {
-              name: '@repo/design-system',
-              version: '0.1.0',
-              description: 'Zopio design system components',
+              name: "@repo/design-system",
+              version: "0.1.0",
+              description: "Zopio design system components",
               private: true,
             },
           },
@@ -53,31 +53,31 @@ function createDesignSystemMCPServer() {
 
       // Define component resource type
       component: MCPServer.createResourceDefinition(componentSchema, {
-        description: 'UI component from the Zopio design system',
+        description: "UI component from the Zopio design system",
         examples: [
           {
-            id: 'button',
-            type: 'component',
+            id: "button",
+            type: "component",
             attributes: {
-              name: 'Button',
-              description: 'Primary button component',
-              category: 'input',
+              name: "Button",
+              description: "Primary button component",
+              category: "input",
               props: {
                 variant: {
-                  type: 'string',
-                  description: 'Button variant (primary, secondary, tertiary)',
+                  type: "string",
+                  description: "Button variant (primary, secondary, tertiary)",
                   required: false,
-                  defaultValue: 'primary',
+                  defaultValue: "primary",
                 },
                 size: {
-                  type: 'string',
-                  description: 'Button size (sm, md, lg)',
+                  type: "string",
+                  description: "Button size (sm, md, lg)",
                   required: false,
-                  defaultValue: 'md',
+                  defaultValue: "md",
                 },
                 disabled: {
-                  type: 'boolean',
-                  description: 'Whether the button is disabled',
+                  type: "boolean",
+                  description: "Whether the button is disabled",
                   required: false,
                   defaultValue: false,
                 },
@@ -86,8 +86,8 @@ function createDesignSystemMCPServer() {
             relationships: {
               package: {
                 data: {
-                  id: 'design-system',
-                  type: 'package',
+                  id: "design-system",
+                  type: "package",
                 },
               },
             },
@@ -101,26 +101,26 @@ function createDesignSystemMCPServer() {
   const server = new MCPServer(serverConfig);
 
   // Register design system package
-  const designSystemPackage = createPackageResource('design-system', {
-    name: '@repo/design-system',
-    version: '0.1.0',
-    description: 'Zopio design system components',
+  const designSystemPackage = createPackageResource("design-system", {
+    name: "@repo/design-system",
+    version: "0.1.0",
+    description: "Zopio design system components",
     private: true,
-    type: 'module',
+    type: "module",
     sideEffects: false,
-    main: './dist/index.js',
-    module: './dist/index.js',
-    types: './dist/index.d.ts',
+    main: "./dist/index.js",
+    module: "./dist/index.js",
+    types: "./dist/index.d.ts",
     exports: {
-      '.': {
-        types: './dist/index.d.ts',
-        import: './dist/index.js',
-        default: './dist/index.js',
+      ".": {
+        types: "./dist/index.d.ts",
+        import: "./dist/index.js",
+        default: "./dist/index.js",
       },
     },
     dependencies: {
-      react: '^19.1.0',
-      'tailwind-merge': '^3.3.0',
+      react: "^19.1.0",
+      "tailwind-merge": "^3.3.0",
     },
   });
 
@@ -128,110 +128,110 @@ function createDesignSystemMCPServer() {
 
   // Register button component
   const buttonComponent = createComponentResource(
-    'button',
+    "button",
     {
-      name: 'Button',
-      description: 'Primary button component for user interactions',
-      category: 'input',
+      name: "Button",
+      description: "Primary button component for user interactions",
+      category: "input",
       props: {
         variant: {
-          type: 'string',
-          description: 'Button variant (primary, secondary, tertiary)',
+          type: "string",
+          description: "Button variant (primary, secondary, tertiary)",
           required: false,
-          defaultValue: 'primary',
+          defaultValue: "primary",
         },
         size: {
-          type: 'string',
-          description: 'Button size (sm, md, lg)',
+          type: "string",
+          description: "Button size (sm, md, lg)",
           required: false,
-          defaultValue: 'md',
+          defaultValue: "md",
         },
         disabled: {
-          type: 'boolean',
-          description: 'Whether the button is disabled',
+          type: "boolean",
+          description: "Whether the button is disabled",
           required: false,
           defaultValue: false,
         },
         onClick: {
-          type: 'function',
-          description: 'Click handler',
+          type: "function",
+          description: "Click handler",
           required: false,
         },
         children: {
-          type: 'node',
-          description: 'Button content',
+          type: "node",
+          description: "Button content",
           required: true,
         },
       },
       examples: [
         {
-          name: 'Primary Button',
+          name: "Primary Button",
           code: '<Button variant="primary">Click me</Button>',
-          description: 'Standard primary button',
+          description: "Standard primary button",
         },
         {
-          name: 'Secondary Button',
+          name: "Secondary Button",
           code: '<Button variant="secondary" size="lg">Cancel</Button>',
-          description: 'Large secondary button',
+          description: "Large secondary button",
         },
       ],
       usage:
-        'Import the Button component from @repo/design-system and use it in your React components.',
+        "Import the Button component from @repo/design-system and use it in your React components.",
       accessibility:
-        'Buttons are fully keyboard accessible and support ARIA attributes.',
-      packageName: '@repo/design-system',
+        "Buttons are fully keyboard accessible and support ARIA attributes.",
+      packageName: "@repo/design-system",
     },
-    'design-system'
+    "design-system"
   );
 
   server.registerResource(buttonComponent);
 
   // Register card component
   const cardComponent = createComponentResource(
-    'card',
+    "card",
     {
-      name: 'Card',
-      description: 'Container component for grouping related content',
-      category: 'layout',
+      name: "Card",
+      description: "Container component for grouping related content",
+      category: "layout",
       props: {
         variant: {
-          type: 'string',
-          description: 'Card variant (default, elevated, outlined)',
+          type: "string",
+          description: "Card variant (default, elevated, outlined)",
           required: false,
-          defaultValue: 'default',
+          defaultValue: "default",
         },
         padding: {
-          type: 'string',
-          description: 'Card padding (none, sm, md, lg)',
+          type: "string",
+          description: "Card padding (none, sm, md, lg)",
           required: false,
-          defaultValue: 'md',
+          defaultValue: "md",
         },
         className: {
-          type: 'string',
-          description: 'Additional CSS classes',
+          type: "string",
+          description: "Additional CSS classes",
           required: false,
         },
         children: {
-          type: 'node',
-          description: 'Card content',
+          type: "node",
+          description: "Card content",
           required: true,
         },
       },
       examples: [
         {
-          name: 'Basic Card',
-          code: '<Card>This is a card</Card>',
-          description: 'Standard card with default styling',
+          name: "Basic Card",
+          code: "<Card>This is a card</Card>",
+          description: "Standard card with default styling",
         },
         {
-          name: 'Elevated Card',
+          name: "Elevated Card",
           code: '<Card variant="elevated">Elevated card with shadow</Card>',
-          description: 'Card with elevation and shadow',
+          description: "Card with elevation and shadow",
         },
       ],
-      packageName: '@repo/design-system',
+      packageName: "@repo/design-system",
     },
-    'design-system'
+    "design-system"
   );
 
   server.registerResource(cardComponent);
@@ -245,16 +245,16 @@ export const designSystemServer = createDesignSystemMCPServer();
 // Example usage
 // Check if this is the main module being executed directly
 // Using a more TypeScript-friendly approach than import.meta.main
-const isMainModule = import.meta.url.endsWith('server-example.ts');
+const isMainModule = import.meta.url.endsWith("server-example.ts");
 if (isMainModule) {
   // List available resources
   const resources = designSystemServer.listResources();
-  logger.log('Available resources:', resources);
+  logger.log("Available resources:", resources);
 
   // Get button component
   const buttonResponse = designSystemServer.handleReadResource(
-    'component',
-    'button'
+    "component",
+    "button"
   );
-  logger.log('Button component:', buttonResponse);
+  logger.log("Button component:", buttonResponse);
 }

@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import Ajv from 'ajv';
-import chalk from 'chalk';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import Ajv from "ajv";
+import chalk from "chalk";
 
 // Get __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -19,30 +19,30 @@ const ajv = new Ajv({ allErrors: true });
 // Load schemas
 const moduleSchemaPath = path.resolve(
   __dirname,
-  '../schemas/module.schema.json'
+  "../schemas/module.schema.json"
 );
-const appSchemaPath = path.resolve(__dirname, '../schemas/app.schema.json');
+const appSchemaPath = path.resolve(__dirname, "../schemas/app.schema.json");
 const pluginSchemaPath = path.resolve(
   __dirname,
-  '../schemas/plugin.schema.json'
+  "../schemas/plugin.schema.json"
 );
 const integrationSchemaPath = path.resolve(
   __dirname,
-  '../schemas/integration.schema.json'
+  "../schemas/integration.schema.json"
 );
-const toolSchemaPath = path.resolve(__dirname, '../schemas/tool.schema.json');
+const toolSchemaPath = path.resolve(__dirname, "../schemas/tool.schema.json");
 
 // Load and parse schemas
-const moduleSchema = JSON.parse(fs.readFileSync(moduleSchemaPath, 'utf8'));
-const appSchema = JSON.parse(fs.readFileSync(appSchemaPath, 'utf8'));
-const pluginSchema = JSON.parse(fs.readFileSync(pluginSchemaPath, 'utf8'));
+const moduleSchema = JSON.parse(fs.readFileSync(moduleSchemaPath, "utf8"));
+const appSchema = JSON.parse(fs.readFileSync(appSchemaPath, "utf8"));
+const pluginSchema = JSON.parse(fs.readFileSync(pluginSchemaPath, "utf8"));
 const integrationSchema = JSON.parse(
-  fs.readFileSync(integrationSchemaPath, 'utf8')
+  fs.readFileSync(integrationSchemaPath, "utf8")
 );
-const toolSchema = JSON.parse(fs.readFileSync(toolSchemaPath, 'utf8'));
+const toolSchema = JSON.parse(fs.readFileSync(toolSchemaPath, "utf8"));
 
 // Add schemas with IDs to resolve references
-ajv.addSchema(moduleSchema, 'module.schema.json');
+ajv.addSchema(moduleSchema, "module.schema.json");
 
 // Compile validators
 const validateModule = ajv.compile(moduleSchema);
@@ -52,10 +52,10 @@ const validateIntegration = ajv.compile(integrationSchema);
 const validateTool = ajv.compile(toolSchema);
 
 // Registry module types
-const moduleTypes = ['apps', 'plugins', 'integrations', 'tools'];
+const moduleTypes = ["apps", "plugins", "integrations", "tools"];
 
 // Registry root directory
-const registryDir = path.resolve(__dirname, '..');
+const registryDir = path.resolve(__dirname, "..");
 
 // Results tracking
 const results = {
@@ -81,13 +81,13 @@ const logger = {
  */
 function getValidatorForType(moduleType) {
   switch (moduleType) {
-    case 'apps':
+    case "apps":
       return validateApp;
-    case 'plugins':
+    case "plugins":
       return validatePlugin;
-    case 'integrations':
+    case "integrations":
       return validateIntegration;
-    case 'tools':
+    case "tools":
       return validateTool;
     default:
       return validateModule;
@@ -115,8 +115,8 @@ function displayValidationErrors(errors, errorType) {
  */
 function validateManifest(filePath, moduleType) {
   try {
-    const manifest = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    results.total++;
+    const manifest = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    results.total += 1;
 
     // First validate against the common module schema
     const isValidModule = validateModule(manifest);
@@ -126,15 +126,15 @@ function validateManifest(filePath, moduleType) {
     const isValidType = validator(manifest);
 
     if (isValidModule && isValidType) {
-      results.valid++;
+      results.valid += 1;
       logger.success(`✓ Valid: ${filePath}`);
     } else {
-      results.invalid++;
+      results.invalid += 1;
       const moduleErrors = validateModule.errors || [];
       const typeErrors = validator.errors || [];
 
       logger.error(`✗ Invalid: ${filePath}`);
-      displayValidationErrors(moduleErrors, 'Module');
+      displayValidationErrors(moduleErrors, "Module");
       displayValidationErrors(typeErrors, moduleType);
 
       results.errors.push({
@@ -144,8 +144,8 @@ function validateManifest(filePath, moduleType) {
       });
     }
   } catch (err) {
-    results.total++;
-    results.invalid++;
+    results.total += 1;
+    results.invalid += 1;
     logger.error(`✗ Error: ${filePath}`);
     logger.info(`    - ${err.message}`);
 
@@ -179,7 +179,7 @@ function scanModuleType(moduleType) {
     const manifestPath = path.join(
       moduleTypeDir,
       moduleDir,
-      'zopio.module.json'
+      "zopio.module.json"
     );
 
     if (fs.existsSync(manifestPath)) {
@@ -193,7 +193,7 @@ function scanModuleType(moduleType) {
 }
 
 // Main execution
-logger.bold('Validating Zopio module manifests...\n');
+logger.bold("Validating Zopio module manifests...\n");
 
 // Scan each module type
 for (const moduleType of moduleTypes) {
@@ -201,7 +201,7 @@ for (const moduleType of moduleTypes) {
 }
 
 // Print summary
-logger.info(`\n${chalk.bold('Summary:')}`);
+logger.info(`\n${chalk.bold("Summary:")}`);
 logger.info(`Total modules: ${results.total}`);
 logger.success(`Valid modules: ${results.valid}`);
 
@@ -209,6 +209,6 @@ if (results.invalid > 0) {
   logger.error(`Invalid modules: ${results.invalid}`);
   process.exit(1);
 } else {
-  logger.success('\nAll modules are valid!');
+  logger.success("\nAll modules are valid!");
   process.exit(0);
 }

@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { BaseModule } from './module.ts';
+import type { BaseModule } from "./module.ts";
 
 /**
  * OAuth configuration for integration modules
@@ -31,7 +31,7 @@ export interface CredentialsConfig {
   fields: {
     name: string;
     label: string;
-    type: 'string' | 'password' | 'number' | 'boolean';
+    type: "string" | "password" | "number" | "boolean";
     required?: boolean;
     description?: string;
   }[];
@@ -53,7 +53,7 @@ export interface Webhook {
 export interface Endpoint {
   name: string;
   path: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   description?: string;
   requestSchema?: Record<string, unknown>;
   responseSchema?: Record<string, unknown>;
@@ -63,17 +63,17 @@ export interface Endpoint {
  * Interface for integration module manifest
  */
 export interface IntegrationManifest extends BaseModule {
-  type: 'integration';
+  type: "integration";
   zopio: {
     category: string;
     icon: string;
     provider: string;
-    authType: 'oauth' | 'apiKey' | 'credentials' | 'none';
+    authType: "oauth" | "apiKey" | "credentials" | "none";
     configSchema?: Record<string, unknown>;
     endpoints?: {
       name: string;
       path: string;
-      method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+      method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
       description: string;
     }[];
     webhooks?: {

@@ -2,12 +2,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import * as ProgressPrimitive from '@radix-ui/react-progress';
-import type * as React from 'react';
-
-import { cn } from '@repo/design-system/lib/utils';
+import * as ProgressPrimitive from "@radix-ui/react-progress";
+import { cn } from "@repo/design-system/lib/utils";
+import type * as React from "react";
 
 function Progress({
   className,
@@ -16,16 +15,16 @@ function Progress({
 }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
   return (
     <ProgressPrimitive.Root
-      data-slot="progress"
       className={cn(
-        'relative h-2 w-full overflow-hidden rounded-full bg-primary/20',
+        "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
         className
       )}
+      data-slot="progress"
       {...props}
     >
       <ProgressPrimitive.Indicator
-        data-slot="progress-indicator"
         className="h-full w-full flex-1 bg-primary transition-all"
+        data-slot="progress-indicator"
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>

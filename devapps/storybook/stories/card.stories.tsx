@@ -2,9 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { BellRing } from 'lucide-react';
-
 import {
   Card,
   CardContent,
@@ -12,20 +9,22 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@repo/design-system/ui/card';
+} from "@repo/design-system/ui/card";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { BellRing } from "lucide-react";
 
 const notifications = [
   {
-    title: 'Your call has been confirmed.',
-    description: '1 hour ago',
+    title: "Your call has been confirmed.",
+    description: "1 hour ago",
   },
   {
-    title: 'You have a new message!',
-    description: '1 hour ago',
+    title: "You have a new message!",
+    description: "1 hour ago",
   },
   {
-    title: 'Your subscription is expiring soon!',
-    description: '2 hours ago',
+    title: "Your subscription is expiring soon!",
+    description: "2 hours ago",
   },
 ];
 
@@ -33,12 +32,12 @@ const notifications = [
  * Displays a card with header, content, and footer.
  */
 const meta: Meta<typeof Card> = {
-  title: 'ui/Card',
+  title: "ui/Card",
   component: Card,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
-    className: 'w-96',
+    className: "w-96",
   },
   render: (args) => (
     <Card {...args}>
@@ -47,8 +46,8 @@ const meta: Meta<typeof Card> = {
         <CardDescription>You have 3 unread messages.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
-        {notifications.map((notification, index) => (
-          <div key={index} className="flex items-center gap-4">
+        {notifications.map((notification) => (
+          <div className="flex items-center gap-4" key={notification.title}>
             <BellRing className="size-6" />
             <div>
               <p>{notification.title}</p>
@@ -58,14 +57,14 @@ const meta: Meta<typeof Card> = {
         ))}
       </CardContent>
       <CardFooter>
-        <button type="button" className="hover:underline">
+        <button className="hover:underline" type="button">
           Close
         </button>
       </CardFooter>
     </Card>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

@@ -2,23 +2,23 @@
  * SPDX-License-Identifier: MIT
  */
 
-import merge from 'lodash.merge';
-import type { Metadata } from 'next';
+import merge from "lodash.merge";
+import type { Metadata } from "next";
 
-type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
+type MetadataGenerator = Omit<Metadata, "description" | "title"> & {
   title: string;
   description: string;
   image?: string;
 };
 
-const applicationName = 'zopio';
-const author: Metadata['authors'] = {
-  name: 'Zopio Labs',
-  url: 'https://zopiolabs.dev/',
+const applicationName = "zopio";
+const author: Metadata["authors"] = {
+  name: "Zopio Labs",
+  url: "https://zopiolabs.dev/",
 };
-const publisher = 'Zopio Labs';
-const twitterHandle = '@zopiolabs';
-const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+const publisher = "Zopio Labs";
+const twitterHandle = "@zopiolabs";
+const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 const productionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
 export const createMetadata = ({
@@ -42,19 +42,19 @@ export const createMetadata = ({
     },
     appleWebApp: {
       capable: true,
-      statusBarStyle: 'default',
+      statusBarStyle: "default",
       title: parsedTitle,
     },
     openGraph: {
       title: parsedTitle,
       description,
-      type: 'website',
+      type: "website",
       siteName: applicationName,
-      locale: 'en_US',
+      locale: "en_US",
     },
     publisher,
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       creator: twitterHandle,
     },
   };

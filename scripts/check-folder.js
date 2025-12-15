@@ -1,22 +1,23 @@
+"use strict";
 /**
  * SPDX-License-Identifier: MIT
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
-const glob = require('fast-glob');
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
+const glob = require("fast-glob");
 
 // List of folder names to ignore at any depth
 const IGNORED_NAMES = [
-  'node_modules',
-  '.turbo',
-  '.next',
-  '.git',
-  'dist',
-  'build',
-  '.cache',
-  '.bin',
+  "node_modules",
+  ".turbo",
+  ".next",
+  ".git",
+  "dist",
+  "build",
+  ".cache",
+  ".bin",
 ];
 
 // Convert each folder name to glob patterns that match at any depth
@@ -29,7 +30,7 @@ const IGNORED_PATTERNS = IGNORED_NAMES.flatMap((name) => [
 const run = (label, command) => {
   console.info(`\n🔍 Running: ${label}\n`);
   try {
-    execSync(command, { stdio: 'inherit' });
+    execSync(command, { stdio: "inherit" });
     console.info(`✅ ${label} passed\n`);
   } catch (err) {
     console.error(`❌ ${label} failed\n`);
@@ -39,8 +40,8 @@ const run = (label, command) => {
 
 // Get all target files excluding ignored patterns
 async function getTargetFiles() {
-  const extensions = ['ts', 'tsx', 'js', 'jsx'];
-  const files = await glob(`**/*.{${extensions.join(',')}}`, {
+  const extensions = ["ts", "tsx", "js", "jsx"];
+  const files = await glob(`**/*.{${extensions.join(",")}}`, {
     ignore: IGNORED_PATTERNS,
     onlyFiles: true,
   });
@@ -51,13 +52,13 @@ async function getTargetFiles() {
 (async () => {
   const files = await getTargetFiles();
   if (files.length === 0) {
-    console.log('⚠️  No matching files found to format/lint.');
+    console.log("⚠️  No matching files found to format/lint.");
     process.exit(0);
   }
 
-  const filesArg = files.map((f) => `"${f}"`).join(' ');
+  const filesArg = files.map((f) => `"${f}"`).join(" ");
 
-  run('🧹 Ultracite Format', `npx ultracite format ${filesArg}`);
-  run('🔵 Ultracite Lint', `npx ultracite lint ${filesArg}`);
-  run('🧠 TypeScript Typecheck', `pnpm tsc --noEmit --project .`);
+  run("🧹 Ultracite Format", `npx ultracite format ${filesArg}`);
+  run("🔵 Ultracite Lint", `npx ultracite lint ${filesArg}`);
+  run("🧠 TypeScript Typecheck", "pnpm tsc --noEmit --project .");
 })();

@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import { useToast } from '@repo/design-system/hooks/use-toast';
+import { useToast } from "@repo/design-system/hooks/use-toast";
 import {
   Toast,
   ToastClose,
@@ -12,7 +12,7 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from '@repo/design-system/ui/toast';
+} from "@repo/design-system/ui/toast";
 
 export function Toaster(): React.JSX.Element {
   const { toasts } = useToast();

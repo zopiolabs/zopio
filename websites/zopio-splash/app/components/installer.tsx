@@ -2,16 +2,16 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
-const command = 'npx zopio@latest init';
+const command = "npx zopio@latest init";
 
 export const Installer = () => {
   const handleCopy = () => {
     navigator.clipboard.writeText(command);
-    toast.success('Copied to clipboard');
+    toast.success("Copied to clipboard");
   };
 
   return (
@@ -21,7 +21,7 @@ export const Installer = () => {
       </p>
       <div className="flex-1 truncate text-left font-mono">{command}</div>
       <div className="flex shrink-0 items-center gap-2">
-        <button type="button" aria-label="Copy" onClick={handleCopy} />
+        <button aria-label="Copy" onClick={handleCopy} type="button" />
       </div>
     </div>
   );

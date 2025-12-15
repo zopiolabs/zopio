@@ -2,18 +2,17 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Bold, Italic } from 'lucide-react';
-
-import { Toggle } from '@repo/design-system/ui/toggle';
+import { Toggle } from "@repo/design-system/ui/toggle";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Bold, Italic } from "lucide-react";
 
 /**
  * A two-state button that can be either on or off.
  */
 const meta: Meta<typeof Toggle> = {
-  title: 'ui/Toggle',
+  title: "ui/Toggle",
   component: Toggle,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     children: {
       control: { disable: true },
@@ -21,10 +20,10 @@ const meta: Meta<typeof Toggle> = {
   },
   args: {
     children: <Bold className="h-4 w-4" />,
-    'aria-label': 'Toggle bold',
+    "aria-label": "Toggle bold",
   },
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 export default meta;
@@ -42,9 +41,9 @@ export const Default: Story = {};
  */
 export const Outline: Story = {
   args: {
-    variant: 'outline',
+    variant: "outline",
     children: <Italic className="h-4 w-4" />,
-    'aria-label': 'Toggle italic',
+    "aria-label": "Toggle italic",
   },
 };
 
@@ -67,7 +66,7 @@ export const WithText: Story = {
  */
 export const Small: Story = {
   args: {
-    size: 'sm',
+    size: "sm",
   },
 };
 
@@ -77,7 +76,7 @@ export const Small: Story = {
  */
 export const Large: Story = {
   args: {
-    size: 'lg',
+    size: "lg",
   },
 };
 

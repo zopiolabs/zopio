@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import { useTranslations as useIntlTranslations } from 'next-intl';
+import { useTranslations as useIntlTranslations } from "next-intl";
 
 type TranslationResult = {
   t: ReturnType<typeof useIntlTranslations>;

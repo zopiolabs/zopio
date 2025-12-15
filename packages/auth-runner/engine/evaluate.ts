@@ -2,10 +2,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { logAccessAttempt } from '@repo/auth-log';
-import { evaluateAccess as baseEvaluate } from '@repo/auth-rbac/engine/evaluate';
-import type { UserContext } from '@repo/auth-rbac/types';
-import { combinedRules } from '../rules/combined-rules';
+import { logAccessAttempt } from "@repo/auth-log";
+import { evaluateAccess as baseEvaluate } from "@repo/auth-rbac/engine/evaluate";
+import type { UserContext } from "@repo/auth-rbac/types";
+import { combinedRules } from "../rules/combined-rules";
 
 export function evaluateAccess(ctx: {
   context: UserContext;

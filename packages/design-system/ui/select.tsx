@@ -2,13 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import * as SelectPrimitive from '@radix-ui/react-select';
-import type * as React from 'react';
+import * as SelectPrimitive from "@radix-ui/react-select";
+import type * as React from "react";
 // Icons replaced with inline SVGs
 
-import { cn } from '@repo/design-system/lib/utils';
+import { cn } from "@repo/design-system/lib/utils";
 
 function Select({
   ...props
@@ -30,36 +30,36 @@ function SelectValue({
 
 function SelectTrigger({
   className,
-  size = 'default',
+  size = "default",
   children,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
-  size?: 'sm' | 'default';
+  size?: "sm" | "default";
 }) {
   return (
     <SelectPrimitive.Trigger
-      data-slot="select-trigger"
-      data-size={size}
       className={cn(
         'flex w-fit items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[size=default]:h-9 data-[size=sm]:h-8 data-[placeholder]:text-muted-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*="size-"])]:size-4 [&_svg:not([class*="text-"])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0',
         className
       )}
+      data-size={size}
+      data-slot="select-trigger"
       {...props}
     >
       {children}
 
       <SelectPrimitive.Icon asChild>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
+          className="size-4 opacity-50"
           fill="none"
+          height="24"
           stroke="currentColor"
-          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="size-4 opacity-50"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path d="m6 9 6 6 6-6" />
         </svg>
@@ -71,19 +71,19 @@ function SelectTrigger({
 function SelectContent({
   className,
   children,
-  position = 'popper',
+  position = "popper",
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
-        data-slot="select-content"
         className={cn(
-          'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=open]:animate-in',
-          position === 'popper' &&
-            'data-[side=left]:-translate-x-1 data-[side=top]:-translate-y-1 data-[side=right]:translate-x-1 data-[side=bottom]:translate-y-1',
+          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=open]:animate-in",
+          position === "popper" &&
+            "data-[side=left]:-translate-x-1 data-[side=top]:-translate-y-1 data-[side=right]:translate-x-1 data-[side=bottom]:translate-y-1",
           className
         )}
+        data-slot="select-content"
         position={position}
         {...props}
       >
@@ -91,9 +91,9 @@ function SelectContent({
 
         <SelectPrimitive.Viewport
           className={cn(
-            'p-1',
-            position === 'popper' &&
-              'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1'
+            "p-1",
+            position === "popper" &&
+              "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1"
           )}
         >
           {children}
@@ -110,8 +110,8 @@ function SelectLabel({
 }: React.ComponentProps<typeof SelectPrimitive.Label>) {
   return (
     <SelectPrimitive.Label
+      className={cn("px-2 py-1.5 text-muted-foreground text-xs", className)}
       data-slot="select-label"
-      className={cn('px-2 py-1.5 text-muted-foreground text-xs', className)}
       {...props}
     />
   );
@@ -124,26 +124,26 @@ function SelectItem({
 }: React.ComponentProps<typeof SelectPrimitive.Item>) {
   return (
     <SelectPrimitive.Item
-      data-slot="select-item"
       className={cn(
         'relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg:not([class*="size-"])]:size-4 [&_svg:not([class*="text-"])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2',
         className
       )}
+      data-slot="select-item"
       {...props}
     >
       <span className="absolute right-2 flex size-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
+            className="size-4"
             fill="none"
+            height="24"
             stroke="currentColor"
-            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="size-4"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path d="M20 6 9 17l-5-5" />
           </svg>
@@ -161,8 +161,8 @@ function SelectSeparator({
 }: React.ComponentProps<typeof SelectPrimitive.Separator>) {
   return (
     <SelectPrimitive.Separator
+      className={cn("-mx-1 pointer-events-none my-1 h-px bg-border", className)}
       data-slot="select-separator"
-      className={cn('-mx-1 pointer-events-none my-1 h-px bg-border', className)}
       {...props}
     />
   );
@@ -174,24 +174,24 @@ function SelectScrollUpButton({
 }: React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>) {
   return (
     <SelectPrimitive.ScrollUpButton
-      data-slot="select-scroll-up-button"
       className={cn(
-        'flex cursor-default items-center justify-center py-1',
+        "flex cursor-default items-center justify-center py-1",
         className
       )}
+      data-slot="select-scroll-up-button"
       {...props}
     >
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
+        className="size-4"
         fill="none"
+        height="24"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <path d="m18 15-6-6-6 6" />
       </svg>
@@ -205,24 +205,24 @@ function SelectScrollDownButton({
 }: React.ComponentProps<typeof SelectPrimitive.ScrollDownButton>) {
   return (
     <SelectPrimitive.ScrollDownButton
-      data-slot="select-scroll-down-button"
       className={cn(
-        'flex cursor-default items-center justify-center py-1',
+        "flex cursor-default items-center justify-center py-1",
         className
       )}
+      data-slot="select-scroll-down-button"
       {...props}
     >
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
+        className="size-4"
         fill="none"
+        height="24"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <path d="m6 9 6 6 6-6" />
       </svg>

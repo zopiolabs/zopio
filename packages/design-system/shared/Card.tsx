@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type React from 'react';
+import type React from "react";
 import {
   CardContent,
   CardDescription,
@@ -10,12 +10,11 @@ import {
   CardHeader,
   CardTitle,
   Card as ShadcnCard,
-} from '../ui/card';
+} from "../ui/card";
 
 // Utility function for class name merging
-const cn = (...classes: (string | undefined)[]) => {
-  return classes.filter(Boolean).join(' ');
-};
+const cn = (...classes: (string | undefined)[]) =>
+  classes.filter(Boolean).join(" ");
 
 export interface CardProps {
   title?: React.ReactNode;
@@ -51,18 +50,18 @@ export const Card: React.FC<CardProps> = ({
   const hasHeader = title || description;
 
   return (
-    <ShadcnCard className={cn('border shadow-sm', className)}>
+    <ShadcnCard className={cn("border shadow-sm", className)}>
       {hasHeader && (
         <CardHeader className={headerClassName}>
           {title && (
-            <CardTitle className={cn('font-semibold text-lg', titleClassName)}>
+            <CardTitle className={cn("font-semibold text-lg", titleClassName)}>
               {title}
             </CardTitle>
           )}
           {description && (
             <CardDescription
               className={cn(
-                'text-muted-foreground text-sm',
+                "text-muted-foreground text-sm",
                 descriptionClassName
               )}
             >
@@ -72,13 +71,13 @@ export const Card: React.FC<CardProps> = ({
         </CardHeader>
       )}
 
-      <CardContent className={cn('p-4', contentClassName)}>
+      <CardContent className={cn("p-4", contentClassName)}>
         {children}
       </CardContent>
 
       {footer && (
         <CardFooter
-          className={cn('flex justify-end gap-2 p-4 pt-0', footerClassName)}
+          className={cn("flex justify-end gap-2 p-4 pt-0", footerClassName)}
         >
           {footer}
         </CardFooter>

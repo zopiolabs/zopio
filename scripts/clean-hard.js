@@ -1,39 +1,34 @@
 #!/usr/bin/env node
+"use strict";
 /**
  * SPDX-License-Identifier: MIT
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
 
 const root = process.cwd();
 const args = process.argv.slice(2);
-const skipInstall = args.includes('--no-install');
-const dryRun = args.includes('--dry-run');
-const skipRecursive = args.includes('--no-recursive');
+const skipInstall = args.includes("--no-install");
+const dryRun = args.includes("--dry-run");
+const skipRecursive = args.includes("--no-recursive");
 
 const FOLDERS = [
-  'node_modules',
-  'dist',
-  'build',
-  'out',
-  '.next',
-  '.turbo',
-  '.vercel',
-  '.cache',
+  "node_modules",
+  "dist",
+  "build",
+  "out",
+  ".next",
+  ".turbo",
+  ".vercel",
+  ".cache",
 ];
 
-const FILES = [
-  'pnpm-lock.yaml',
-  'package-lock.json',
-  'yarn.lock',
-];
+const FILES = ["pnpm-lock.yaml", "package-lock.json", "yarn.lock"];
 
 // Directories to skip when doing recursive search
-const SKIP_DIRS = [
-  '.git',
-];
+const SKIP_DIRS = [".git"];
 
 let totalFoldersRemoved = 0;
 let totalFilesRemoved = 0;
@@ -48,14 +43,17 @@ function removeFolder(folderPath) {
 
   if (fs.existsSync(folderPath)) {
     if (dryRun) {
-      logWouldRemove('folder', relativePath || '.');
+      logWouldRemove("folder", relativePath || ".");
     } else {
       try {
         fs.rmSync(folderPath, { recursive: true, force: true });
-        console.log(`✔ Removed folder: ${relativePath || '.'}`);
+        console.log(`✔ Removed folder: ${relativePath || "."}`);
         totalFoldersRemoved++;
       } catch (err) {
-        console.error(`❌ Failed to remove folder: ${relativePath || '.'}`, err);
+        console.error(
+          `❌ Failed to remove folder: ${relativePath || "."}`,
+          err
+        );
       }
     }
   }
@@ -67,7 +65,7 @@ function removeFile(filePath) {
 
   if (fs.existsSync(filePath)) {
     if (dryRun) {
-      logWouldRemove('file', relativePath);
+      logWouldRemove("file", relativePath);
     } else {
       try {
         fs.rmSync(filePath);
@@ -85,7 +83,7 @@ function removeFile(filePath) {
  */
 function cleanDirectory(dir) {
   // Clean specific folders in current directory
-  FOLDERS.forEach(folder => {
+  FOLDERS.forEach((folder) => {
     const folderPath = path.join(dir, folder);
     if (fs.existsSync(folderPath)) {
       removeFolder(folderPath);
@@ -93,7 +91,7 @@ function cleanDirectory(dir) {
   });
 
   // Clean specific files in current directory
-  FILES.forEach(file => {
+  FILES.forEach((file) => {
     const filePath = path.join(dir, file);
     if (fs.existsSync(filePath)) {
       removeFile(filePath);
@@ -124,30 +122,36 @@ function cleanDirectory(dir) {
 }
 
 function reinstall() {
-  console.log('\n📦 Reinstalling dependencies with pnpm...\n');
+  console.log("\n📦 Reinstalling dependencies with pnpm...\n");
   try {
-    execSync('pnpm install', { stdio: 'inherit' });
-    console.log('\n✅ Reinstallation complete.');
+    execSync("pnpm install", { stdio: "inherit" });
+    console.log("\n✅ Reinstallation complete.");
   } catch (err) {
-    console.error('❌ Failed to reinstall dependencies.', err);
+    console.error("❌ Failed to reinstall dependencies.", err);
   }
 }
 
-console.log('🧹 Starting full cleanup...');
-console.log(skipRecursive ? '🔍 Cleaning root directory only' : '🔍 Cleaning root and all subdirectories recursively');
-console.log('');
+console.log("🧹 Starting full cleanup...");
+console.log(
+  skipRecursive
+    ? "🔍 Cleaning root directory only"
+    : "🔍 Cleaning root and all subdirectories recursively"
+);
+console.log("");
 
 // Start the cleaning process from the root directory
 cleanDirectory(root);
 
 if (dryRun) {
-  console.log('\n🚫 Dry-run mode: nothing was deleted.');
+  console.log("\n🚫 Dry-run mode: nothing was deleted.");
 } else {
-  console.log(`\n🧹 Cleanup summary: removed ${totalFoldersRemoved} folders and ${totalFilesRemoved} files`);
+  console.log(
+    `\n🧹 Cleanup summary: removed ${totalFoldersRemoved} folders and ${totalFilesRemoved} files`
+  );
 
-  if (!skipInstall) {
-    reinstall();
+  if (skipInstall) {
+    console.log("\n🚫 Skipping dependency installation (due to --no-install)");
   } else {
-    console.log('\n🚫 Skipping dependency installation (due to --no-install)');
+    reinstall();
   }
 }

@@ -2,15 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import * as React from 'react';
+import { cn } from "@repo/design-system/lib/utils";
+import * as React from "react";
+import * as ResizablePrimitive from "react-resizable-panels";
 
-import * as ResizablePrimitive from 'react-resizable-panels';
-
-import { cn } from '@repo/design-system/lib/utils';
-
-type Direction = 'horizontal' | 'vertical';
+type Direction = "horizontal" | "vertical";
 
 interface ResizablePanelGroupProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -24,17 +22,16 @@ const ResizablePanelGroup: React.FC<ResizablePanelGroupProps> = ({
   className,
   direction,
   ...props
-}) => {
-  return React.createElement(ResizablePrimitive.PanelGroup as any, {
-    'data-slot': 'resizable-panel-group',
+}) =>
+  React.createElement(ResizablePrimitive.PanelGroup as any, {
+    "data-slot": "resizable-panel-group",
     direction,
     className: cn(
-      'flex h-full w-full data-[panel-group-direction=vertical]:flex-col',
+      "flex h-full w-full data-[panel-group-direction=vertical]:flex-col",
       className
     ),
     ...props,
   });
-};
 
 interface ResizablePanelProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -64,9 +61,9 @@ const ResizablePanel: React.FC<ResizablePanelProps> = ({
   maxSize,
   style,
   ...props
-}) => {
-  return React.createElement(ResizablePrimitive.Panel as any, {
-    'data-slot': 'resizable-panel',
+}) =>
+  React.createElement(ResizablePrimitive.Panel as any, {
+    "data-slot": "resizable-panel",
     className,
     defaultSize,
     id,
@@ -75,7 +72,6 @@ const ResizablePanel: React.FC<ResizablePanelProps> = ({
     style,
     ...props,
   });
-};
 
 interface ResizableHandleProps {
   withHandle?: boolean;
@@ -88,54 +84,53 @@ const ResizableHandle: React.FC<ResizableHandleProps> = ({
   withHandle,
   className,
   ...props
-}) => {
-  return React.createElement(
+}) =>
+  React.createElement(
     ResizablePrimitive.PanelResizeHandle as any,
     {
-      'data-slot': 'resizable-handle',
+      "data-slot": "resizable-handle",
       className: cn(
-        'after:-translate-x-1/2 data-[panel-group-direction=vertical]:after:-translate-y-1/2 relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90',
+        "after:-translate-x-1/2 data-[panel-group-direction=vertical]:after:-translate-y-1/2 relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:left-1/2 after:w-1 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0 [&[data-panel-group-direction=vertical]>div]:rotate-90",
         className
       ),
       ...props,
     },
     withHandle &&
       React.createElement(
-        'div',
+        "div",
         {
           className:
-            'bg-border z-10 flex h-4 w-3 items-center justify-center rounded-xs border',
+            "bg-border z-10 flex h-4 w-3 items-center justify-center rounded-xs border",
         },
         React.createElement(
-          'svg',
+          "svg",
           {
-            xmlns: 'http://www.w3.org/2000/svg',
-            width: '24',
-            height: '24',
-            viewBox: '0 0 24 24',
-            fill: 'none',
-            stroke: 'currentColor',
-            strokeWidth: '2',
-            strokeLinecap: 'round',
-            strokeLinejoin: 'round',
-            className: 'size-2.5',
+            xmlns: "http://www.w3.org/2000/svg",
+            width: "24",
+            height: "24",
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            className: "size-2.5",
           },
-          React.createElement('line', {
-            x1: '12',
-            x2: '12',
-            y1: '3',
-            y2: '21',
+          React.createElement("line", {
+            x1: "12",
+            x2: "12",
+            y1: "3",
+            y2: "21",
           }),
-          React.createElement('line', {
-            x1: '18',
-            x2: '18',
-            y1: '3',
-            y2: '21',
+          React.createElement("line", {
+            x1: "18",
+            x2: "18",
+            y1: "3",
+            y2: "21",
           }),
-          React.createElement('line', { x1: '6', x2: '6', y1: '3', y2: '21' })
+          React.createElement("line", { x1: "6", x2: "6", y1: "3", y2: "21" })
         )
       )
   );
-};
 
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle };

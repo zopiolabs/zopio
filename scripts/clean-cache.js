@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict";
 /**
  * SPDX-License-Identifier: MIT
  *
@@ -7,31 +8,31 @@
  * - .next, .turbo, .vercel, .cache
  */
 
-const fs = require('fs');
-const path = require('path');
-const glob = require('fast-glob');
+const fs = require("fs");
+const path = require("path");
+const glob = require("fast-glob");
 
 const TARGETS = [
-  '**/dist',
-  '**/build',
-  '**/out',
-  '**/.next',
-  '**/.turbo',
-  '**/.vercel',
-  '**/.cache',
+  "**/dist",
+  "**/build",
+  "**/out",
+  "**/.next",
+  "**/.turbo",
+  "**/.vercel",
+  "**/.cache",
 ];
 
 (async () => {
   const root = process.cwd();
   const folders = await glob(TARGETS, {
     onlyDirectories: true,
-    ignore: ['**/.git/**'],
+    ignore: ["**/.git/**"],
     cwd: root,
     absolute: true,
   });
 
   if (folders.length === 0) {
-    console.log('✅ No cache or build folders found.');
+    console.log("✅ No cache or build folders found.");
     return;
   }
 
@@ -46,5 +47,5 @@ const TARGETS = [
     }
   }
 
-  console.log('\n✅ Cache cleanup complete.');
+  console.log("\n✅ Cache cleanup complete.");
 })();

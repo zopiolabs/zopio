@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { getAuth } from '@repo/auth/server';
-import type { NextRequest } from 'next/server';
-import type { UserContext } from '../types';
+import { getAuth } from "@repo/auth/server";
+import type { NextRequest } from "next/server";
+import type { UserContext } from "../types";
 
 // Define the expected structure of auth.sessionClaims
 interface SessionClaims {
@@ -27,8 +27,8 @@ export async function getUserContext(req: NextRequest): Promise<UserContext> {
     req as unknown as Parameters<typeof getAuth>[0]
   )) as Auth;
 
-  if (!auth.userId || !auth.orgId || !auth.sessionClaims?.metadata?.role) {
-    throw new Error('Unauthorized or incomplete session');
+  if (!(auth.userId && auth.orgId && auth.sessionClaims?.metadata?.role)) {
+    throw new Error("Unauthorized or incomplete session");
   }
 
   return {

@@ -2,25 +2,24 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Label } from '@repo/design-system/ui/label';
+import { Label } from "@repo/design-system/ui/label";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Renders an accessible label associated with controls.
  */
 const meta: Meta<typeof Label> = {
-  title: 'ui/Label',
+  title: "ui/Label",
   component: Label,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     children: {
-      control: { type: 'text' },
+      control: { type: "text" },
     },
   },
   args: {
-    children: 'Your email address',
-    htmlFor: 'email',
+    children: "Your email address",
+    htmlFor: "email",
   },
 };
 

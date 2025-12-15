@@ -2,25 +2,24 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Info } from 'lucide-react';
-
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@repo/design-system/ui/collapsible';
+} from "@repo/design-system/ui/collapsible";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Info } from "lucide-react";
 
 /**
  * An interactive component which expands/collapses a panel.
  */
 const meta: Meta<typeof Collapsible> = {
-  title: 'ui/Collapsible',
+  title: "ui/Collapsible",
   component: Collapsible,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
-    className: 'w-96',
+    className: "w-96",
     disabled: false,
   },
   render: (args) => (
@@ -36,7 +35,7 @@ const meta: Meta<typeof Collapsible> = {
     </Collapsible>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

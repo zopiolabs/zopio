@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { RichText } from 'basehub/react-rich-text';
-import type { FC, ReactElement } from 'react';
+import { RichText } from "basehub/react-rich-text";
+import type { FC, ReactElement } from "react";
 
 // Define a more specific type for the content based on what we know about the structure
 type RichTextContent = unknown;
@@ -14,7 +14,10 @@ type BodyProps = {
     pre?: ({
       code,
       language,
-    }: { code: string; language: string }) => ReactElement;
+    }: {
+      code: string;
+      language: string;
+    }) => ReactElement;
   };
 };
 

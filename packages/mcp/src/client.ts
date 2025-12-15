@@ -11,13 +11,13 @@ import type {
   MCPErrorResponse,
   ReadResourceResponse,
   Resource,
-} from './types.js';
+} from "./types.js";
 
 /**
  * MCP Client class for interacting with MCP servers
  */
 export class MCPClient {
-  private config: MCPClientConfig;
+  private readonly config: MCPClientConfig;
 
   /**
    * Creates a new MCP client instance
@@ -35,9 +35,9 @@ export class MCPClient {
    * @returns Promise resolving to list of available resources
    */
   async listResources(cursor?: string): Promise<ListResourcesResponse> {
-    const url = new URL('/resources', this.config.serverUrl);
+    const url = new URL("/resources", this.config.serverUrl);
     if (cursor) {
-      url.searchParams.set('cursor', cursor);
+      url.searchParams.set("cursor", cursor);
     }
 
     const response = await this.fetchWithHeaders(url.toString());
@@ -84,7 +84,7 @@ export class MCPClient {
     options: RequestInit = {}
   ): Promise<Response> {
     const headers = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...this.config.headers,
       ...options.headers,
     };

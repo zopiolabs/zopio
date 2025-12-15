@@ -1,0 +1,62 @@
+diff --git a/jsx-runtime/jsx-dev-runtime.js b/jsx-runtime/jsx-dev-runtime.js
+index 7b743366d66d39a22bad3e1c24011e16e3886959..f62c2e6aaa123bb2e733d5a4b471ac80f4f1c540 100644
+--- a/jsx-runtime/jsx-dev-runtime.js
++++ b/jsx-runtime/jsx-dev-runtime.js
+@@ -1,9 +1,36 @@
+ // This hack is necessary because React forces the use of the non-dev JSX runtime
+ // when NODE_ENV is set to 'production', which would break the data-source references
+ // we need for stack traces in the preview server.
+-import ReactJSXDevRuntime from 'react/jsx-dev-runtime';
+ 
+-export function jsxDEV(type, props, key, isStaticChildren, source, self) {
++const path = require('node:path');
++const { createRequire } = require('node:module');
++
++const localRequire = createRequire(__filename);
++
++const reactPackageJsonPath = localRequire.resolve('react/package.json');
++const reactDir = path.dirname(reactPackageJsonPath);
++const reactJsxDevRuntimeDevelopmentPath = path.join(
++  reactDir,
++  'cjs',
++  'react-jsx-dev-runtime.development.js',
++);
++
++const prevNodeEnv = process.env.NODE_ENV;
++let ReactJSXDevRuntime;
++
++try {
++  process.env.NODE_ENV = 'development';
++  try {
++    delete localRequire.cache[reactJsxDevRuntimeDevelopmentPath];
++    ReactJSXDevRuntime = localRequire(reactJsxDevRuntimeDevelopmentPath);
++  } catch {
++    ReactJSXDevRuntime = localRequire('react/jsx-dev-runtime');
++  }
++} finally {
++  process.env.NODE_ENV = prevNodeEnv;
++}
++
++function jsxDEV(type, props, key, isStaticChildren, source, self) {
+   const newProps = { ...props };
+ 
+   if (source && shouldIncludeSourceReference) {
+@@ -21,4 +48,5 @@ export function jsxDEV(type, props, key, isStaticChildren, source, self) {
+   );
+ }
+ 
+-export const Fragment = ReactJSXDevRuntime.Fragment;
++exports.jsxDEV = jsxDEV;
++exports.Fragment = ReactJSXDevRuntime.Fragment;
+diff --git a/src/utils/create-jsx-runtime.ts b/src/utils/create-jsx-runtime.ts
+index d8603b6541ce3791a6cbf57a201c3a7205b94fe2..865270517da3299676b760b979e7383e06df23ea 100644
+--- a/src/utils/create-jsx-runtime.ts
++++ b/src/utils/create-jsx-runtime.ts
+@@ -32,6 +32,7 @@ export const createJsxRuntime = async (
+     bundle: true,
+     outfile: path.join(jsxRuntimePath, 'jsx-dev-runtime.js'),
+     format: 'cjs',
++    platform: 'node',
+     logLevel: 'silent',
+     stdin: {
+       resolveDir: cwd,

@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Toolbar } from '@repo/cms/components/toolbar';
-import type { ReactNode } from 'react';
+import { Toolbar } from "@repo/cms/components/toolbar";
+import type { ReactNode } from "react";
 
 type LegalLayoutProps = {
   children: ReactNode;

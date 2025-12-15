@@ -2,10 +2,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-import fs from 'node:fs';
-import type { AccessLogEntry } from '../types';
+import fs from "node:fs";
+import type { AccessLogEntry } from "../types";
 
-const logPath = './logs/access.log';
+const logPath = "./logs/access.log";
 
 export const fileLogger = {
   write: (entry: AccessLogEntry): void => {

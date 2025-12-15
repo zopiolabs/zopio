@@ -2,11 +2,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { FC, ReactNode } from 'react';
-import { GoogleAnalytics } from './google';
-import { keys } from './keys';
-import { PostHogProvider } from './posthog/client';
-import { VercelAnalytics } from './vercel';
+import type { FC, ReactNode } from "react";
+import { GoogleAnalytics } from "./google";
+import { keys } from "./keys";
+import { PostHogProvider } from "./posthog/client";
+import { VercelAnalytics } from "./vercel";
 
 type AnalyticsProviderProps = {
   readonly children: ReactNode;

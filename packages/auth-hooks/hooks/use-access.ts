@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { evaluateAccess } from '@repo/auth-runner';
+import { evaluateAccess } from "@repo/auth-runner";
 
 interface Record {
   [key: string]: unknown;
@@ -54,7 +54,7 @@ export function useAccess(params: Params): AccessResult {
   } catch (error) {
     return {
       can: false,
-      reason: error instanceof Error ? error.message : 'Unknown error',
+      reason: error instanceof Error ? error.message : "Unknown error",
       loading: false,
     };
   }

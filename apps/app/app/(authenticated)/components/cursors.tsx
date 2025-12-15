@@ -2,10 +2,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import { useMyPresence, useOthers } from '@repo/collaboration/hooks';
-import { useEffect } from 'react';
+import { useMyPresence, useOthers } from "@repo/collaboration/hooks";
+import { useEffect } from "react";
 
 const Cursor = ({
   name,
@@ -26,10 +26,10 @@ const Cursor = ({
   >
     <svg
       className="absolute top-0 left-0"
-      width="24"
+      fill="none"
       height="36"
       viewBox="0 0 24 36"
-      fill="none"
+      width="24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <title>Cursor</title>
@@ -81,12 +81,12 @@ export const Cursors = () => {
       });
     };
 
-    document.body.addEventListener('pointermove', onPointerMove);
-    document.body.addEventListener('pointerleave', onPointerLeave);
+    document.body.addEventListener("pointermove", onPointerMove);
+    document.body.addEventListener("pointerleave", onPointerLeave);
 
     return () => {
-      document.body.removeEventListener('pointermove', onPointerMove);
-      document.body.removeEventListener('pointerleave', onPointerLeave);
+      document.body.removeEventListener("pointermove", onPointerMove);
+      document.body.removeEventListener("pointerleave", onPointerLeave);
     };
   }, [updateMyPresence]);
 
@@ -97,13 +97,13 @@ export const Cursors = () => {
 
     return (
       <Cursor
-        key={`cursor-${connectionId}`}
+        color={info.color}
         // connectionId is an integer that is incremented at every new connections
         // Assigning a color with a modulo makes sure that a specific user has the same colors on every clients
-        color={info.color}
+        key={`cursor-${connectionId}`}
+        name={info?.name}
         x={presence.cursor.x}
         y={presence.cursor.y}
-        name={info?.name}
       />
     );
   });
