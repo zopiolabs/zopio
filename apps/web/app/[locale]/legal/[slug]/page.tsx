@@ -2,18 +2,18 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Sidebar } from '@/components/sidebar';
-import { ArrowLeftIcon } from '@radix-ui/react-icons';
-import { legal } from '@repo/cms';
-import type { LegalPost } from '@repo/cms';
-import { Body } from '@repo/cms/components/body';
-import { Feed } from '@repo/cms/components/feed';
-import { TableOfContents } from '@repo/cms/components/toc';
-import { createMetadata } from '@repo/seo/metadata';
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import Balancer from 'react-wrap-balancer';
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import type { LegalPost } from "@repo/cms";
+import { legal } from "@repo/cms";
+import { Body } from "@repo/cms/components/body";
+import { Feed } from "@repo/cms/components/feed";
+import { TableOfContents } from "@repo/cms/components/toc";
+import { createMetadata } from "@repo/seo/metadata";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import Balancer from "react-wrap-balancer";
+import { Sidebar } from "@/components/sidebar";
 
 type LegalPageProperties = {
   readonly params: Promise<{
@@ -43,7 +43,7 @@ export const generateStaticParams = async (): Promise<{ slug: string }[]> => {
   return posts
     .filter(
       (post): post is typeof post & { _slug: string } =>
-        typeof post._slug === 'string' && post._slug !== ''
+        typeof post._slug === "string" && post._slug !== ""
     )
     .map(({ _slug }) => ({ slug: _slug }));
 };
@@ -65,6 +65,8 @@ const LegalPage = async ({ params }: LegalPageProperties) => {
     <Feed data={{ page: legalPost }}>
       {(feedData) => {
         const page = feedData.page as LegalPost;
+        const content = page?.body?.json?.content;
+        const contentArray = Array.isArray(content) ? content : null;
 
         if (!page) {
           return null;
@@ -88,25 +90,22 @@ const LegalPage = async ({ params }: LegalPageProperties) => {
             <div className="mt-16 flex flex-col items-start gap-8 sm:flex-row">
               <div className="sm:flex-1">
                 <div className="prose prose-neutral dark:prose-invert">
-                  {page.body?.json?.content &&
-                  Array.isArray(page.body.json.content) ? (
-                    <Body content={page.body.json.content} />
-                  ) : null}
+                  {contentArray ? <Body content={contentArray} /> : null}
                 </div>
               </div>
               <div className="sticky top-24 hidden shrink-0 md:block">
                 <Sidebar
+                  date={new Date()}
+                  readingTime={
+                    page.body?.readingTime
+                      ? `${page.body.readingTime} min read`
+                      : ""
+                  }
                   toc={
                     page.body?.json?.toc ? (
                       <TableOfContents data={page.body.json.toc} />
                     ) : null
                   }
-                  readingTime={
-                    page.body?.readingTime
-                      ? `${page.body.readingTime} min read`
-                      : ''
-                  }
-                  date={new Date()}
                 />
               </div>
             </div>

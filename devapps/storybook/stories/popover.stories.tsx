@@ -2,21 +2,20 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@repo/design-system/ui/popover';
+} from "@repo/design-system/ui/popover";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Displays rich content in a portal, triggered by a button.
  */
 const meta: Meta<typeof Popover> = {
-  title: 'ui/Popover',
+  title: "ui/Popover",
   component: Popover,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
 
   render: (args) => (
@@ -26,7 +25,7 @@ const meta: Meta<typeof Popover> = {
     </Popover>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

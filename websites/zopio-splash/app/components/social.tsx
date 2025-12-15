@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Tweet } from 'react-tweet';
+import { Tweet } from "react-tweet";
 
 const tweets: string[] = [];
 
@@ -13,7 +13,7 @@ export const Social = () => (
     </div>
     <div className="columns-1 gap-4 p-8 sm:col-span-2 md:columns-2">
       {tweets.map((tweet: string, index: number) => (
-        <div key={tweet} className={index ? '' : 'sm:-mt-6'}>
+        <div className={index ? "" : "sm:-mt-6"} key={tweet}>
           <Tweet id={tweet} />
         </div>
       ))}

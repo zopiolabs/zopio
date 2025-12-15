@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { capitalize } from '@repo/design-system/lib/utils';
-import type { ReactNode } from 'react';
+import { capitalize } from "@repo/design-system/lib/utils";
+import type { ReactNode } from "react";
 
 type SidebarProperties = {
   readonly date: Date;
@@ -22,11 +22,11 @@ export const Sidebar = async ({
     <div className="grid gap-2">
       <p className="text-muted-foreground text-sm">Published</p>
       <p className="rounded-sm text-foreground text-sm">
-        {new Intl.DateTimeFormat('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          timeZone: 'America/New_York',
+        {new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          timeZone: "America/New_York",
         }).format(date)}
       </p>
     </div>
@@ -34,14 +34,14 @@ export const Sidebar = async ({
       <p className="text-muted-foreground text-sm">Reading Time</p>
       <p className="rounded-sm text-foreground text-sm">{readingTime}</p>
     </div>
-    {tags && (
+    {tags ? (
       <div className="grid gap-2">
         <p className="text-muted-foreground text-sm">Tags</p>
         <p className="rounded-sm text-foreground text-sm">
-          {tags.map(capitalize).join(', ')}
+          {tags.map(capitalize).join(", ")}
         </p>
       </div>
-    )}
+    ) : null}
     {Toc ? (
       <div className="-mx-2">
         <div className="grid gap-2 p-2">
@@ -49,6 +49,6 @@ export const Sidebar = async ({
           {Toc}
         </div>
       </div>
-    ) : undefined}
+    ) : null}
   </div>
 );

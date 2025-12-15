@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export * from './src/index.js';
+export * from "./src/index.js";

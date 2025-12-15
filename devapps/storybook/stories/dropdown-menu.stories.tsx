@@ -2,9 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Mail, Plus, PlusCircle, Search, UserPlus } from 'lucide-react';
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -21,16 +18,18 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@repo/design-system/ui/dropdown-menu';
+} from "@repo/design-system/ui/dropdown-menu";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Mail, Plus, PlusCircle, Search, UserPlus } from "lucide-react";
 
 /**
  * Displays a menu to the user — such as a set of actions or functions —
  * triggered by a button.
  */
 const meta: Meta<typeof DropdownMenu> = {
-  title: 'ui/DropdownMenu',
+  title: "ui/DropdownMenu",
   component: DropdownMenu,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <DropdownMenu {...args}>
@@ -46,7 +45,7 @@ const meta: Meta<typeof DropdownMenu> = {
     </DropdownMenu>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

@@ -2,11 +2,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import { NextIntlClientProvider } from 'next-intl';
-import type * as React from 'react';
-import type { ReactNode } from 'react';
+import { NextIntlClientProvider } from "next-intl";
+import type * as React from "react";
+import type { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;

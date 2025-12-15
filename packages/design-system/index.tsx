@@ -10,4 +10,4 @@
  * import from index.ts or index.tsx
  */
 
-export * from './index';
+export * from "./index";

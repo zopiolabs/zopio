@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { AccessLogEntry } from '../types';
+import type { AccessLogEntry } from "../types";
 
 // Using a custom logger function instead of direct console.log
 const logToConsole = (prefix: string, data: unknown): void => {
@@ -12,6 +12,6 @@ const logToConsole = (prefix: string, data: unknown): void => {
 
 export const consoleLogger = {
   write: (entry: AccessLogEntry): void => {
-    logToConsole('[AUTH-LOG]', entry);
+    logToConsole("[AUTH-LOG]", entry);
   },
 };

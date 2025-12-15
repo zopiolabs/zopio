@@ -2,27 +2,26 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Badge } from '@repo/design-system/ui/badge';
+import { Badge } from "@repo/design-system/ui/badge";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Displays a badge or a component that looks like a badge.
  */
 const meta: Meta<typeof Badge> = {
-  title: 'ui/Badge',
+  title: "ui/Badge",
   component: Badge,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     children: {
-      control: 'text',
+      control: "text",
     },
   },
   args: {
-    children: 'Badge',
+    children: "Badge",
   },
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -41,7 +40,7 @@ export const Default: Story = {};
  */
 export const Secondary: Story = {
   args: {
-    variant: 'secondary',
+    variant: "secondary",
   },
 };
 
@@ -51,7 +50,7 @@ export const Secondary: Story = {
  */
 export const Destructive: Story = {
   args: {
-    variant: 'destructive',
+    variant: "destructive",
   },
 };
 
@@ -61,6 +60,6 @@ export const Destructive: Story = {
  */
 export const Outline: Story = {
   args: {
-    variant: 'outline',
+    variant: "outline",
   },
 };

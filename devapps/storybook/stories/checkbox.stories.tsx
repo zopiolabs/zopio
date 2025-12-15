@@ -2,35 +2,34 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Checkbox } from '@repo/design-system/ui/checkbox';
+import { Checkbox } from "@repo/design-system/ui/checkbox";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * A control that allows the user to toggle between checked and not checked.
  */
 const meta: Meta<typeof Checkbox> = {
-  title: 'ui/Checkbox',
+  title: "ui/Checkbox",
   component: Checkbox,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
-    id: 'terms',
+    id: "terms",
     disabled: false,
   },
   render: (args) => (
     <div className="flex space-x-2">
       <Checkbox {...args} />
       <label
-        htmlFor={args.id}
         className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-50"
+        htmlFor={args.id}
       >
         Accept terms and conditions
       </label>
     </div>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 } satisfies Meta<typeof Checkbox>;
 
@@ -48,7 +47,7 @@ export const Default: Story = {};
  */
 export const Disabled: Story = {
   args: {
-    id: 'disabled-terms',
+    id: "disabled-terms",
     disabled: true,
   },
 };

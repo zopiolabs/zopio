@@ -5,7 +5,7 @@
 /**
  * Utility functions for MCP
  */
-import type { Resource, ResourceIdentifier } from './types.js';
+import type { Resource, ResourceIdentifier } from "./types.js";
 
 /**
  * Generates a unique ID for a resource
@@ -13,7 +13,7 @@ import type { Resource, ResourceIdentifier } from './types.js';
  * @param prefix Optional prefix for the ID
  * @returns A unique ID string
  */
-export function generateResourceId(prefix = ''): string {
+export function generateResourceId(prefix = ""): string {
   const timestamp = Date.now().toString(36);
   const randomPart = Math.random().toString(36).substring(2, 10);
   return `${prefix}${timestamp}${randomPart}`;

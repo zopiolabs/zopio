@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { ModeToggle } from '@repo/design-system/ui/mode-toggle';
-import { CommandIcon } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { ModeToggle } from "@repo/design-system/ui/mode-toggle";
+import { CommandIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 type AuthLayoutProps = {
   readonly children: ReactNode;

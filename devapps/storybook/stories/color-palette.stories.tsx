@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { ColorPalette } from '@repo/design-system/ui/color-palette';
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import { ColorPalette } from "@repo/design-system/ui/color-palette";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * The Color Palette component displays the design system's color tokens in an organized, visual format.
@@ -20,28 +20,28 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
  * - Provides both visual (color) and text-based (name/value) information
  */
 const meta = {
-  title: 'UI/ColorPalette',
+  title: "UI/ColorPalette",
   component: ColorPalette,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     showHex: {
-      control: 'boolean',
-      description: 'Show hex/HSL values for each color',
+      control: "boolean",
+      description: "Show hex/HSL values for each color",
       defaultValue: true,
     },
     showName: {
-      control: 'boolean',
-      description: 'Show name for each color',
+      control: "boolean",
+      description: "Show name for each color",
       defaultValue: true,
     },
     type: {
-      control: 'select',
-      options: ['base', 'accent', 'semantic', 'all'],
-      description: 'Type of colors to display',
-      defaultValue: 'all',
+      control: "select",
+      options: ["base", "accent", "semantic", "all"],
+      description: "Type of colors to display",
+      defaultValue: "all",
     },
   },
 } satisfies Meta<typeof ColorPalette>;
@@ -54,7 +54,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const AllColors: Story = {
   args: {
-    type: 'all',
+    type: "all",
     showHex: true,
     showName: true,
   },
@@ -66,7 +66,7 @@ export const AllColors: Story = {
  */
 export const BaseColors: Story = {
   args: {
-    type: 'base',
+    type: "base",
     showHex: true,
     showName: true,
   },
@@ -78,7 +78,7 @@ export const BaseColors: Story = {
  */
 export const AccentColors: Story = {
   args: {
-    type: 'accent',
+    type: "accent",
     showHex: true,
     showName: true,
   },
@@ -90,7 +90,7 @@ export const AccentColors: Story = {
  */
 export const SemanticColors: Story = {
   args: {
-    type: 'semantic',
+    type: "semantic",
     showHex: true,
     showName: true,
   },
@@ -101,7 +101,7 @@ export const SemanticColors: Story = {
  */
 export const WithoutHexValues: Story = {
   args: {
-    type: 'all',
+    type: "all",
     showHex: false,
     showName: true,
   },
@@ -112,7 +112,7 @@ export const WithoutHexValues: Story = {
  */
 export const WithoutNames: Story = {
   args: {
-    type: 'all',
+    type: "all",
     showHex: true,
     showName: false,
   },
@@ -124,7 +124,7 @@ export const WithoutNames: Story = {
  */
 export const MinimalDisplay: Story = {
   args: {
-    type: 'all',
+    type: "all",
     showHex: false,
     showName: false,
   },

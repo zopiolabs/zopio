@@ -2,17 +2,16 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Slider } from '@repo/design-system/ui/slider';
+import { Slider } from "@repo/design-system/ui/slider";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * An input where the user selects a value from within a given range.
  */
 const meta: Meta<typeof Slider> = {
-  title: 'ui/Slider',
+  title: "ui/Slider",
   component: Slider,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
     defaultValue: [33],

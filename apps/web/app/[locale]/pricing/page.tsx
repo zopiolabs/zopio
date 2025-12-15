@@ -2,10 +2,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { env } from '@/env';
-import { Button } from '@repo/design-system/ui/button';
-import { Check, Minus, MoveRight, PhoneCall } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from "@repo/design-system/ui/button";
+import { Check, Minus, MoveRight, PhoneCall } from "lucide-react";
+import Link from "next/link";
+import { env } from "@/env";
 
 const Pricing = () => (
   <div className="w-full py-20 lg:py-40">
@@ -31,7 +31,7 @@ const Pricing = () => (
               <span className="text-4xl">$40</span>
               <span className="text-muted-foreground text-sm"> / month</span>
             </p>
-            <Button variant="outline" className="mt-8 gap-4" asChild>
+            <Button asChild className="mt-8 gap-4" variant="outline">
               <Link href={env.NEXT_PUBLIC_APP_URL}>
                 Try it <MoveRight className="h-4 w-4" />
               </Link>
@@ -47,7 +47,7 @@ const Pricing = () => (
               <span className="text-4xl">$40</span>
               <span className="text-muted-foreground text-sm"> / month</span>
             </p>
-            <Button className="mt-8 gap-4" asChild>
+            <Button asChild className="mt-8 gap-4">
               <Link href={env.NEXT_PUBLIC_APP_URL}>
                 Try it <MoveRight className="h-4 w-4" />
               </Link>
@@ -63,7 +63,7 @@ const Pricing = () => (
               <span className="text-4xl">$40</span>
               <span className="text-muted-foreground text-sm"> / month</span>
             </p>
-            <Button variant="outline" className="mt-8 gap-4" asChild>
+            <Button asChild className="mt-8 gap-4" variant="outline">
               <Link href="/contact">
                 Contact us <PhoneCall className="h-4 w-4" />
               </Link>

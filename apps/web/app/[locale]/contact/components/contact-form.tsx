@@ -2,22 +2,22 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import { cn } from '@repo/design-system/lib/utils';
-import { Button } from '@repo/design-system/ui/button';
-import { Calendar } from '@repo/design-system/ui/calendar';
-import { Input } from '@repo/design-system/ui/input';
-import { Label } from '@repo/design-system/ui/label';
+import { cn } from "@repo/design-system/lib/utils";
+import { Button } from "@repo/design-system/ui/button";
+import { Calendar } from "@repo/design-system/ui/calendar";
+import { Input } from "@repo/design-system/ui/input";
+import { Label } from "@repo/design-system/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@repo/design-system/ui/popover';
-import type { Dictionary } from '@repo/internationalization';
-import { format } from 'date-fns';
-import { CalendarIcon, Check, MoveRight } from 'lucide-react';
-import { useState } from 'react';
+} from "@repo/design-system/ui/popover";
+import type { Dictionary } from "@repo/internationalization";
+import { format } from "date-fns";
+import { CalendarIcon, Check, MoveRight } from "lucide-react";
+import { useState } from "react";
 
 type ContactFormProps = {
   dictionary: Dictionary;
@@ -41,10 +41,10 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                 </p>
               </div>
             </div>
-            {dictionary.web.contact.hero.benefits.map((benefit, index) => (
+            {dictionary.web.contact.hero.benefits.map((benefit) => (
               <div
                 className="flex flex-row items-start gap-6 text-left"
-                key={index}
+                key={benefit.title}
               >
                 <Check className="mt-2 h-4 w-4 text-primary" />
                 <div className="flex flex-col gap-1">
@@ -67,15 +67,15 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="outline"
                       className={cn(
-                        'w-full max-w-sm justify-start text-left font-normal',
-                        !date && 'text-muted-foreground'
+                        "w-full max-w-sm justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
                       )}
+                      variant="outline"
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {date ? (
-                        format(date, 'PPP')
+                        format(date, "PPP")
                       ) : (
                         <span>{dictionary.web.contact.hero.form.date}</span>
                       )}
@@ -83,10 +83,10 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
                       initialFocus
+                      mode="single"
+                      onSelect={setDate}
+                      selected={date}
                     />
                   </PopoverContent>
                 </Popover>
@@ -111,7 +111,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
               </div>
 
               <Button className="w-full gap-4">
-                {dictionary.web.contact.hero.form.cta}{' '}
+                {dictionary.web.contact.hero.form.cta}{" "}
                 <MoveRight className="h-4 w-4" />
               </Button>
             </div>

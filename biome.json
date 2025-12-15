@@ -1,33 +1,49 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "extends": ["ultracite"],
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "extends": ["ultracite/core"],
   "javascript": {
     "globals": ["Liveblocks"]
   },
+  "linter": {
+    "rules": {
+      "nursery": {
+        "noShadow": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off",
+        "noNamespaceImport": "off"
+      },
+      "style": {
+        "useConsistentTypeDefinitions": "off"
+      }
+    }
+  },
   "files": {
-    "ignore": [
-      "**/__tests__/**",
-      ".bin/**",
-      ".cache/**",
-      ".git/**",
-      ".next/**",
-      ".turbo/**",
-      "apps/docs/**/*.json",
-      "devapps/emailstudio/.react-email/**",
-      "devapps/storybook/storybook-static/**",
-      "build/**",
-      "dist/**",
-      "node_modules/**",
-      "packages/collaboration/config.ts",
-      "packages/database/generated/**",
-      "packages/design-system/blocks/**",
-      "packages/design-system/hooks/**",
-      "packages/design-system/lib/**",
-      "packages/design-system/shared/**",
-      "packages/design-system/ui/**",
-      "scripts/**",
-      "websites/zopio-docs/**/*.json",
-      "websites/zopio-docs/snippets/**"
+    "includes": [
+      "**",
+      "!**/__tests__",
+      "!**/.bin",
+      "!**/.cache",
+      "!**/.git",
+      "!**/.next",
+      "!**/.turbo",
+      "!**/apps/docs/**/*.json",
+      "!**/devapps/emailstudio/.react-email",
+      "!**/devapps/storybook/storybook-static",
+      "!**/build",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/packages/collaboration/config.ts",
+      "!**/packages/cms/basehub-types.d.ts",
+      "!**/packages/database/generated",
+      "!**/packages/design-system/blocks",
+      "!**/packages/design-system/hooks",
+      "!**/packages/design-system/lib",
+      "!**/packages/design-system/shared",
+      "!**/packages/design-system/ui",
+      "!**/scripts",
+      "!**/websites/zopio-docs/**/*.json",
+      "!**/websites/zopio-docs/snippets"
     ]
   }
 }

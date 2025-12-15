@@ -5,7 +5,7 @@
 /**
  * Core types for the Model Context Protocol (MCP)
  */
-import type { z } from 'zod';
+import type { z } from "zod";
 
 /**
  * Base resource interface that all MCP resources must implement

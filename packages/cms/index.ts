@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { keys } from './keys';
+import { keys } from "./keys";
 
 // Custom implementation to replace basehub functionality
 type FragmentType<T> = { __type: string } & T;
@@ -33,9 +33,9 @@ function basehubClient(options: { token: string }) {
   async function query(queryOptions: QueryOptions) {
     try {
       const response = await fetch(baseUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query: JSON.stringify(queryOptions) }),
       });
@@ -62,7 +62,7 @@ const basehub = basehubClient({
  * Common Fragments
  * -----------------------------------------------------------------------------------------------*/
 
-const imageFragment = fragmentOn('BlockImage', {
+const imageFragment = fragmentOn("BlockImage", {
   url: true,
   width: true,
   height: true,
@@ -74,7 +74,7 @@ const imageFragment = fragmentOn('BlockImage', {
  * Blog Fragments & Queries
  * -----------------------------------------------------------------------------------------------*/
 
-const postMetaFragment = fragmentOn('PostsItem', {
+const postMetaFragment = fragmentOn("PostsItem", {
   _slug: true,
   _title: true,
   authors: {
@@ -90,7 +90,7 @@ const postMetaFragment = fragmentOn('PostsItem', {
   image: imageFragment,
 });
 
-const postFragment = fragmentOn('PostsItem', {
+const postFragment = fragmentOn("PostsItem", {
   ...postMetaFragment,
   body: {
     plainText: true,
@@ -106,7 +106,7 @@ export type PostMeta = typeof postMetaFragment;
 export type Post = typeof postFragment;
 
 export const blog = {
-  postsQuery: fragmentOn('Query', {
+  postsQuery: fragmentOn("Query", {
     blog: {
       posts: {
         items: postMetaFragment,
@@ -114,11 +114,11 @@ export const blog = {
     },
   }),
 
-  latestPostQuery: fragmentOn('Query', {
+  latestPostQuery: fragmentOn("Query", {
     blog: {
       posts: {
         __args: {
-          orderBy: '_sys_createdAt__DESC',
+          orderBy: "_sys_createdAt__DESC",
         },
         item: postFragment,
       },
@@ -143,7 +143,7 @@ export const blog = {
       const data = await basehub.query(blog.postsQuery);
 
       // Add null checks to handle potential undefined values
-      if (!data || !data.blog || !data.blog.posts) {
+      if (!data?.blog?.posts) {
         return [];
       }
 
@@ -157,7 +157,7 @@ export const blog = {
     try {
       const data = await basehub.query(blog.latestPostQuery);
 
-      if (!data || !data.blog || !data.blog.posts) {
+      if (!data?.blog?.posts) {
         return null;
       }
 
@@ -172,7 +172,7 @@ export const blog = {
       const query = blog.postQuery(slug);
       const data = await basehub.query(query);
 
-      if (!data || !data.blog || !data.blog.posts) {
+      if (!data?.blog?.posts) {
         return null;
       }
 
@@ -187,13 +187,13 @@ export const blog = {
  * Legal Fragments & Queries
  * -----------------------------------------------------------------------------------------------*/
 
-const legalPostMetaFragment = fragmentOn('LegalPagesItem', {
+const legalPostMetaFragment = fragmentOn("LegalPagesItem", {
   _slug: true,
   _title: true,
   description: true,
 });
 
-const legalPostFragment = fragmentOn('LegalPagesItem', {
+const legalPostFragment = fragmentOn("LegalPagesItem", {
   ...legalPostMetaFragment,
   body: {
     plainText: true,
@@ -209,23 +209,23 @@ export type LegalPostMeta = typeof legalPostMetaFragment;
 export type LegalPost = typeof legalPostFragment;
 
 export const legal = {
-  postsQuery: fragmentOn('Query', {
+  postsQuery: fragmentOn("Query", {
     legalPages: {
       items: legalPostFragment,
     },
   }),
 
-  latestPostQuery: fragmentOn('Query', {
+  latestPostQuery: fragmentOn("Query", {
     legalPages: {
       __args: {
-        orderBy: '_sys_createdAt__DESC',
+        orderBy: "_sys_createdAt__DESC",
       },
       item: legalPostFragment,
     },
   }),
 
   postQuery: (slug: string) =>
-    fragmentOn('Query', {
+    fragmentOn("Query", {
       legalPages: {
         __args: {
           filter: {
@@ -241,7 +241,7 @@ export const legal = {
       const data = await basehub.query(legal.postsQuery);
 
       // Add null checks to handle potential undefined values
-      if (!data || !data.legalPages) {
+      if (!data?.legalPages) {
         return [];
       }
 
@@ -255,7 +255,7 @@ export const legal = {
     try {
       const data = await basehub.query(legal.latestPostQuery);
 
-      if (!data || !data.legalPages) {
+      if (!data?.legalPages) {
         return null;
       }
 
@@ -270,7 +270,7 @@ export const legal = {
       const query = legal.postQuery(slug);
       const data = await basehub.query(query);
 
-      if (!data || !data.legalPages) {
+      if (!data?.legalPages) {
         return null;
       }
 

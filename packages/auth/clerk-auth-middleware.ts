@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-import { verifyClerkToken } from './lib/verify-clerk-token';
+import { verifyClerkToken } from "./lib/verify-clerk-token";
 
 // Extend the Request type to include user property
 declare global {
@@ -16,15 +16,15 @@ declare global {
 export async function clerkAuthMiddleware(
   req: Request
 ): Promise<Request | Response> {
-  const authHeader = req.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
     return new Response(
-      'Unauthorized: Missing or invalid authorization header',
+      "Unauthorized: Missing or invalid authorization header",
       { status: 401 }
     );
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(" ")[1];
 
   try {
     // Verify the token using our utility function
@@ -36,6 +36,6 @@ export async function clerkAuthMiddleware(
     return req;
   } catch (_error) {
     // Handle errors safely without exposing details
-    return new Response('Invalid authentication token', { status: 403 });
+    return new Response("Invalid authentication token", { status: 403 });
   }
 }

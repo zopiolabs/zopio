@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export * from '@vercel/blob';
+export * from "@vercel/blob";

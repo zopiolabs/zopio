@@ -2,10 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { CommandSeparator } from 'cmdk';
-import * as React from 'react';
-
 import {
   Command,
   CommandEmpty,
@@ -13,7 +9,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@repo/design-system/ui/command';
+} from "@repo/design-system/ui/command";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { CommandSeparator } from "cmdk";
+import * as React from "react";
 
 interface CommandGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   heading?: string;
@@ -23,12 +22,12 @@ interface CommandGroupProps extends React.HTMLAttributes<HTMLDivElement> {
  * Fast, composable, unstyled command menu for React.
  */
 const meta: Meta<typeof Command> = {
-  title: 'ui/Command',
+  title: "ui/Command",
   component: Command,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
-    className: 'rounded-lg w-96 border shadow-md',
+    className: "rounded-lg w-96 border shadow-md",
   },
   render: (args) => (
     <Command {...args}>
@@ -38,7 +37,7 @@ const meta: Meta<typeof Command> = {
         {/* Using React.createElement with CommandGroupProps interface */}
         {React.createElement(
           CommandGroup as React.ComponentType<CommandGroupProps>,
-          { heading: 'Suggestions' },
+          { heading: "Suggestions" },
           <CommandItem>Calendar</CommandItem>,
           <CommandItem>Search Emoji</CommandItem>,
           <CommandItem>Calculator</CommandItem>
@@ -46,7 +45,7 @@ const meta: Meta<typeof Command> = {
         <CommandSeparator />
         {React.createElement(
           CommandGroup as React.ComponentType<CommandGroupProps>,
-          { heading: 'Settings' },
+          { heading: "Settings" },
           <CommandItem>Profile</CommandItem>,
           <CommandItem>Billing</CommandItem>,
           <CommandItem>Settings</CommandItem>
@@ -55,7 +54,7 @@ const meta: Meta<typeof Command> = {
     </Command>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

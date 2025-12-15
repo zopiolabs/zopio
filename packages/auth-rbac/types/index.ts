@@ -8,7 +8,7 @@ export type UserContext = {
   tenantId: string;
 };
 
-import type { DSLNode } from '../engine/evaluate-dsl';
+import type { DSLNode } from "../engine/evaluate-dsl";
 
 export type PermissionRule = {
   resource: string;
@@ -18,7 +18,7 @@ export type PermissionRule = {
     record?: Record<string, unknown> | null
   ) => boolean;
   dsl?: DSLNode;
-  fieldPermissions?: Record<string, 'read' | 'write' | 'none'>;
+  fieldPermissions?: Record<string, "read" | "write" | "none">;
 };
 
 export type AccessEvaluationInput = {

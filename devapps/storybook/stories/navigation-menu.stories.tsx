@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,15 +10,16 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from '@repo/design-system/ui/navigation-menu';
+} from "@repo/design-system/ui/navigation-menu";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * A collection of links for navigating websites.
  */
 const meta: Meta<typeof NavigationMenu> = {
-  title: 'ui/NavigationMenu',
+  title: "ui/NavigationMenu",
   component: NavigationMenu,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <NavigationMenu {...args}>
@@ -69,7 +68,7 @@ const meta: Meta<typeof NavigationMenu> = {
     </NavigationMenu>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

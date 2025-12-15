@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-Object.defineProperty(exports, '__esModule', { value: true });
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.consoleLogger = undefined;
 // Using a custom logger function instead of direct console.log
 const logToConsole = (prefix, data) => {
@@ -11,6 +11,6 @@ const logToConsole = (prefix, data) => {
 };
 exports.consoleLogger = {
   write: (entry) => {
-    logToConsole('[AUTH-LOG]', entry);
+    logToConsole("[AUTH-LOG]", entry);
   },
 };

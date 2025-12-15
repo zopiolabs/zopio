@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-declare module 'swr' {
+declare module "swr" {
   export interface SWRResponse<Data = unknown, Error = unknown> {
     data?: Data;
     error?: Error;

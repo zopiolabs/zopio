@@ -2,10 +2,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { BaseModule } from './module.js';
+import type { BaseModule } from "./module.js";
 
 export interface AppModule extends BaseModule {
-  type: 'app';
+  type: "app";
   zopio: {
     category: string;
     icon: string;

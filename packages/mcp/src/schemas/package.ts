@@ -5,23 +5,23 @@
 /**
  * Package resource schema for MCP
  */
-import { z } from 'zod';
-import { resourceSchema } from '../protocol.js';
+import { z } from "zod";
+import { resourceSchema } from "../protocol.js";
 
 /**
  * Schema for package resources
  */
 export const packageSchema = resourceSchema.extend({
-  type: z.literal('package'),
+  type: z.literal("package"),
   attributes: z
     .object({
       name: z
         .string()
-        .regex(/^@repo\//, 'Package name must use @repo/* namespace'),
+        .regex(/^@repo\//, "Package name must use @repo/* namespace"),
       version: z.string(),
       description: z.string().optional(),
       private: z.boolean().optional(),
-      type: z.enum(['module', 'commonjs']).optional(),
+      type: z.enum(["module", "commonjs"]).optional(),
       sideEffects: z.boolean().optional(),
       main: z.string().optional(),
       module: z.string().optional(),
@@ -51,17 +51,17 @@ export type PackageResource = z.infer<typeof packageSchema>;
  */
 export function createPackageResource(
   id: string,
-  attributes: Omit<NonNullable<PackageResource['attributes']>, 'name'> & {
+  attributes: Omit<NonNullable<PackageResource["attributes"]>, "name"> & {
     name: string;
   }
 ): PackageResource {
   return {
     id,
-    type: 'package',
+    type: "package",
     attributes: {
       ...attributes,
       // Ensure package name follows convention
-      name: attributes.name.startsWith('@repo/')
+      name: attributes.name.startsWith("@repo/")
         ? attributes.name
         : `@repo/${attributes.name}`,
     },

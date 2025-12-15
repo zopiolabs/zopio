@@ -8,17 +8,17 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import { init, replayIntegration } from '@sentry/nextjs';
-import { keys } from './keys';
-import { log } from './log';
+import { init, replayIntegration } from "@sentry/nextjs";
+import { keys } from "./keys";
+import { log } from "./log";
 
 export const initializeSentry = (): ReturnType<typeof init> | undefined => {
   try {
     const dsn = keys().NEXT_PUBLIC_SENTRY_DSN;
 
     // Only initialize if DSN is provided
-    if (!dsn || typeof dsn !== 'string' || dsn.length === 0) {
-      return undefined;
+    if (!dsn || typeof dsn !== "string" || dsn.length === 0) {
+      return;
     }
 
     return init({
@@ -52,6 +52,6 @@ export const initializeSentry = (): ReturnType<typeof init> | undefined => {
     log.warn(
       `Failed to initialize Sentry client: ${error instanceof Error ? error.message : String(error)}`
     );
-    return undefined;
+    return;
   }
 };

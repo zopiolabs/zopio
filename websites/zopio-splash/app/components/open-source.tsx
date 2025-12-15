@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import Image from 'next/image';
-import { octokit, safeGitHubFetch } from '../lib/octokit';
+import Image from "next/image";
+import { octokit, safeGitHubFetch } from "../lib/octokit";
 
 export const OpenSource = async () => {
   // Default repository data in case of API failure
@@ -31,8 +31,8 @@ export const OpenSource = async () => {
   const repoData = await safeGitHubFetch(
     () =>
       octokit.repos.get({
-        owner: 'zopiolabs',
-        repo: 'zopio',
+        owner: "zopiolabs",
+        repo: "zopio",
       }),
     defaultRepoData
   );
@@ -41,9 +41,9 @@ export const OpenSource = async () => {
   const contributorsResponse = await safeGitHubFetch(
     () =>
       octokit.repos.listContributors({
-        owner: 'zopiolabs',
-        repo: 'zopio',
-        anon: 'true',
+        owner: "zopiolabs",
+        repo: "zopio",
+        anon: "true",
         per_page: 100,
       }),
     defaultContributors
@@ -52,7 +52,7 @@ export const OpenSource = async () => {
   // Ensure contributors is an array and filter out entries without avatar_url
   const contributors = Array.isArray(contributorsResponse)
     ? contributorsResponse.filter(
-        (c) => c && typeof c === 'object' && c.avatar_url
+        (c) => c && typeof c === "object" && c.avatar_url
       )
     : [];
 
@@ -63,31 +63,31 @@ export const OpenSource = async () => {
           <small>Open source</small>
         </div>
         <p className="font-semibold text-xl tracking-tight">
-          zopio currently has{' '}
-          <span className="text-orange-600">{repoData.stargazers_count}</span>{' '}
-          stars, <span className="text-orange-600">{repoData.forks_count}</span>{' '}
-          forks, and{' '}
-          <span className="text-orange-600">{repoData.open_issues_count}</span>{' '}
-          open issues and{' '}
-          <span className="text-orange-600">{contributors.length}</span>{' '}
+          zopio currently has{" "}
+          <span className="text-orange-600">{repoData.stargazers_count}</span>{" "}
+          stars, <span className="text-orange-600">{repoData.forks_count}</span>{" "}
+          forks, and{" "}
+          <span className="text-orange-600">{repoData.open_issues_count}</span>{" "}
+          open issues and{" "}
+          <span className="text-orange-600">{contributors.length}</span>{" "}
           contributors.
         </p>
         <div className="-space-x-1 flex flex-row">
           {contributors.slice(0, 10).map((contributor) => (
             <Image
+              alt={contributor.login ? String(contributor.login) : ""}
+              className="rounded-full object-cover ring-2 ring-white"
+              height={28}
               key={String(contributor.id)}
               src={String(contributor.avatar_url)}
-              alt={contributor.login ? String(contributor.login) : ''}
               width={28}
-              height={28}
-              className="rounded-full object-cover ring-2 ring-white"
             />
           ))}
         </div>
       </div>
       <a
-        href="https://github.com/zopiolabs/zopio"
         className="inline-flex rounded-md border bg-white px-4 py-2 font-medium text-sm shadow-sm"
+        href="https://github.com/zopiolabs/zopio"
       >
         Browse the source code
       </a>

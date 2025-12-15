@@ -2,20 +2,19 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Textarea } from '@repo/design-system/ui/textarea';
+import { Textarea } from "@repo/design-system/ui/textarea";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Displays a form textarea or a component that looks like a textarea.
  */
 const meta: Meta<typeof Textarea> = {
-  title: 'ui/Textarea',
+  title: "ui/Textarea",
   component: Textarea,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
-    placeholder: 'Type your message here.',
+    placeholder: "Type your message here.",
     disabled: false,
   },
 };

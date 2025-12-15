@@ -2,24 +2,24 @@
  * SPDX-License-Identifier: MIT
  */
 
-Object.defineProperty(exports, '__esModule', { value: true });
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.createBetterStackLogger = createBetterStackLogger;
 function createBetterStackLogger(options) {
-  const endpoint = options.endpoint || 'https://in.logs.betterstack.com';
+  const endpoint = options.endpoint || "https://in.logs.betterstack.com";
   return {
     write: async (entry) => {
       try {
         const response = await fetch(`${endpoint}`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${options.sourceToken}`,
           },
           body: JSON.stringify({
             ...entry,
-            level: entry.can ? 'info' : 'warn',
-            message: `Auth ${entry.can ? 'ALLOWED' : 'DENIED'}: ${entry.action} ${entry.resource}${entry.field ? `.${entry.field}` : ''}`,
-            service: 'auth-service',
+            level: entry.can ? "info" : "warn",
+            message: `Auth ${entry.can ? "ALLOWED" : "DENIED"}: ${entry.action} ${entry.resource}${entry.field ? `.${entry.field}` : ""}`,
+            service: "auth-service",
           }),
         });
         if (!response.ok) {

@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export { GoogleAnalytics } from '@next/third-parties/google';
+export { GoogleAnalytics } from "@next/third-parties/google";

@@ -2,15 +2,15 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type React from 'react';
+import type React from "react";
 
 // Type declarations for modules without type definitions
-declare module 'lucide-react' {
+declare module "lucide-react" {
   export const StarIcon: React.FC<{ size?: number }>;
   // Add other icons as needed
 }
 
-declare module 'react-tweet' {
+declare module "react-tweet" {
   export interface TweetProps {
     id: string;
   }

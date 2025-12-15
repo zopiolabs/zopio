@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export * from '@clerk/nextjs';
+export * from "@clerk/nextjs";

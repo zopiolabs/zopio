@@ -2,27 +2,26 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@repo/design-system/ui/tabs';
+} from "@repo/design-system/ui/tabs";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * A set of layered sections of content—known as tab panels—that are displayed
  * one at a time.
  */
 const meta: Meta<typeof Tabs> = {
-  title: 'ui/Tabs',
+  title: "ui/Tabs",
   component: Tabs,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {
-    defaultValue: 'account',
-    className: 'w-96',
+    defaultValue: "account",
+    className: "w-96",
   },
   render: (args) => (
     <Tabs {...args}>
@@ -37,7 +36,7 @@ const meta: Meta<typeof Tabs> = {
     </Tabs>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

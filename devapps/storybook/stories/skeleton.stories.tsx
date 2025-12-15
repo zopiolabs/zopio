@@ -2,20 +2,19 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Skeleton } from '@repo/design-system/ui/skeleton';
+import { Skeleton } from "@repo/design-system/ui/skeleton";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Use to show a placeholder while content is loading.
  */
 const meta: Meta<typeof Skeleton> = {
-  title: 'ui/Skeleton',
+  title: "ui/Skeleton",
   component: Skeleton,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

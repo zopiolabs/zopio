@@ -2,17 +2,16 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
-import { Separator } from '@repo/design-system/ui/separator';
+import { Separator } from "@repo/design-system/ui/separator";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Visually or semantically separates content.
  */
 const meta: Meta<typeof Separator> = {
-  title: 'ui/Separator',
+  title: "ui/Separator",
   component: Separator,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
 };
 
@@ -27,7 +26,7 @@ export const Horizontal: Story = {
   render: () => (
     <div className="flex gap-2">
       <div>Left</div>
-      <Separator orientation="vertical" className="h-auto" />
+      <Separator className="h-auto" orientation="vertical" />
       <div>Right</div>
     </div>
   ),

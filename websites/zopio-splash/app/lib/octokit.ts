@@ -2,15 +2,15 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Octokit } from '@octokit/rest';
+import { Octokit } from "@octokit/rest";
 
 // Initialize Octokit with auth token if available
 export const octokit = new Octokit({
-  auth: process.env.GH_TOKEN || '',
+  auth: process.env.GH_TOKEN || "",
   request: {
     // Add cache headers to improve rate limit usage
     headers: {
-      'If-None-Match': '',
+      "If-None-Match": "",
     },
   },
 });
@@ -24,8 +24,7 @@ export async function safeGitHubFetch<T>(
     const { data } = await fetchFn();
     return data;
   } catch (error) {
-    // biome-ignore lint/suspicious/noConsole: Error logging is necessary for debugging API issues
-    console.error('GitHub API error:', error);
+    console.error("GitHub API error:", error);
     return fallback;
   }
 }

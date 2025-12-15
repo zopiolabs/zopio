@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Dialog,
   DialogClose,
@@ -13,16 +11,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@repo/design-system/ui/dialog';
+} from "@repo/design-system/ui/dialog";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * A window overlaid on either the primary window or another dialog window,
  * rendering the content underneath inert.
  */
 const meta: Meta<typeof Dialog> = {
-  title: 'ui/Dialog',
+  title: "ui/Dialog",
   component: Dialog,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <Dialog {...args}>
@@ -36,13 +35,13 @@ const meta: Meta<typeof Dialog> = {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-4">
-          <button type="button" className="hover:underline">
+          <button className="hover:underline" type="button">
             Cancel
           </button>
           <DialogClose>
             <button
-              type="button"
               className="rounded bg-primary px-4 py-2 text-primary-foreground"
+              type="button"
             >
               Continue
             </button>
@@ -52,7 +51,7 @@ const meta: Meta<typeof Dialog> = {
     </Dialog>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

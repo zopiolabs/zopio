@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-import { type JWTVerifyResult, jwtVerify } from 'jose';
+import { type JWTVerifyResult, jwtVerify } from "jose";
 
 interface JWTPayload {
   sub?: string;
@@ -16,7 +16,7 @@ export async function verifyClerkToken(token: string): Promise<string> {
   try {
     // Get the JWT verification key from environment variable
     if (!process.env.CLERK_SECRET_KEY) {
-      throw new Error('CLERK_SECRET_KEY is not defined');
+      throw new Error("CLERK_SECRET_KEY is not defined");
     }
 
     // Use jose to verify the JWT token
@@ -26,12 +26,12 @@ export async function verifyClerkToken(token: string): Promise<string> {
     };
 
     if (!payload.sub) {
-      throw new Error('Invalid token: No user ID found');
+      throw new Error("Invalid token: No user ID found");
     }
 
     return payload.sub;
   } catch (_error) {
     // Avoid using console in production code
-    throw new Error('Invalid or expired token');
+    throw new Error("Invalid or expired token");
   }
 }

@@ -1,8 +1,8 @@
-import { clerkAuthMiddleware } from '@repo/auth';
-import * as Sentry from '@sentry/nextjs';
+import { clerkAuthMiddleware } from "@repo/auth";
+import * as Sentry from "@sentry/nextjs";
+import type { NextRequest } from "next/server";
 // SPDX-License-Identifier: MIT
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
 
 /**
  * Next.js middleware function to handle authentication for API routes
@@ -12,11 +12,11 @@ export async function middleware(request: NextRequest) {
 
   // Define public routes that don't require authentication
   const publicPaths = [
-    '/',
-    '/health',
-    '/webhooks',
-    '/_next/static',
-    '/favicon.ico',
+    "/",
+    "/health",
+    "/webhooks",
+    "/_next/static",
+    "/favicon.ico",
   ];
 
   // Check if the current path is public
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   );
 
   // API key routes will handle their own authentication in their route handlers
-  const isApiKeyPath = pathname.startsWith('/api-keys');
+  const isApiKeyPath = pathname.startsWith("/api-keys");
 
   // Allow public routes and API key routes without authentication
   if (isPublicPath || isApiKeyPath) {
@@ -47,16 +47,16 @@ export async function middleware(request: NextRequest) {
   } catch (error) {
     // Handle any errors during authentication
     Sentry.captureException(error, {
-      tags: { source: 'auth-middleware' },
+      tags: { source: "auth-middleware" },
       extra: { path: request.nextUrl.pathname },
     });
 
     return new NextResponse(
       JSON.stringify({
-        error: 'Authentication error',
-        message: 'Failed to authenticate request',
+        error: "Authentication error",
+        message: "Failed to authenticate request",
       }),
-      { status: 500, headers: { 'content-type': 'application/json' } }
+      { status: 500, headers: { "content-type": "application/json" } }
     );
   }
 }
@@ -65,6 +65,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all API routes except static files
-    '/((?!_next/static|favicon.ico).*)',
+    "/((?!_next/static|favicon.ico).*)",
   ],
 };

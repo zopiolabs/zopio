@@ -2,4 +2,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export * from 'ai/react';
+export * from "ai/react";

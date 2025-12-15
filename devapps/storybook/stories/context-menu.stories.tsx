@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   ContextMenu,
   ContextMenuCheckboxItem,
@@ -18,16 +16,17 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@repo/design-system/ui/context-menu';
+} from "@repo/design-system/ui/context-menu";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * Displays a menu to the user — such as a set of actions or functions —
  * triggered by a button.
  */
 const meta: Meta<typeof ContextMenu> = {
-  title: 'ui/ContextMenu',
+  title: "ui/ContextMenu",
   component: ContextMenu,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   args: {},
   render: (args) => (
@@ -44,7 +43,7 @@ const meta: Meta<typeof ContextMenu> = {
     </ContextMenu>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

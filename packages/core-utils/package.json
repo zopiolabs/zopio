@@ -10,14 +10,18 @@
     "build": "tsc",
     "lint": "ultracite lint"
   },
-  "keywords": ["zopio", "utils", "logger"],
+  "keywords": [
+    "zopio",
+    "utils",
+    "logger"
+  ],
   "author": "Zopio Labs",
   "license": "MIT",
   "dependencies": {
-    "tslib": "^2.6.0"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@types/node": "24.0.13",
-    "typescript": "^5.8.3"
+    "@types/node": "25.0.2",
+    "typescript": "^5.9.3"
   }
 }

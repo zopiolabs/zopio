@@ -2,25 +2,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { TriggerClient } from '@trigger.dev/sdk';
+import { tasks } from "@trigger.dev/sdk";
 
-// Validate environment variables
-if (!process.env.TRIGGER_API_KEY) {
-  // Using a safer logging approach
+if (!(process.env.TRIGGER_SECRET_KEY || process.env.TRIGGER_API_KEY)) {
   process.stderr.write(
-    'TRIGGER_API_KEY environment variable is not set. Trigger.dev functionality will not work properly.\n'
+    "TRIGGER_SECRET_KEY is not set. Trigger.dev functionality will not work properly.\n"
   );
 }
-
-/**
- * Configured Trigger.dev client for the Zopio application
- * @see https://trigger.dev/docs/documentation/clients/javascript-client
- */
-export const client = new TriggerClient({
-  id: 'zopio-trigger',
-  apiKey: process.env.TRIGGER_API_KEY || 'missing-api-key',
-  apiUrl: process.env.TRIGGER_API_URL || 'https://api.trigger.dev',
-});
 
 /**
  * Helper function to safely send events to Trigger.dev
@@ -33,10 +21,21 @@ export async function sendEvent<T extends Record<string, unknown>>(
   payload: T
 ): Promise<unknown> {
   try {
-    return await client.sendEvent({
-      name: eventName,
-      payload,
-    });
+    switch (eventName) {
+      case "user.created": {
+        const [welcome, notifyAdmins] = await Promise.all([
+          tasks.trigger("send-welcome-email", payload),
+          tasks.trigger("notify-admins-new-user", payload),
+        ]);
+        return { notifyAdmins, welcome };
+      }
+      case "user.deleted": {
+        return await tasks.trigger("process-user-deletion", payload);
+      }
+      default: {
+        return await tasks.trigger(eventName, payload);
+      }
+    }
   } catch (error) {
     // Using a safer logging approach
     process.stderr.write(

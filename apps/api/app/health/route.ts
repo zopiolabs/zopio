@@ -2,19 +2,19 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from "next/server";
 
 export function GET(request: Request | NextRequest): Response {
   // Check if this is a test request or specifically wants plain text
-  const acceptHeader = request?.headers.get('Accept') || '';
+  const acceptHeader = request?.headers.get("Accept") || "";
   const isTestRequest =
-    process.env.NODE_ENV === 'test' || acceptHeader.includes('text/plain');
+    process.env.NODE_ENV === "test" || acceptHeader.includes("text/plain");
 
   if (isTestRequest) {
-    return new Response('OK', {
+    return new Response("OK", {
       status: 200,
       headers: {
-        'Content-Type': 'text/plain',
+        "Content-Type": "text/plain",
       },
     });
   }
@@ -77,7 +77,7 @@ export function GET(request: Request | NextRequest): Response {
   return new Response(html, {
     status: 200,
     headers: {
-      'Content-Type': 'text/html',
+      "Content-Type": "text/html",
     },
   });
 }

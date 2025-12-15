@@ -2,21 +2,20 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@repo/design-system/ui/avatar';
+} from "@repo/design-system/ui/avatar";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * An image element with a fallback for representing the user.
  */
 const meta: Meta<typeof Avatar> = {
-  title: 'ui/Avatar',
+  title: "ui/Avatar",
   component: Avatar,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <Avatar {...args}>
@@ -25,7 +24,7 @@ const meta: Meta<typeof Avatar> = {
     </Avatar>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

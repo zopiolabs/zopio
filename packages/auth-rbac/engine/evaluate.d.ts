@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { AccessEvaluationInput, AccessEvaluationResult } from '../types';
+import type { AccessEvaluationInput, AccessEvaluationResult } from "../types";
 export declare function evaluateAccess({
   rules,
   context,

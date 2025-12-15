@@ -2,14 +2,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-import 'server-only';
-import { Liveblocks as LiveblocksNode } from '@liveblocks/node';
-import { keys } from './keys';
+import "server-only";
+import { Liveblocks as LiveblocksNode } from "@liveblocks/node";
+import { keys } from "./keys";
 
 type AuthenticateOptions = {
   userId: string;
   orgId: string;
-  userInfo: Liveblocks['UserMeta']['info'];
+  userInfo: Liveblocks["UserMeta"]["info"];
 };
 
 const secret = keys().LIVEBLOCKS_SECRET;
@@ -20,7 +20,7 @@ export const authenticate = async ({
   userInfo,
 }: AuthenticateOptions) => {
   if (!secret) {
-    throw new Error('LIVEBLOCKS_SECRET is not set');
+    throw new Error("LIVEBLOCKS_SECRET is not set");
   }
 
   const liveblocks = new LiveblocksNode({ secret });

@@ -9,8 +9,7 @@
  * Providers are components that wrap your application to provide context or functionality.
  */
 
-// Export theme provider
-export * from './theme';
-
 // Export main DesignSystemProvider
-export * from './design-system-provider';
+export * from "./design-system-provider";
+// Export theme provider
+export * from "./theme";

@@ -2,14 +2,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { withLogtail } from '@logtail/next';
-import { withSentryConfig } from '@sentry/nextjs';
-import { keys } from './keys';
+import { withLogtail } from "@logtail/next";
+import { withSentryConfig } from "@sentry/nextjs";
+import { keys } from "./keys";
 
 export const sentryConfig: Parameters<typeof withSentryConfig>[1] = {
   // Safely access org and project with fallbacks
-  org: keys().SENTRY_ORG || '',
-  project: keys().SENTRY_PROJECT || '',
+  org: keys().SENTRY_ORG || "",
+  project: keys().SENTRY_PROJECT || "",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
@@ -28,7 +28,7 @@ export const sentryConfig: Parameters<typeof withSentryConfig>[1] = {
    * Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
    * side errors will fail.
    */
-  tunnelRoute: '/monitoring',
+  tunnelRoute: "/monitoring",
 
   // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
@@ -46,14 +46,14 @@ export const withSentry = (sourceConfig: object): object => {
   try {
     const configWithTranspile = {
       ...sourceConfig,
-      transpilePackages: ['@sentry/nextjs'],
+      transpilePackages: ["@sentry/nextjs"],
     };
 
     // Only apply Sentry config if we have valid DSN
     const envKeys = keys();
     if (
       envKeys?.NEXT_PUBLIC_SENTRY_DSN &&
-      typeof envKeys.NEXT_PUBLIC_SENTRY_DSN === 'string' &&
+      typeof envKeys.NEXT_PUBLIC_SENTRY_DSN === "string" &&
       envKeys.NEXT_PUBLIC_SENTRY_DSN.length > 0
     ) {
       return withSentryConfig(configWithTranspile, sentryConfig);
@@ -67,6 +67,4 @@ export const withSentry = (sourceConfig: object): object => {
   }
 };
 
-export const withLogging = (config: object): object => {
-  return withLogtail(config);
-};
+export const withLogging = (config: object): object => withLogtail(config);

@@ -12,15 +12,16 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@react-email/components": "0.3.1",
-    "react": "19.1.0",
-    "react-email": "4.0.17"
+    "@react-email/components": "1.0.1",
+    "react": "19.2.3",
+    "react-email": "5.0.8"
   },
   "devDependencies": {
+    "@react-email/preview-server": "^5.0.8",
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "24.0.13",
-    "@types/react": "19.1.8",
-    "next": "15.3.3",
-    "typescript": "^5.8.3"
+    "@types/node": "25.0.2",
+    "@types/react": "19.2.7",
+    "next": "16.0.10",
+    "typescript": "^5.9.3"
   }
 }

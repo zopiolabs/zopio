@@ -11,7 +11,7 @@
  */
 
 // Define a type for log levels
-type LogLevel = 'info' | 'error' | 'warn' | 'debug';
+type LogLevel = "info" | "error" | "warn" | "debug";
 
 // Create a logging function that can be disabled by linting rules
 const logMessage = (
@@ -20,26 +20,20 @@ const logMessage = (
   args: unknown[]
 ): void => {
   switch (level) {
-    case 'info':
-      // biome-ignore lint/suspicious/noConsole: This is a logger utility
+    case "info":
       console.info(`[INFO] ${message}`, ...args);
       break;
-    case 'error':
-      // biome-ignore lint/suspicious/noConsole: This is a logger utility
+    case "error":
       console.error(`[ERROR] ${message}`, ...args);
       break;
-    case 'warn':
-      // biome-ignore lint/suspicious/noConsole: This is a logger utility
+    case "warn":
       console.warn(`[WARN] ${message}`, ...args);
       break;
-    case 'debug':
-      // biome-ignore lint/suspicious/noConsole: This is a logger utility
+    case "debug":
       console.debug(`[DEBUG] ${message}`, ...args);
       break;
     default:
       // Handle unexpected log levels
-      // biome-ignore lint/suspicious/noConsole: This is a logger utility
-      // biome-ignore lint/suspicious/noConsoleLog: This is a logger utility
       console.log(`[UNKNOWN] ${message}`, ...args);
   }
 };
@@ -55,8 +49,8 @@ export const logger = {
    */
   info(message: string, ...args: unknown[]): void {
     // In production, this would use a proper logging service
-    if (process.env.NODE_ENV !== 'production') {
-      logMessage('info', message, args);
+    if (process.env.NODE_ENV !== "production") {
+      logMessage("info", message, args);
     }
   },
 
@@ -67,7 +61,7 @@ export const logger = {
    */
   error(message: string, ...args: unknown[]): void {
     // Errors are always logged
-    logMessage('error', message, args);
+    logMessage("error", message, args);
   },
 
   /**
@@ -77,7 +71,7 @@ export const logger = {
    */
   warn(message: string, ...args: unknown[]): void {
     // Warnings are always logged
-    logMessage('warn', message, args);
+    logMessage("warn", message, args);
   },
 
   /**
@@ -87,8 +81,8 @@ export const logger = {
    */
   debug(message: string, ...args: unknown[]): void {
     // Only log in development
-    if (process.env.NODE_ENV === 'development') {
-      logMessage('debug', message, args);
+    if (process.env.NODE_ENV === "development") {
+      logMessage("debug", message, args);
     }
   },
 };
@@ -102,18 +96,18 @@ export const asyncUtils = {
    * @param fn The async function to wrap
    * @returns A function that returns a promise that never rejects
    */
-  safeAsync: <T, A extends unknown[]>(
-    fn: (...args: A) => Promise<T>
-  ): ((...args: A) => Promise<[T | null, Error | null]>) => {
-    return async (...args: A): Promise<[T | null, Error | null]> => {
+  safeAsync:
+    <T, A extends unknown[]>(
+      fn: (...args: A) => Promise<T>
+    ): ((...args: A) => Promise<[T | null, Error | null]>) =>
+    async (...args: A): Promise<[T | null, Error | null]> => {
       try {
         const result = await fn(...args);
         return [result, null];
       } catch (error) {
         return [null, error as Error];
       }
-    };
-  },
+    },
 };
 
 /**
@@ -132,7 +126,7 @@ export const objectUtils = {
   ): T => {
     const output = { ...target } as T;
 
-    if (!isObject(target) || !isObject(source)) {
+    if (!(isObject(target) && isObject(source))) {
       return output;
     }
 
@@ -171,7 +165,7 @@ export const objectUtils = {
  * @returns True if the value is an object
  */
 function isObject(item: unknown): item is Record<string, unknown> {
-  return Boolean(item && typeof item === 'object' && !Array.isArray(item));
+  return Boolean(item && typeof item === "object" && !Array.isArray(item));
 }
 
 /**
@@ -183,25 +177,23 @@ export const stringUtils = {
    * @param str The string to convert
    * @returns The camelCase string
    */
-  toCamelCase: (str: string): string => {
-    return str
-      .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
-        return index === 0 ? word.toLowerCase() : word.toUpperCase();
-      })
-      .replace(/\s+/g, '');
-  },
+  toCamelCase: (str: string): string =>
+    str
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
+        index === 0 ? word.toLowerCase() : word.toUpperCase()
+      )
+      .replace(/\s+/g, ""),
 
   /**
    * Convert a string to kebab-case
    * @param str The string to convert
    * @returns The kebab-case string
    */
-  toKebabCase: (str: string): string => {
-    return str
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .replace(/\s+/g, '-')
-      .toLowerCase();
-  },
+  toKebabCase: (str: string): string =>
+    str
+      .replace(/([a-z])([A-Z])/g, "$1-$2")
+      .replace(/\s+/g, "-")
+      .toLowerCase(),
 };
 
 /**
@@ -217,8 +209,8 @@ export const arrayUtils = {
   groupBy: <T extends Record<string, unknown>, K extends keyof T>(
     array: T[],
     key: K
-  ): Record<string, T[]> => {
-    return array.reduce(
+  ): Record<string, T[]> =>
+    array.reduce(
       (result, item) => {
         const groupKey = String(item[key]);
         result[groupKey] = result[groupKey] || [];
@@ -226,6 +218,5 @@ export const arrayUtils = {
         return result;
       },
       {} as Record<string, T[]>
-    );
-  },
+    ),
 };

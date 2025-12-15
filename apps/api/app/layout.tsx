@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from "react";
 
 type RootLayoutProperties = {
   readonly children: ReactNode;

@@ -43,17 +43,17 @@ interface AuthResponse {
  * Demonstrates how to implement a third-party integration
  */
 export class SampleProvider {
-  private baseUrl: string;
-  private clientId: string;
-  private clientSecret: string;
-  private accessToken = '';
+  private readonly baseUrl: string;
+  private readonly clientId: string;
+  private readonly clientSecret: string;
+  private accessToken = "";
 
   constructor(config: {
     baseUrl?: string;
     clientId: string;
     clientSecret: string;
   }) {
-    this.baseUrl = config.baseUrl || 'https://api.sampleprovider.com/v1';
+    this.baseUrl = config.baseUrl || "https://api.sampleprovider.com/v1";
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
   }
@@ -64,14 +64,14 @@ export class SampleProvider {
   async authenticate(): Promise<string> {
     try {
       const response = await fetch(`${this.baseUrl}/oauth/token`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           client_id: this.clientId,
           client_secret: this.clientSecret,
-          grant_type: 'client_credentials',
+          grant_type: "client_credentials",
         }),
       });
 
@@ -81,11 +81,11 @@ export class SampleProvider {
 
       const data = (await response.json()) as AuthResponse;
       this.accessToken = data.access_token;
-      Logger.info('Authentication successful');
+      Logger.info("Authentication successful");
       return this.accessToken;
     } catch (error) {
-      Logger.error('Authentication failed:', error);
-      throw new Error('Failed to authenticate with the provider');
+      Logger.error("Authentication failed:", error);
+      throw new Error("Failed to authenticate with the provider");
     }
   }
 
@@ -112,8 +112,8 @@ export class SampleProvider {
       Logger.info(`Retrieved ${data.users.length} users`);
       return data.users;
     } catch (error) {
-      Logger.error('Failed to fetch users:', error);
-      throw new Error('Failed to fetch users from the provider');
+      Logger.error("Failed to fetch users:", error);
+      throw new Error("Failed to fetch users from the provider");
     }
   }
 
@@ -131,10 +131,10 @@ export class SampleProvider {
 
     try {
       const response = await fetch(`${this.baseUrl}/users`, {
-        method: 'POST',
+        method: "POST",
         headers: {
           Authorization: `Bearer ${this.accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
@@ -144,11 +144,11 @@ export class SampleProvider {
       }
 
       const data = (await response.json()) as { user: User };
-      Logger.info('User created successfully:', data.user.id);
+      Logger.info("User created successfully:", data.user.id);
       return data.user;
     } catch (error) {
-      Logger.error('Failed to create user:', error);
-      throw new Error('Failed to create user with the provider');
+      Logger.error("Failed to create user:", error);
+      throw new Error("Failed to create user with the provider");
     }
   }
 
@@ -163,13 +163,13 @@ export class SampleProvider {
     setTimeout(() => {
       if (handlers.userCreated) {
         const mockUserData: User = {
-          id: 'user_123',
-          name: 'John Doe',
-          email: 'john@example.com',
+          id: "user_123",
+          name: "John Doe",
+          email: "john@example.com",
           createdAt: new Date().toISOString(),
         };
 
-        Logger.info('Simulating userCreated webhook event');
+        Logger.info("Simulating userCreated webhook event");
         handlers.userCreated(mockUserData);
       }
     }, 5000);
@@ -178,7 +178,7 @@ export class SampleProvider {
 
 // Export the provider
 export default {
-  name: '@repo/sample-integration',
-  version: '1.0.0',
+  name: "@repo/sample-integration",
+  version: "1.0.0",
   provider: SampleProvider,
 };

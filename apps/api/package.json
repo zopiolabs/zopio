@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "concurrently \"npm:next\" \"npm:stripe-check\"",
     "next": "next dev -p 3002 --turbopack",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "analyze": "cross-env ANALYZE=true npm run build",
     "test": "vitest run",
@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.20.0",
+    "@clerk/nextjs": "^6.36.2",
     "@repo/analytics": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/database": "workspace:*",
@@ -24,24 +24,24 @@
     "@repo/payments": "workspace:*",
     "@repo/testing": "workspace:*",
     "@repo/trigger": "workspace:*",
-    "@sentry/nextjs": "^9.22.0",
-    "@t3-oss/env-nextjs": "^0.13.4",
-    "@trigger.dev/sdk": "^2.2.0",
-    "next": "15.3.3",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "svix": "^1.66.0",
-    "vitest": "^3.1.4",
-    "zod": "^3.25.28"
+    "@sentry/nextjs": "^10.30.0",
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "@trigger.dev/sdk": "^4.3.0",
+    "next": "16.0.10",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "svix": "^1.82.0",
+    "vitest": "^4.0.15",
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "24.0.13",
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
-    "concurrently": "^9.1.2",
-    "cross-env": "^7.0.3",
-    "typescript": "^5.8.3"
+    "@types/node": "25.0.2",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "typescript": "^5.9.3"
   }
 }

@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
-import type { StorybookConfig } from '@storybook/nextjs';
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
+import type { StorybookConfig } from "@storybook/nextjs";
 
 const require = createRequire(import.meta.url);
 
@@ -17,36 +17,36 @@ const cssIncludeRegex = /.*\.css$/;
  * It is needed in projects that use Yarn PnP or are set up within a monorepo.
  */
 const getAbsolutePath = (value: string) =>
-  dirname(require.resolve(join(value, 'package.json')));
+  dirname(require.resolve(join(value, "package.json")));
 
 const config: StorybookConfig = {
   stories: [
-    '../stories/**/*.mdx',
-    '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    "../stories/**/*.mdx",
+    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
 
   addons: [
-    getAbsolutePath('@storybook/addon-onboarding'),
-    getAbsolutePath('@chromatic-com/storybook'),
-    getAbsolutePath('@storybook/addon-themes'),
-    getAbsolutePath('@storybook/addon-a11y'),
-    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath("@storybook/addon-onboarding"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-themes"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-docs"),
   ],
 
   framework: {
-    name: getAbsolutePath('@storybook/nextjs'),
+    name: getAbsolutePath("@storybook/nextjs"),
     options: {
       strictMode: true,
     },
   },
 
-  staticDirs: ['../public', '../styles'],
+  staticDirs: ["../public", "../styles"],
 
   core: {
     disableTelemetry: true,
   },
 
-  webpackFinal: async (config) => {
+  webpackFinal: (config) => {
     if (!config.module) {
       config.module = { rules: [] };
     }
@@ -57,13 +57,13 @@ const config: StorybookConfig = {
 
     // Remove existing CSS rules
     config.module.rules = config.module.rules.filter((rule) => {
-      if (!rule || typeof rule !== 'object') {
+      if (!rule || typeof rule !== "object") {
         return true;
       }
       const ruleObj = rule as { test?: RegExp | string };
       return !(
         ruleObj.test instanceof RegExp &&
-        ruleObj.test.toString().includes('css')
+        ruleObj.test.toString().includes("css")
       );
     });
 
@@ -71,22 +71,22 @@ const config: StorybookConfig = {
     config.module.rules.push({
       test: cssRegex,
       use: [
-        'style-loader',
+        "style-loader",
         {
-          loader: 'css-loader',
+          loader: "css-loader",
           options: {
             importLoaders: 1,
           },
         },
         {
-          loader: 'postcss-loader',
+          loader: "postcss-loader",
           options: {
             postcssOptions: {
               plugins: [
-                'postcss-import',
-                '@tailwindcss/postcss',
-                'autoprefixer',
-                'postcss-nesting',
+                "postcss-import",
+                "@tailwindcss/postcss",
+                "autoprefixer",
+                "postcss-nesting",
               ],
             },
           },

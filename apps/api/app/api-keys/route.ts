@@ -2,22 +2,22 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { clerkAuthMiddleware } from '@repo/auth';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { clerkAuthMiddleware } from "@repo/auth";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import {
   createApiKeyController,
   deleteApiKeyController,
   listApiKeysController,
-} from './controller';
+} from "./controller";
 
 // Type guard to check if the object is a Response
 function isResponse(obj: unknown): obj is Response {
   return (
     obj !== null &&
-    typeof obj === 'object' &&
-    'status' in obj &&
-    typeof (obj as Response).status === 'number'
+    typeof obj === "object" &&
+    "status" in obj &&
+    typeof (obj as Response).status === "number"
   );
 }
 
@@ -64,10 +64,10 @@ export async function DELETE(req: NextRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
   if (!id) {
     return NextResponse.json(
-      { error: 'Missing id parameter' },
+      { error: "Missing id parameter" },
       { status: 400 }
     );
   }

@@ -5,19 +5,19 @@
 /**
  * API resource schema for MCP
  */
-import { z } from 'zod';
-import { resourceSchema } from '../protocol.js';
+import { z } from "zod";
+import { resourceSchema } from "../protocol.js";
 
 /**
  * Schema for API parameter
  */
 const parameterSchema = z.object({
   name: z.string(),
-  in: z.enum(['path', 'query', 'header', 'cookie', 'body']),
+  in: z.enum(["path", "query", "header", "cookie", "body"]),
   description: z.string().optional(),
   required: z.boolean().optional().default(false),
   schema: z.object({
-    type: z.enum(['string', 'number', 'integer', 'boolean', 'array', 'object']),
+    type: z.enum(["string", "number", "integer", "boolean", "array", "object"]),
     format: z.string().optional(),
     items: z.lazy(() => z.object({ type: z.string() }).optional()),
     properties: z
@@ -43,12 +43,12 @@ const responseSchema = z.object({
           .object({
             type: z
               .enum([
-                'string',
-                'number',
-                'integer',
-                'boolean',
-                'array',
-                'object',
+                "string",
+                "number",
+                "integer",
+                "boolean",
+                "array",
+                "object",
               ])
               .optional(),
             properties: z
@@ -86,18 +86,18 @@ const responseSchema = z.object({
  * Schema for API resources
  */
 export const apiSchema = resourceSchema.extend({
-  type: z.literal('api'),
+  type: z.literal("api"),
   attributes: z
     .object({
       path: z.string(),
       method: z.enum([
-        'GET',
-        'POST',
-        'PUT',
-        'DELETE',
-        'PATCH',
-        'OPTIONS',
-        'HEAD',
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH",
+        "OPTIONS",
+        "HEAD",
       ]),
       summary: z.string().optional(),
       description: z.string().optional(),
@@ -137,7 +137,7 @@ export const apiSchema = resourceSchema.extend({
         .object({
           data: z.object({
             id: z.string(),
-            type: z.literal('package'),
+            type: z.literal("package"),
           }),
         })
         .optional(),
@@ -160,12 +160,12 @@ export type ApiResource = z.infer<typeof apiSchema>;
  */
 export function createApiResource(
   id: string,
-  attributes: NonNullable<ApiResource['attributes']>,
+  attributes: NonNullable<ApiResource["attributes"]>,
   packageId?: string
 ): ApiResource {
   return {
     id,
-    type: 'api',
+    type: "api",
     attributes,
     ...(packageId
       ? {
@@ -173,7 +173,7 @@ export function createApiResource(
             package: {
               data: {
                 id: packageId,
-                type: 'package',
+                type: "package",
               },
             },
           },

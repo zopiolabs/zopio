@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { init } from '@sentry/nextjs';
-import { keys } from './keys';
-import { log } from './log';
+import { init } from "@sentry/nextjs";
+import { keys } from "./keys";
+import { log } from "./log";
 
 /**
  * Initialize Sentry for Next.js instrumentation
@@ -19,7 +19,7 @@ export function initializeSentry() {
       const dsn = envKeys?.NEXT_PUBLIC_SENTRY_DSN;
 
       // Only initialize Sentry if DSN is provided
-      if (dsn && typeof dsn === 'string' && dsn.length > 0) {
+      if (dsn && typeof dsn === "string" && dsn.length > 0) {
         const opts = {
           dsn,
           // Set timeout options to prevent hanging on remote requests
@@ -31,11 +31,11 @@ export function initializeSentry() {
           tracesSampleRate: 0.1,
         };
 
-        if (process.env.NEXT_RUNTIME === 'nodejs') {
+        if (process.env.NEXT_RUNTIME === "nodejs") {
           init(opts);
         }
 
-        if (process.env.NEXT_RUNTIME === 'edge') {
+        if (process.env.NEXT_RUNTIME === "edge") {
           init(opts);
         }
       }

@@ -9,18 +9,18 @@
  * for the design system, including theme, auth, analytics, and UI components.
  */
 
-import { AnalyticsProvider } from '@repo/analytics';
-import { AuthProvider } from '@repo/auth/provider';
-import type { ThemeProviderProps } from 'next-themes';
-import type { ReactNode } from 'react';
-import { Toaster } from '../ui/sonner';
-import { TooltipProvider } from '../ui/tooltip';
-import { ThemeProvider } from './theme';
+import { AnalyticsProvider } from "@repo/analytics";
+import { AuthProvider } from "@repo/auth/provider";
+import type { ThemeProviderProps } from "next-themes";
+import type { ReactNode } from "react";
+import { Toaster } from "../ui/sonner";
+import { TooltipProvider } from "../ui/tooltip";
+import { ThemeProvider } from "./theme";
 
 interface DesignSystemProviderProps {
   children?: ReactNode;
   /** Theme attribute - must match ThemeProvider's Attribute type */
-  attribute?: ThemeProviderProps['attribute'];
+  attribute?: ThemeProviderProps["attribute"];
   defaultTheme?: string;
   enableSystem?: boolean;
   disableTransitionOnChange?: boolean;
@@ -60,9 +60,9 @@ export function DesignSystemProvider({
   return (
     <ThemeProvider {...themeProps}>
       <AuthProvider
+        helpUrl={helpUrl}
         privacyUrl={privacyUrl}
         termsUrl={termsUrl}
-        helpUrl={helpUrl}
       >
         <AnalyticsProvider>
           <TooltipProvider>

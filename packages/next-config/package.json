@@ -9,13 +9,13 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "next": "15.3.3"
+    "next": "16.0.10"
   },
   "dependencies": {
-    "@next/bundle-analyzer": "15.3.3",
-    "@prisma/nextjs-monorepo-workaround-plugin": "^6.4.1",
-    "@t3-oss/env-core": "^0.13.4",
-    "@t3-oss/env-nextjs": "^0.13.4",
-    "zod": "^3.25.28"
+    "@next/bundle-analyzer": "16.0.10",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^7.1.0",
+    "@t3-oss/env-core": "^0.13.10",
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "zod": "^4.2.0"
   }
 }

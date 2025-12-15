@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { validateResource } from './protocol.js';
+import { validateResource } from "./protocol.js";
 /**
  * MCP Server implementation
  */
@@ -13,14 +13,14 @@ import type {
   ReadResourceResponse,
   Resource,
   ResourceDefinition,
-} from './types.js';
+} from "./types.js";
 
 /**
  * MCP Server class for handling resource requests
  */
 export class MCPServer {
-  private config: MCPServerConfig;
-  private resources: Map<string, Map<string, Resource>> = new Map();
+  private readonly config: MCPServerConfig;
+  private readonly resources: Map<string, Map<string, Resource>> = new Map();
 
   /**
    * Creates a new MCP server instance
@@ -128,7 +128,7 @@ export class MCPServer {
     if (!resource) {
       return {
         error: {
-          code: 'resource_not_found',
+          code: "resource_not_found",
           message: `Resource of type '${type}' with id '${id}' not found`,
         },
       };
@@ -145,11 +145,11 @@ export class MCPServer {
    * @returns A resource definition
    */
   static createResourceDefinition(
-    schema: import('zod').ZodType,
-    options: Omit<ResourceDefinition, 'schema'> = {}
+    schema: import("zod").ZodType,
+    options: Omit<ResourceDefinition, "schema"> = {}
   ): ResourceDefinition {
     return {
-      schema: schema,
+      schema,
       ...options,
     };
   }

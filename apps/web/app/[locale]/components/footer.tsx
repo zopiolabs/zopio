@@ -2,11 +2,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { env } from '@/env';
-import { legal } from '@repo/cms';
-import { Feed } from '@repo/cms/components/feed';
-import { Status } from '@repo/observability/status';
-import Link from 'next/link';
+import { legal } from "@repo/cms";
+import { Feed } from "@repo/cms/components/feed";
+import { Status } from "@repo/observability/status";
+import Link from "next/link";
+import { env } from "@/env";
 
 // Type for the legal page items from the CMS
 type LegalPageData = {
@@ -28,9 +28,7 @@ export const Footer = async () => {
 
   return (
     <Feed data={{ legalPages: { items: legalPages } }}>
-      {async (data: Record<string, unknown>) => {
-        'use server';
-
+      {(data: Record<string, unknown>) => {
         // Type assertion for the data from Feed component with fallback
         const legalPages = data.legalPages as
           | { items: LegalPageData[] }
@@ -39,23 +37,23 @@ export const Footer = async () => {
 
         const navigationItems = [
           {
-            title: 'Home',
-            href: '/',
-            description: '',
+            title: "Home",
+            href: "/",
+            description: "",
           },
           {
-            title: 'Pages',
-            description: 'Managing a small business today is already tough.',
+            title: "Pages",
+            description: "Managing a small business today is already tough.",
             items: [
               {
-                title: 'Blog',
-                href: '/blog',
+                title: "Blog",
+                href: "/blog",
               },
             ],
           },
           {
-            title: 'Legal',
-            description: 'We stay on top of the latest legal requirements.',
+            title: "Legal",
+            description: "We stay on top of the latest legal requirements.",
             items:
               legalItems.map((post) => ({
                 title: post._title as string,
@@ -66,11 +64,11 @@ export const Footer = async () => {
 
         if (env.NEXT_PUBLIC_DOCS_URL) {
           const pagesSection = navigationItems.find(
-            (item) => item.title === 'Pages'
+            (item) => item.title === "Pages"
           );
           if (pagesSection?.items) {
             pagesSection.items.push({
-              title: 'Docs',
+              title: "Docs",
               href: env.NEXT_PUBLIC_DOCS_URL,
             });
           }
@@ -95,24 +93,20 @@ export const Footer = async () => {
                   <div className="grid items-start gap-10 lg:grid-cols-3">
                     {navigationItems.map((item) => (
                       <div
-                        key={item.title}
                         className="flex flex-col items-start gap-1 text-base"
+                        key={item.title}
                       >
                         <div className="flex flex-col gap-2">
                           {item.href ? (
                             <Link
-                              href={item.href}
                               className="flex items-center justify-between"
-                              target={
-                                item.href.includes('http')
-                                  ? '_blank'
-                                  : undefined
-                              }
-                              rel={
-                                item.href.includes('http')
-                                  ? 'noopener noreferrer'
-                                  : undefined
-                              }
+                              href={item.href}
+                              {...(item.href.includes("http")
+                                ? {
+                                    rel: "noopener noreferrer",
+                                    target: "_blank",
+                                  }
+                                : {})}
                             >
                               <span className="text-xl">{item.title}</span>
                             </Link>
@@ -122,19 +116,15 @@ export const Footer = async () => {
                           {item.items?.map(
                             (subItem: { title: string; href: string }) => (
                               <Link
-                                key={subItem.title}
-                                href={subItem.href}
                                 className="flex items-center justify-between"
-                                target={
-                                  subItem.href.includes('http')
-                                    ? '_blank'
-                                    : undefined
-                                }
-                                rel={
-                                  subItem.href.includes('http')
-                                    ? 'noopener noreferrer'
-                                    : undefined
-                                }
+                                href={subItem.href}
+                                key={subItem.title}
+                                {...(subItem.href.includes("http")
+                                  ? {
+                                      rel: "noopener noreferrer",
+                                      target: "_blank",
+                                    }
+                                  : {})}
                               >
                                 <span className="text-foreground/75">
                                   {subItem.title}

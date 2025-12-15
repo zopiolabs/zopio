@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { AccessLogEntry } from '../types';
+import type { AccessLogEntry } from "../types";
 export declare const fileLogger: {
   write: (entry: AccessLogEntry) => void;
 };

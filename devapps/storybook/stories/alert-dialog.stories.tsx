@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { Meta, StoryObj } from '@storybook/nextjs';
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,16 +12,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@repo/design-system/ui/alert-dialog';
+} from "@repo/design-system/ui/alert-dialog";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 /**
  * A modal dialog that interrupts the user with important content and expects
  * a response.
  */
 const meta: Meta<typeof AlertDialog> = {
-  title: 'ui/AlertDialog',
+  title: "ui/AlertDialog",
   component: AlertDialog,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <AlertDialog {...args}>
@@ -44,7 +43,7 @@ const meta: Meta<typeof AlertDialog> = {
     </AlertDialog>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 

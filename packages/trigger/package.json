@@ -5,9 +5,9 @@
   "main": "index.ts",
   "types": "index.ts",
   "dependencies": {
-    "@trigger.dev/sdk": "^2.2.0"
+    "@trigger.dev/sdk": "^4.3.0"
   },
   "devDependencies": {
-    "@types/node": "^22.15.21"
+    "@types/node": "^25.0.2"
   }
 }

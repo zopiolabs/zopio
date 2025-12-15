@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import Balancer from 'react-wrap-balancer';
+import Balancer from "react-wrap-balancer";
 
 export const Review = () => (
   <section className="flex flex-col gap-8 p-8">

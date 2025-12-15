@@ -9,7 +9,7 @@
  * consistently across the application.
  */
 
-import tokensImport from './tokens';
+import tokensImport from "./tokens";
 
 // Re-export tokens for external use
 export const tokens = tokensImport;
@@ -20,18 +20,18 @@ export const tokens = tokensImport;
  * @returns The color value as a string
  */
 export function getColor(path: string): string {
-  const parts = path.split('.');
+  const parts = path.split(".");
   let value: Record<string, unknown> = tokens.colors;
 
   for (const part of parts) {
     if (value[part] === undefined) {
-      return '';
+      return "";
     }
     value = value[part] as Record<string, unknown>;
   }
 
-  if (typeof value !== 'string') {
-    return (value as Record<string, string>).DEFAULT || '';
+  if (typeof value !== "string") {
+    return (value as Record<string, string>).DEFAULT || "";
   }
 
   return value as string;
@@ -51,7 +51,7 @@ export function getTypography(
   const value = tokens.typography[category]?.[key as TypographyKey];
 
   if (value === undefined) {
-    return '';
+    return "";
   }
 
   return value;
@@ -66,7 +66,7 @@ export function getSpacing(key: keyof typeof tokens.spacing): string {
   const value = tokens.spacing[key];
 
   if (value === undefined) {
-    return '';
+    return "";
   }
 
   return value;
@@ -78,7 +78,7 @@ export function getSpacing(key: keyof typeof tokens.spacing): string {
  * @returns The border radius value as a string
  */
 export function getBorderRadius(
-  key: keyof typeof tokens.borders.radius = 'DEFAULT'
+  key: keyof typeof tokens.borders.radius = "DEFAULT"
 ): string {
   const value = tokens.borders.radius[key];
 
@@ -114,8 +114,8 @@ export function createStyles(
   styles: Record<string, unknown>
 ): Record<string, unknown> {
   const processValue = (value: unknown): unknown => {
-    if (typeof value !== 'string') {
-      if (typeof value === 'object' && value !== null) {
+    if (typeof value !== "string") {
+      if (typeof value === "object" && value !== null) {
         // Ensure value is a valid Record before processing
         const safeValue = value as Record<string, unknown>;
         return Object.entries(safeValue).reduce<Record<string, unknown>>(
@@ -131,35 +131,35 @@ export function createStyles(
 
     // Process token references in string values
     return value.replace(/\$tokens\.([\w.]+)/g, (_, path) => {
-      const [category, ...rest] = path.split('.');
-      const key = rest.join('.');
+      const [category, ...rest] = path.split(".");
+      const key = rest.join(".");
 
       switch (category) {
-        case 'colors':
+        case "colors":
           return getColor(key);
-        case 'typography': {
+        case "typography": {
           if (rest.length < 2) {
-            return '';
+            return "";
           }
           return getTypography(
             rest[0] as keyof typeof tokens.typography,
             rest[1]
           );
         }
-        case 'spacing':
+        case "spacing":
           return getSpacing(key as keyof typeof tokens.spacing);
-        case 'borders': {
-          if (rest[0] === 'radius') {
+        case "borders": {
+          if (rest[0] === "radius") {
             return getBorderRadius(
               rest[1] as keyof typeof tokens.borders.radius
             );
           }
-          return '';
+          return "";
         }
-        case 'shadows':
+        case "shadows":
           return getShadow(key);
         default:
-          return '';
+          return "";
       }
     });
   };

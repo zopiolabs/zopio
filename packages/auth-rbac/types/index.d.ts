@@ -7,7 +7,7 @@ export type UserContext = {
   role: string;
   tenantId: string;
 };
-import type { DSLNode } from '../engine/evaluateDsl';
+import type { DSLNode } from "../engine/evaluateDsl";
 export type PermissionRule = {
   resource: string;
   action: string;
@@ -16,7 +16,7 @@ export type PermissionRule = {
     record?: Record<string, unknown> | null
   ) => boolean;
   dsl?: DSLNode;
-  fieldPermissions?: Record<string, 'read' | 'write' | 'none'>;
+  fieldPermissions?: Record<string, "read" | "write" | "none">;
 };
 export type AccessEvaluationInput = {
   rules: PermissionRule[];

@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import * as React from 'react';
-import useSWR from 'swr';
+import * as React from "react";
+import useSWR from "swr";
 
 interface AccessResponse {
   can: boolean;
@@ -25,11 +25,11 @@ export function useAccess({
   field?: string;
 }) {
   // Create a stable key for SWR that includes record ID if available
-  const recordId = record && 'id' in record ? String(record.id) : undefined;
+  const recordId = record && "id" in record ? String(record.id) : undefined;
   const key = React.useMemo(() => {
     const baseKey = `/api/access?resource=${resource}&action=${action}`;
-    const fieldParam = field ? `&field=${field}` : '';
-    const recordParam = recordId ? `&recordId=${recordId}` : '';
+    const fieldParam = field ? `&field=${field}` : "";
+    const recordParam = recordId ? `&recordId=${recordId}` : "";
     return `${baseKey}${fieldParam}${recordParam}`;
   }, [resource, action, field, recordId]);
 
@@ -38,7 +38,7 @@ export function useAccess({
 
   return {
     can: data?.can ?? false,
-    reason: data?.reason ?? (error ? 'Unknown error' : undefined),
-    loading: !data && !error,
+    reason: data?.reason ?? (error ? "Unknown error" : undefined),
+    loading: !(data || error),
   };
 }

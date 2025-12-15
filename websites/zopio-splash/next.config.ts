@@ -2,15 +2,15 @@
  * SPDX-License-Identifier: MIT
  */
 
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const config: NextConfig = {
   images: {
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
-        hostname: 'avatars.githubusercontent.com',
-        protocol: 'https',
+        hostname: "avatars.githubusercontent.com",
+        protocol: "https",
       },
     ],
   },

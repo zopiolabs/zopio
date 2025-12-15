@@ -2,9 +2,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 // Define the props for our Video component
 type VideoProps = {
@@ -17,7 +17,7 @@ type VideoProps = {
 };
 
 const ReactPlayer = dynamic(
-  () => import('react-player/youtube').then((mod) => mod.default),
+  () => import("react-player").then((mod) => mod.default),
   {
     ssr: false,
     loading: () => <div className="h-full w-full bg-black" />,
@@ -29,11 +29,11 @@ export const Video = ({ aspectRatio, ...props }: VideoProps) => (
     {/* @ts-ignore - Ignoring type issues with ReactPlayer in React 19 */}
     <ReactPlayer
       {...props}
-      width="100%"
       height="100%"
       style={{
-        position: 'absolute',
+        position: "absolute",
       }}
+      width="100%"
     />
   </div>
 );
